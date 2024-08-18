@@ -80,6 +80,30 @@ const addCompletedPuzzle = async (req, res) => {
   }
 };
 
+// @desc    Add a completed puzzle to a player
+// @route   PUT /api/players/:userId/completed-game
+// @access  Public
+const addCompletedGame = async (req, res) => {
+  try {
+    console.log(req.body);
+    const player = await Player.findOne({ userId: req.params.userId });
+    console.log(player);
+    const gameId = req.body.gameId;
+    console.log(gameId);
+    if (!player) {
+      return res.status(404).json({ message: 'Player not found' });
+    }
+
+    // Add puzzle to the completed puzzles list
+    player.gamesCompleted.push(gameId);
+
+    const updatedPlayer = await player.save();
+    res.json(updatedPlayer);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
 // @desc    Delete a player
 // @route   DELETE /api/players/:userId
 // @access  Public
@@ -102,5 +126,6 @@ module.exports = {
   getPlayerByUserId,
   updatePlayerElo,
   addCompletedPuzzle,
+  addCompletedGame,
   deletePlayer,
 };

@@ -6,6 +6,7 @@ const {
   getPlayerByUserId,
   updatePlayerElo,
   addCompletedPuzzle,
+  addCompletedGame,
   deletePlayer,
 } = require('./playerController');
 
@@ -20,6 +21,9 @@ router.put('/:userId/elo', updatePlayerElo);
 
 // Add a completed puzzle to a player
 router.put('/:userId/completed', addCompletedPuzzle);
+
+// Add a completed puzzle to a player
+router.put('/:userId/completed-game', addCompletedGame);
 
 // Delete a player
 router.delete('/:userId', deletePlayer);
