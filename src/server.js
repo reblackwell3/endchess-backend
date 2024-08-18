@@ -24,7 +24,7 @@ app.use('/api/players', playerRoutes);
 
 app.use('/api/games', gameRoutes);
 
-app.use('api/import', importRoutes);
+app.use('/api/import', importRoutes);
 
 const PORT = process.env.PORT || 5000;
 
