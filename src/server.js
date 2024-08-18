@@ -6,6 +6,8 @@ const dotenv = require('dotenv');
 const puzzleRoutes = require('./features/puzzles/puzzleRoutes');
 const playerRoutes = require('./features/players/playerRoutes');
 const gameRoutes = require('./features/games/gameRoutes');
+const importRoutes = require('./features/import/importRoutes');
+
 
 dotenv.config({ path: '.env' });
 
@@ -21,6 +23,8 @@ app.use('/api/puzzles', puzzleRoutes);
 app.use('/api/players', playerRoutes);
 
 app.use('/api/games', gameRoutes);
+
+app.use('api/import', importRoutes);
 
 const PORT = process.env.PORT || 5000;
 
