@@ -33,7 +33,7 @@ async function importGamesChessCom(gamesData) {
                 moves: g.pgn.split(' ').map(move => ({ move })),
                 raw: g.pgn,
             };
-            return buildGame(parsedPgn);
+            return {...buildGame(parsedPgn), ImportFrom: 'Chess.com'};
         });
 
         console.log(`${games.length} games have been built`);
@@ -65,7 +65,7 @@ async function importGamesLichess(gamesData) {
                 moves: g.moves.split(' ').map(move => ({ move })),
                 raw: g.pgn,
             };
-            return buildGame(parsedPgn);
+            return {...buildGame(parsedPgn), ImportFrom: 'Lichess'};
         });
 
         console.log(`${games.length} games have been built`);

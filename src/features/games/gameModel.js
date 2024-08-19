@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const gameSchema = new mongoose.Schema({
+  ImportFrom: {type: String},
   GameId: { type: String, required: true },
   WhitePlayer: { type: String, required: true },
   BlackPlayer: { type: String, required: true },
