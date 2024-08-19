@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const { parsePgn } = require('./parsePgn');
-const Game = require('./gameModel');
+const Game = require('../games/gameModel');
 const connectDB = require('../../config/db');
-const {importGames} = require('../import/importService');
+const {importGames} = require('./importService');
 
 // Load environment variables from .env file
 require('dotenv').config();
