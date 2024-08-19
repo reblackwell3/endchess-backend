@@ -17,13 +17,13 @@ function buildGame(gameData, source) {
                 Result: chessComGameData.white.result === 'win' ? '1-0' : chessComGameData.black.result === 'win' ? '0-1' : '1/2-1/2',
                 Date: new Date(chessComGameData.end_time * 1000).toISOString().split('T')[0],
                 Opening: chessComGameData.opening ? chessComGameData.opening.name : 'Unknown',
-                Moves: chessComGameData.pgn.split(' ').map(move => move).join(' ') || '',
+                Moves: chessComGameData.pgn || '',
                 PGN: chessComGameData.pgn || '',
-                WhiteElo: chessComGameData.white.rating || '',
-                BlackElo: chessComGameData.black.rating || '',
-                WhiteRatingDiff: chessComGameData.white.ratingDiff || '',
-                BlackRatingDiff: chessComGameData.black.ratingDiff || '',
-                ECO: chessComGameData.opening ? chessComGameData.opening.eco : 'Unknown',
+                WhiteElo: chessComGameData.white.rating || 0,
+                BlackElo: chessComGameData.black.rating || 0,
+                WhiteRatingDiff: chessComGameData.white.ratingDiff || 0,
+                BlackRatingDiff: chessComGameData.black.ratingDiff || 0,
+                ECO: chessComGameData.opening?.eco || 'Unknown',
                 TimeControl: chessComGameData.time_control || '',
                 Termination: chessComGameData.termination || '',
                 ImportFrom: 'Chess.com'
@@ -37,14 +37,12 @@ function buildGame(gameData, source) {
                 BlackPlayer: lichessGameData.players.black.user.name || '',
                 Result: lichessGameData.winner === 'white' ? '1-0' : lichessGameData.winner === 'black' ? '0-1' : '1/2-1/2',
                 Date: new Date(lichessGameData.createdAt).toISOString().split('T')[0],
-                Opening: lichessGameData.opening ? lichessGameData.opening.name : 'Unknown',
-                Moves: lichessGameData.moves.split(' ').map(move => move).join(' ') || '',
+                Opening: lichessGameData.opening?.name || 'Unknown',
+                Moves: lichessGameData.moves || '',
                 PGN: lichessGameData.pgn || '',
-                WhiteElo: lichessGameData.players.white.rating || '',
-                BlackElo: lichessGameData.players.black.rating || '',
-                WhiteRatingDiff: '', // Lichess data might not provide ratingDiff
-                BlackRatingDiff: '', // Lichess data might not provide ratingDiff
-                ECO: lichessGameData.opening ? lichessGameData.opening.code : 'Unknown',
+                WhiteElo: lichessGameData.players.white.rating || 0,
+                BlackElo: lichessGameData.players.black.rating || 0,
+                ECO: lichessGameData.opening?.code || 'Unknown',
                 TimeControl: `${lichessGameData.clock.initial}+${lichessGameData.clock.increment}` || '',
                 Termination: lichessGameData.status || '',
                 ImportFrom: 'Lichess'
@@ -62,10 +60,10 @@ function buildGame(gameData, source) {
                 Opening: headers.Opening || '',
                 Moves: pgnGameData.moves.map(move => move.move).join(' ') || '',
                 PGN: pgnGameData.raw || '',
-                WhiteElo: headers.WhiteElo || '',
-                BlackElo: headers.BlackElo || '',
-                WhiteRatingDiff: headers.WhiteRatingDiff || '',
-                BlackRatingDiff: headers.BlackRatingDiff || '',
+                WhiteElo: parseInt(headers.WhiteElo) || 0,
+                BlackElo: parseInt(headers.BlackElo) || 0,
+                WhiteRatingDiff: parseInt(headers.WhiteRatingDiff || '0'),
+                BlackRatingDiff: parseInt(headers.BlackRatingDiff || '0'),
                 ECO: headers.ECO || '',
                 TimeControl: headers.TimeControl || '',
                 Termination: headers.Termination || '',
@@ -73,7 +71,7 @@ function buildGame(gameData, source) {
             });
         }
         console.log('game :', JSON.stringify(game, null, 2));
-        return game;
+        return game ? game : null;
     }
     catch (error) {
         console.error('Failed to build game:', error);

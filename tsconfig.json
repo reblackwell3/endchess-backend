@@ -10,8 +10,12 @@
     "rootDir": "./src",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "./",
+    "paths": {
+      "*": ["src/@types/*"]
+    }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/@types/**/*.d.ts"],
   "exclude": ["node_modules"]
 }

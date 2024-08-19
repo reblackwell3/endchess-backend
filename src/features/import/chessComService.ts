@@ -1,5 +1,6 @@
-import axios from 'axios'; // For making HTTP requests
-import buildGame from './buildGameService'; // Service to build game objects
+import axios from 'axios'; 
+import buildGame from './buildGameService'; 
+import { IGame } from '../games/gameModel'
 
 interface ChessComGame {
     Moves: string;
@@ -9,10 +10,12 @@ interface ChessComGame {
 
 async function importGamesChessCom(gamesData: ChessComGame[]): Promise<void> {
     try {
-        const games = gamesData.map(g => buildGame(g, 'Chess.com'));
+        const games = gamesData
+            .map(g => buildGame(g, 'Chess.com'))
+            .filter((game): game is IGame => game !== null);
 
         console.log(`${games.length} games have been built`);
-        await Promise.all(games.filter(game => game && game.Moves !== '').map(game => game.save()));
+        await Promise.all(games.map(game => game.save()));
         console.log('Chess.com games successfully processed and data imported');
     } catch (err) {
         const error = err as Error;
@@ -31,7 +34,6 @@ export async function readGamesFromChessCom(username: string): Promise<void> {
             const gamesData: ChessComGame[] = gamesResponse.data.games;
             console.log(gamesData);
 
-            // Delegate to the import service to process and save the games
             await importGamesChessCom(gamesData);
         }
 

@@ -1,7 +1,26 @@
-import mongoose from 'mongoose';
+import { Document, Model, model, Schema } from 'mongoose';
 
-const gameSchema = new mongoose.Schema({
-  ImportFrom: {type: String},
+export interface IGame extends Document {
+  ImportFrom?: string;
+  GameId: string;
+  WhitePlayer: string;
+  BlackPlayer: string;
+  Result: string;
+  Date: string;
+  Opening?: string;
+  Moves: string;
+  PGN: string;
+  WhiteElo?: string;
+  BlackElo?: string;
+  WhiteRatingDiff?: string;
+  BlackRatingDiff?: string;
+  ECO?: string;
+  TimeControl?: string;
+  Termination?: string;
+}
+
+const gameSchema = new Schema<IGame>({
+  ImportFrom: { type: String },
   GameId: { type: String, required: true },
   WhitePlayer: { type: String, required: true },
   BlackPlayer: { type: String, required: true },
@@ -19,6 +38,6 @@ const gameSchema = new mongoose.Schema({
   Termination: { type: String }
 });
 
-const Game = mongoose.model('Game', gameSchema);
+const Game: Model<IGame> = model<IGame>('Game', gameSchema);
 
 export default Game;
