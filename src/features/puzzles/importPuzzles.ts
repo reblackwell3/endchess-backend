@@ -1,8 +1,8 @@
 // backend/puzzles/importPuzzles.js
-const mongoose = require('mongoose');
-const fs = require('fs');
-const csv = require('csv-parser');
-const Puzzle = require('./puzzleModel');
+import mongoose from 'mongoose';
+import fs from 'fs';
+import csv from 'csv-parser';
+import Puzzle from './puzzleModel';
 const connectDB = require('../config/db')
 
 // Load environment variables from .env file

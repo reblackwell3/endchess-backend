@@ -1,5 +1,5 @@
 // backend/players/playerController.js
-const Player = require('./playerModel');
+import Player from './playerModel';
 
 // @desc    Create a new player
 // @route   POST /api/players

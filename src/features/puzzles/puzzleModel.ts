@@ -1,5 +1,5 @@
 // backend/puzzles/puzzleModel.js
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const puzzleSchema = new mongoose.Schema({
   PuzzleId: String,
@@ -16,4 +16,4 @@ const puzzleSchema = new mongoose.Schema({
 
 const Puzzle = mongoose.model('Puzzle', puzzleSchema);
 
-module.exports = Puzzle;
+export default Puzzle;

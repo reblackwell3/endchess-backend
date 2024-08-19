@@ -1,5 +1,5 @@
 // backend/players/playerRoutes.js
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 const {
   createPlayer,
@@ -28,4 +28,4 @@ router.put('/:userId/completed-game', addCompletedGame);
 // Delete a player
 router.delete('/:userId', deletePlayer);
 
-module.exports = router;
+export default router;

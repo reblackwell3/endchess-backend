@@ -1,6 +1,6 @@
 // backend/puzzles/puzzleController.js
-const Puzzle = require('./puzzleModel');
-const Player = require('../players/playerModel');
+import Puzzle from './puzzleModel';
+import Player from '../players/playerModel';
 
 // @desc    Get a random puzzle
 // @route   GET /api/puzzles/random

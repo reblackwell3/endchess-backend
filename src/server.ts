@@ -1,12 +1,12 @@
 // backend/server.js
-const express = require('express');
-const cors = require('cors');
-const connectDB = require('./config/db');
-const dotenv = require('dotenv');
-const puzzleRoutes = require('./features/puzzles/puzzleRoutes');
-const playerRoutes = require('./features/players/playerRoutes');
-const gameRoutes = require('./features/games/gameRoutes');
-const importRoutes = require('./features/import/importRoutes');
+import express from 'express';
+import cors from 'cors';
+import connectDB from './config/db.ts';
+import dotenv from 'dotenv';
+import puzzleRoutes from './features/puzzles/puzzleRoutes';
+import playerRoutes from './features/players/playerRoutes';
+import gameRoutes from './features/games/gameRoutes';
+import importRoutes from './features/import/importRoutes';
 
 
 dotenv.config({ path: '.env' });

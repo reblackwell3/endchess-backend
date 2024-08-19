@@ -1,4 +1,4 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 const {
   getRandomGame,
@@ -10,4 +10,4 @@ router.get('/random', getRandomGame);
 router.get('/random-rated/:rating', getRandomGameRated);
 router.get('/:id', getGameById);
 
-module.exports = router;
+export default router;

@@ -1,5 +1,5 @@
 // backend/games/gameController.js
-const Game = require('./gameModel');
+import Game from './gameModel';
 
 // @desc    Get a random game
 // @route   GET /api/games/random

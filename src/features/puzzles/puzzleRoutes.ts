@@ -1,5 +1,5 @@
 // backend/puzzles/puzzleRoutes.js
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 const {
   getRandomPuzzle,
@@ -19,4 +19,4 @@ router.get('/next', getNextPuzzle);
 // Get a single puzzle by ID
 router.get('/:id', getPuzzleById);
 
-module.exports = router;
+export default router;
