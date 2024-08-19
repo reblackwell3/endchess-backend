@@ -73,4 +73,4 @@ function buildGame(gameData, source) {
     return null;
 }
 
-module.exports = {buildGame}
+module.exports = buildGame;

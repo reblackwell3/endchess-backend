@@ -51,6 +51,7 @@ async function readGamesFromLichess(username) {
         console.log('Lichess games successfully processed and data imported');
     } catch (err) {
         console.error(`Error importing Lichess games: ${err.message}`);
+        console.error(err.stack);
         throw new Error('Failed to import Lichess games');
     }
 }

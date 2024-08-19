@@ -23,4 +23,4 @@ function augmentParsed(parsed, rawPgn) {
     return { ...parsed[0], headers, raw: rawPgn };
 }
 
-module.exports = { parsePgn };
+module.exports = parsePgn;
