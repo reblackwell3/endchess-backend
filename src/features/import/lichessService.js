@@ -6,9 +6,7 @@ const parsePgn = require('./parsePgn'); // Assuming you have a function to parse
 // Function to import games from Lichess data
 async function importGamesLichess(gamesData) {
     try {
-        const games = gamesData.map(g => {
-            return {...buildGame(g, 'Pgn'), ImportFrom: 'Lichess'};
-        });
+        const games = gamesData.map(g => buildGame(g, 'Lichess'));
 
         console.log(`${games.length} games have been built`);
         await Promise.all(games.filter(game => game && game.Moves !== '').map(game => game.save()));

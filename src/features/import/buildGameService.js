@@ -1,3 +1,5 @@
+const Game = require('../games/gameModel');
+
 function buildGame(gameData, source) {
     try {
         console.log('Building game from data:', JSON.stringify(gameData, null, 2));

@@ -5,9 +5,7 @@ const buildGame = require('./buildGameService'); // Service to build game object
 
 async function importGamesChessCom(gamesData) {
     try {
-        const games = gamesData.map(g => {
-            return {...buildGame(g, 'Chess.com')};
-        });
+        const games = gamesData.map(g => buildGame(g, 'Chess.com'));
 
         console.log(`${games.length} games have been built`);
         await Promise.all(games.filter(game => game && game.Moves !== '').map(game => game.save()));
