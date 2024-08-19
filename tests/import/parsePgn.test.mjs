@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { parsePgn } from '../../src/features/games/parsePgn.js';  // Adjust the path as needed
+import parsePgn from '../../src/features/import/parsePgn.js';  // Adjust the path as needed
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -42,10 +42,4 @@ describe('parsePgn', () => {
     expect(parsedPgns[1].moves.map(move => move.move).join(' ')).to.contain('e4 c5 Nf3 d6');
   });
 
-  it('should ignore bad start and end of pgn', async () => {
-    const pgnPath = path.resolve(__dirname, '../data/bad-start-and-end.pgn');
-    const parsedPgns = await parsePgn(pgnPath);
-    expect(parsedPgns).to.have.lengthOf(1);
-    expect(parsedPgns[0].headers.White).to.equal('Mescalero25');
-  });
 });

@@ -19,8 +19,10 @@
     "pgn-parser": "^2.2.0"
   },
   "devDependencies": {
+    "axios-mock-adapter": "^2.0.0",
     "chai": "^5.1.1",
     "mocha": "^10.7.0",
+    "sinon": "^18.0.0",
     "supertest": "^7.0.0"
   }
 }
