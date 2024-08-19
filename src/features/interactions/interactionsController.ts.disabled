@@ -1,0 +1,149 @@
+import { Request, Response } from 'express';
+import Interactions from './interactionsModel.ts.disabled';
+
+// Create or update interaction
+export const createOrUpdateInteraction = async (req: Request, res: Response): Promise<void> => {
+  const { username } = req.params;
+  const { featureName, featureId, result } = req.body;
+
+  try {
+    let interaction = await Interactions.findOne({ username });
+    if (!interaction) {
+      // Create a new document if the user doesn't exist
+      interaction = new Interactions({
+        username,
+        interactions: {
+          [featureName]: [{ feature_id: featureId, interactions: [{ result }] }]
+        }
+      });
+    } else {
+      // Update the existing document
+      if (!interaction.interactions[featureName]) {
+        interaction.interactions[featureName] = [{ feature_id: featureId, interactions: [{ result }] }];
+      } else {
+        const features = interaction.interactions[featureName];
+        const feature = features.find(f => f.feature_id === featureId);
+        if (feature) {
+          feature.interactions.push({ result });
+        } else {
+          features.push({ feature_id: featureId, interactions: [{ result }] });
+        }
+      }
+    }
+    await interaction.save();
+    res.status(200).json({ message: 'Interaction updated successfully' });
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({ error: `Error updating interaction: ${error.message}` });
+    } else {
+      res.status(500).json({ error: 'Error updating interaction' });
+    }
+  }
+};
+
+// Get all interactions for a user
+export const getInteractions = async (req: Request, res: Response): Promise<void> => {
+  const { username } = req.params;
+
+  try {
+    const interactions = await Interactions.findOne({ username });
+    if (!interactions) {
+      res.status(404).json({ error: 'User not found' });
+    } else {
+      res.status(200).json(interactions);
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({ error: `Error fetching interactions: ${error.message}` });
+    } else {
+      res.status(500).json({ error: 'Error fetching interactions' });
+    }
+  }
+};
+
+// Get specific feature interactions for a user
+export const getFeatureIdInteractions = async (req: Request, res: Response): Promise<void> => {
+  const { username, featureName, featureId } = req.params;
+
+  try {
+    const interactions = await Interactions.findOne({ username });
+    if (!interactions || !interactions.interactions[featureName]) {
+      res.status(404).json({ error: 'Feature interactions not found' });
+    } else {
+      const featureInteractions = interactions.interactions[featureName];
+      const specificFeature = featureInteractions.find(f => f.feature_id === featureId);
+      if (specificFeature) {
+        res.status(200).json(specificFeature);
+      } else {
+        res.status(404).json({ error: 'Feature ID interactions not found' });
+      }
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({ error: `Error fetching feature interactions: ${error.message}` });
+    } else {
+      res.status(500).json({ error: 'Error fetching feature interactions' });
+    }
+  }
+};
+
+// Create or update specific feature interaction
+export const createOrUpdateFeatureIdInteraction = async (req: Request, res: Response): Promise<void> => {
+  const { username, featureName, featureId } = req.params;
+  const { result } = req.body;
+
+  try {
+    let interaction = await Interactions.findOne({ username });
+    if (!interaction) {
+      // Create a new document if the user doesn't exist
+      interaction = new Interactions({
+        username,
+        interactions: {
+          [featureName]: [{ feature_id: featureId, interactions: [{ result }] }]
+        }
+      });
+    } else {
+      // Update the existing document
+      if (!interaction.interactions[featureName]) {
+        interaction.interactions[featureName] = [{ feature_id: featureId, interactions: [{ result }] }];
+      } else {
+        const features = interaction.interactions[featureName];
+        const feature = features.find(f => f.feature_id === featureId);
+        if (feature) {
+          feature.interactions.push({ result });
+        } else {
+          features.push({ feature_id: featureId, interactions: [{ result }] });
+        }
+      }
+    }
+    await interaction.save();
+    res.status(200).json({ message: 'Feature interaction updated successfully' });
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({ error: `Error updating feature interaction: ${error.message}` });
+    } else {
+      res.status(500).json({ error: 'Error updating feature interaction' });
+    }
+  }
+};
+
+// Get all interactions for a user and feature
+export const getUserFeatureInteractions = async (req: Request, res: Response): Promise<void> => {
+  const { username, featureName } = req.params;
+
+  try {
+    const interactions = await Interactions.findOne({ username });
+    if (!interactions || !interactions.interactions[featureName]) {
+      res.status(404).json({ error: 'Feature interactions not found' });
+    } else {
+      const featureInteractions = interactions.interactions[featureName];
+      res.status(200).json(featureInteractions);
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({ error: `Error fetching feature interactions: ${error.message}` });
+    } else {
+      res.status(500).json({ error: 'Error fetching feature interactions' });
+    }
+  }
+};

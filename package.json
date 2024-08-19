@@ -5,7 +5,9 @@
   "main": "src/server.ts",
   "scripts": {
     "test": "mocha --loader ts-node/esm --require tsconfig-paths/register 'tests/**/*.test.ts'",
-    "start": "node --loader ts-node/esm src/server.ts"
+    "start": "node --loader ts-node/esm src/server.ts",
+    "build": "tsc",
+    "serve": "node dist/server.js"
   },
   "keywords": [],
   "author": "",

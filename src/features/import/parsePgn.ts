@@ -1,6 +1,17 @@
 import pgnParser from 'pgn-parser';
 
-function parsePgn(pgnText) {
+interface PgnHeader {
+    name: string;
+    value: string;
+}
+
+interface ParsedPgn {
+    headers: PgnHeader[];
+    moves: any[]; // Assuming moves are stored in an array; you can replace `any` with a specific type if known
+    raw: string;
+}
+
+function parsePgn(pgnText: string): ParsedPgn[] {
     try {
         // Split the PGN text into individual game segments
         const pgns = pgnText.split(/\n\n(?=\[Event)/).filter(Boolean);
@@ -15,8 +26,8 @@ function parsePgn(pgnText) {
     }
 }
 
-function augmentParsed(parsed, rawPgn) {
-    const headers = parsed[0].headers.reduce((acc, header) => {
+function augmentParsed(parsed: any[], rawPgn: string): ParsedPgn {
+    const headers = parsed[0].headers.reduce((acc: Record<string, string>, header: PgnHeader) => {
         acc[header.name] = header.value;
         return acc;
     }, {});

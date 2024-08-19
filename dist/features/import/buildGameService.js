@@ -1,59 +1,16 @@
-import Game from '../games/gameModel';
-
-interface ChessComGameData {
-    white: { username: string; result: string; rating: number; ratingDiff?: number };
-    black: { username: string; result: string; rating: number; ratingDiff?: number };
-    end_time: number;
-    opening?: { name: string; eco: string };
-    pgn: string;
-    time_control: string;
-    termination: string;
-}
-
-interface LichessGameData {
-    players: {
-        white: { user: { name: string }; rating: number };
-        black: { user: { name: string }; rating: number };
-    };
-    createdAt: number;
-    winner?: string;
-    opening?: { name: string; code: string };
-    moves: string;
-    pgn: string;
-    clock: { initial: number; increment: number };
-    status: string;
-}
-
-interface PgnGameData {
-    headers: {
-        White: string;
-        Black: string;
-        Result: string;
-        UTCDate: string;
-        Opening: string;
-        WhiteElo: string;
-        BlackElo: string;
-        WhiteRatingDiff?: string;
-        BlackRatingDiff?: string;
-        ECO?: string;
-        TimeControl?: string;
-        Termination?: string;
-    };
-    moves: { move: string }[];
-    raw: string;
-}
-
-type GameData = ChessComGameData | LichessGameData | PgnGameData;
-
-function buildGame(gameData: GameData, source: string): typeof Game | null {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const gameModel_1 = __importDefault(require("../games/gameModel"));
+function buildGame(gameData, source) {
     try {
         console.log('Building game from data:', JSON.stringify(gameData, null, 2));
-
         let game;
-
         if (source === 'Chess.com') {
-            const chessComGameData = gameData as ChessComGameData;
-            game = new Game({
+            const chessComGameData = gameData;
+            game = new gameModel_1.default({
                 GameId: `game_${chessComGameData.white.username}_${chessComGameData.black.username}_${new Date(chessComGameData.end_time * 1000).toISOString().split('T')[0]}`,
                 WhitePlayer: chessComGameData.white.username || '',
                 BlackPlayer: chessComGameData.black.username || '',
@@ -71,9 +28,10 @@ function buildGame(gameData: GameData, source: string): typeof Game | null {
                 Termination: chessComGameData.termination || '',
                 ImportFrom: 'Chess.com'
             });
-        } else if (source === 'Lichess') {
-            const lichessGameData = gameData as LichessGameData;
-            game = new Game({
+        }
+        else if (source === 'Lichess') {
+            const lichessGameData = gameData;
+            game = new gameModel_1.default({
                 GameId: `game_${lichessGameData.players.white.user.name}_${lichessGameData.players.black.user.name}_${new Date(lichessGameData.createdAt).toISOString().split('T')[0]}`,
                 WhitePlayer: lichessGameData.players.white.user.name || '',
                 BlackPlayer: lichessGameData.players.black.user.name || '',
@@ -91,11 +49,11 @@ function buildGame(gameData: GameData, source: string): typeof Game | null {
                 Termination: lichessGameData.status || '',
                 ImportFrom: 'Lichess'
             });
-        } else if (source === 'Pgn') {
-            const pgnGameData = gameData as PgnGameData;
+        }
+        else if (source === 'Pgn') {
+            const pgnGameData = gameData;
             const headers = pgnGameData.headers;
-
-            game = new Game({
+            game = new gameModel_1.default({
                 GameId: `game_${headers.White}_${headers.Black}_${headers.UTCDate}`,
                 WhitePlayer: headers.White || '',
                 BlackPlayer: headers.Black || '',
@@ -114,13 +72,12 @@ function buildGame(gameData: GameData, source: string): typeof Game | null {
                 ImportFrom: 'Pgn'
             });
         }
-
         console.log('game :', JSON.stringify(game, null, 2));
         return game;
-    } catch (error) {
+    }
+    catch (error) {
         console.error('Failed to build game:', error);
     }
     return null;
 }
-
-export default buildGame;
+exports.default = buildGame;

@@ -1,8 +1,8 @@
-const { readGamesFromChessCom } = require('./chessComService'); // Adjust the path if necessary
-const { readGamesFromLichess } = require('./lichessService'); // Adjust the path if necessary
+import { readGamesFromChessCom } from './chessComService'; // Adjust the path if necessary
+import { readGamesFromLichess } from './lichessService'; // Adjust the path if necessary
+import { Request, Response } from 'express';
 
-
-async function importChesscomGames(req, res) {
+export async function importChesscomGames(req: Request, res: Response): Promise<void> {
     const username = req.params.username;
 
     try {
@@ -14,16 +14,14 @@ async function importChesscomGames(req, res) {
     }
 }
 
-async function importLichessGames(req, res) {
-  const username = req.params.username;
+export async function importLichessGames(req: Request, res: Response): Promise<void> {
+    const username = req.params.username;
 
-  try {
-      await readGamesFromLichess(username);
-      res.status(200).json({ message: 'Lichess games imported successfully' });
-  } catch (error) {
-      console.error('Error importing Lichess games:', error);
-      res.status(500).json({ error: 'Failed to import Lichess games' });
-  }
+    try {
+        await readGamesFromLichess(username);
+        res.status(200).json({ message: 'Lichess games imported successfully' });
+    } catch (error) {
+        console.error('Error importing Lichess games:', error);
+        res.status(500).json({ error: 'Failed to import Lichess games' });
+    }
 }
-
-module.exports = { importChesscomGames, importLichessGames };

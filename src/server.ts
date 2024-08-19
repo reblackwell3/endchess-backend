@@ -1,7 +1,7 @@
 // backend/server.js
 import express from 'express';
 import cors from 'cors';
-import connectDB from './config/db.ts';
+import connectDB from './config/db';
 import dotenv from 'dotenv';
 import puzzleRoutes from './features/puzzles/puzzleRoutes';
 import playerRoutes from './features/players/playerRoutes';

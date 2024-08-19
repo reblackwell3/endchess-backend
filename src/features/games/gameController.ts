@@ -1,25 +1,25 @@
-// backend/games/gameController.js
 import Game from './gameModel';
+import { Request, Response } from 'express';
 
 // @desc    Get a random game
 // @route   GET /api/games/random
 // @access  Public
-const getRandomGame = async (req, res) => {
+const getRandomGame = async (req: Request, res: Response): Promise<void> => {
   try {
     const count = await Game.countDocuments();
     const randomIndex = Math.floor(Math.random() * count);
     const game = await Game.findOne().skip(randomIndex);
     res.json(game);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    const error = err as Error;
+    res.status(500).json({ message: error.message });
   }
 };
-
 
 // @desc    Get a random rated game
 // @route   GET /api/games/random-rated/:rating
 // @access  Public
-const getRandomGameRated = async (req, res) => {
+const getRandomGameRated = async (req: Request, res: Response): Promise<void> => {
   const rating = parseInt(req.params.rating, 10);
 
   try {
@@ -34,26 +34,29 @@ const getRandomGameRated = async (req, res) => {
     }).skip(randomIndex);
     res.json(game);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    const error = err as Error;
+    res.status(500).json({ message: error.message });
   }
 };
 
 // @desc    Get a game by ID
 // @route   GET /api/games/:id
 // @access  Public
-const getGameById = async (req, res) => {
+const getGameById = async (req: Request, res: Response): Promise<void> => {
   try {
     const game = await Game.findById(req.params.id);
     if (!game) {
-      return res.status(404).json({ message: 'Game not found' });
+      res.status(404).json({ message: 'Game not found' });
+    } else {
+      res.json(game);
     }
-    res.json(game);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    const error = err as Error;
+    res.status(500).json({ message: error.message });
   }
 };
 
-module.exports = {
+export {
   getRandomGame,
   getGameById,
   getRandomGameRated

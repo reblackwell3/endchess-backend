@@ -1,10 +1,10 @@
-// backend/players/playerController.js
 import Player from './playerModel';
+import { Request, Response } from 'express';
 
 // @desc    Create a new player
 // @route   POST /api/players
 // @access  Public
-const createPlayer = async (req, res) => {
+export const createPlayer = async (req: Request, res: Response): Promise<void> => {
   const { userId, elo } = req.body;
 
   const player = new Player({
@@ -17,49 +17,56 @@ const createPlayer = async (req, res) => {
     const newPlayer = await player.save();
     res.status(201).json(newPlayer);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    const error = err as Error;
+    res.status(400).json({ message: error.message });
   }
 };
 
 // @desc    Get a single player by userId
 // @route   GET /api/players/:userId
 // @access  Public
-const getPlayerByUserId = async (req, res) => {
+export const getPlayerByUserId = async (req: Request, res: Response): Promise<void> => {
   try {
     const player = await Player.findOne({ userId: req.params.userId });
     if (!player) {
-      return res.status(404).json({ message: 'Player not found' });
+      res.status(404).json({ message: 'Player not found' });
+    } else {
+
+      res.json(player);
     }
-    res.json(player);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    const error = err as Error;
+    res.status(500).json({ message: error.message });
   }
 };
 
 // @desc    Update a player's ELO
 // @route   PUT /api/players/:userId/elo
 // @access  Public
-const updatePlayerElo = async (req, res) => {
+export const updatePlayerElo = async (req: Request, res: Response): Promise<void> => {
   try {
     const player = await Player.findOne({ userId: req.params.userId });
     if (!player) {
-      return res.status(404).json({ message: 'Player not found' });
+      res.status(404).json({ message: 'Player not found' });
+    } else {
+      
+      // Update player's ELO
+      player.elo = req.body.elo;
+  
+      const updatedPlayer = await player.save();
+      res.json(updatedPlayer);
+
     }
-
-    // Update player's ELO
-    player.elo = req.body.elo;
-
-    const updatedPlayer = await player.save();
-    res.json(updatedPlayer);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    const error = err as Error;
+    res.status(400).json({ message: error.message });
   }
 };
 
 // @desc    Add a completed puzzle to a player
 // @route   PUT /api/players/:userId/completed
 // @access  Public
-const addCompletedPuzzle = async (req, res) => {
+export const addCompletedPuzzle = async (req: Request, res: Response): Promise<void> => {
   try {
     console.log(req.body);
     const player = await Player.findOne({ userId: req.params.userId });
@@ -67,23 +74,26 @@ const addCompletedPuzzle = async (req, res) => {
     const puzzleId = req.body.puzzleId;
     console.log(puzzleId);
     if (!player) {
-      return res.status(404).json({ message: 'Player not found' });
-    }
+      res.status(404).json({ message: 'Player not found' });
+    } else {
 
     // Add puzzle to the completed puzzles list
     player.puzzlesCompleted.push(puzzleId);
 
     const updatedPlayer = await player.save();
     res.json(updatedPlayer);
+
+    }
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    const error = err as Error;
+    res.status(400).json({ message: error.message });
   }
 };
 
-// @desc    Add a completed puzzle to a player
+// @desc    Add a completed game to a player
 // @route   PUT /api/players/:userId/completed-game
 // @access  Public
-const addCompletedGame = async (req, res) => {
+export const addCompletedGame = async (req: Request, res: Response): Promise<void> => {
   try {
     console.log(req.body);
     const player = await Player.findOne({ userId: req.params.userId });
@@ -91,41 +101,38 @@ const addCompletedGame = async (req, res) => {
     const gameId = req.body.gameId;
     console.log(gameId);
     if (!player) {
-      return res.status(404).json({ message: 'Player not found' });
+      res.status(404).json({ message: 'Player not found' });
+    } else {
+      // Add game to the completed games list
+      player.gamesCompleted.push(gameId);
+  
+      const updatedPlayer = await player.save();
+      res.json(updatedPlayer);
+
     }
 
-    // Add puzzle to the completed puzzles list
-    player.gamesCompleted.push(gameId);
-
-    const updatedPlayer = await player.save();
-    res.json(updatedPlayer);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    const error = err as Error;
+    res.status(400).json({ message: error.message });
   }
 };
 
-// @desc    Delete a player
-// @route   DELETE /api/players/:userId
-// @access  Public
-const deletePlayer = async (req, res) => {
-  try {
-    const player = await Player.findOne({ userId: req.params.userId });
-    if (!player) {
-      return res.status(404).json({ message: 'Player not found' });
-    }
+// // @desc    Delete a player
+// // @route   DELETE /api/players/:userId
+// // @access  Public
+// export const deletePlayer = async (req: Request, res: Response): Promise<void> => {
+//   try {
+//     const player = await Player.findOne({ userId: req.params.userId });
+//     if (!player) {
+//       res.status(404).json({ message: 'Player not found' });
+//     } else {
+      
+//           await player.remove();
+//           res.json({ message: 'Player deleted' });
 
-    await player.remove();
-    res.json({ message: 'Player deleted' });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-module.exports = {
-  createPlayer,
-  getPlayerByUserId,
-  updatePlayerElo,
-  addCompletedPuzzle,
-  addCompletedGame,
-  deletePlayer,
-};
+//     }
+//   } catch (err) {
+//     const error = err as Error;
+//     res.status(500).json({ message: error.message });
+//   }
+// };

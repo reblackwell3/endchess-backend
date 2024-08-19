@@ -1,26 +1,28 @@
-// backend/puzzles/importPuzzles.js
 import mongoose from 'mongoose';
 import fs from 'fs';
 import csv from 'csv-parser';
 import Puzzle from './puzzleModel';
-const connectDB = require('../config/db')
+import connectDB from '../../config/db';
+import dotenv from 'dotenv';
 
 // Load environment variables from .env file
-require('dotenv').config();
+dotenv.config();
 
 connectDB();
 importPuzzles();
 
-async function importPuzzles() {
+async function importPuzzles(): Promise<void> {
   try {
     // Clear existing data
     await Puzzle.deleteMany({});
     console.log('Cleared existing puzzle data');
 
     // Read and parse the CSV file
+    const puzzles: any[] = []; // Store puzzles to insert them at once
+
     fs.createReadStream('./data/lichess_db_puzzle.csv')
       .pipe(csv())
-      .on('data', async (row) => {
+      .on('data', (row) => {
         const puzzle = new Puzzle({
           PuzzleId: row.PuzzleId,
           FEN: row.FEN,
@@ -34,14 +36,27 @@ async function importPuzzles() {
           OpeningTags: row.OpeningTags,
         });
 
-        // Save puzzle to database
-        await puzzle.save();
-
+        puzzles.push(puzzle); // Add puzzle to the array
       })
-      .on('end', () => {
-        console.log('CSV file successfully processed and data imported');
+      .on('end', async () => {
+        try {
+          await Puzzle.insertMany(puzzles); // Insert all puzzles at once
+          console.log('CSV file successfully processed and data imported');
+        } catch (err) {
+          if (err instanceof Error) {
+            console.error(`Error inserting puzzles: ${err.message}`);
+          } else {
+            console.error('An unknown error occurred while inserting puzzles');
+          }
+        } finally {
+          mongoose.connection.close(); // Close the connection when done
+        }
       });
   } catch (err) {
-    console.error(`Error importing puzzles: ${err.message}`);
+    if (err instanceof Error) {
+      console.error(`Error importing puzzles: ${err.message}`);
+    } else {
+      console.error('An unknown error occurred while importing puzzles');
+    }
   }
 }
