@@ -22,10 +22,7 @@ async function importGamesLichess(gamesData) {
 async function readGamesFromLichess(username) {
     try {
       
-
-        // todo: for testing
-        // Calculate timestamps for 1 year ago and 9 months ago
-        const oneYearAgo = 1692459530;
+        const MAX_10_GAMES_FOR_TESTING = 10;
 
         // Fetch the PGN file from Lichess API with evals included
         const response = await axios.get(`https://lichess.org/api/games/user/${username}`, {
@@ -36,18 +33,17 @@ async function readGamesFromLichess(username) {
                 evals: true, // Include evaluations (evals) in the PGN
                 opening: true, // Include opening names
                 moves: true, // Include moves in the PGN
-                max: 1000, // Optionally limit the number of games fetched
-                since: oneYearAgo
+                max: MAX_10_GAMES_FOR_TESTING, // Optionally limit the number of games fetched
             },
             responseType: 'text' // Make sure to get the response as text since it's a PGN file
         });
 
-        const pgnFile = response.data;
+        const pgnText = response.data;
 
-        console.log(`pgnFile: ${pgnFile}`);
+        console.log(`pgnText: ${pgnText}`);
 
         // Parse the PGN data (assuming parsePgn function exists)
-        const gamesData = parsePgn(pgnFile);
+        const gamesData = parsePgn(pgnText);
 
         // Process and save the games
         await importGamesLichess(gamesData);
