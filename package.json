@@ -7,8 +7,6 @@
     "test": "mocha --loader ts-node/esm --require tsconfig-paths/register 'tests/**/*.test.ts'",
     "start": "npm run build && node dist/server.js",
     "build": "tsc",
-    "postbuild": "npm run write-package-json",
-    "write-package-json": "echo '{ \"type\": \"module\" }' > dist/package.json",
     "serve": "node dist/server.js"
   },
   "keywords": [],
