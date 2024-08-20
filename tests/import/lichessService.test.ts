@@ -1,19 +1,14 @@
-// tests/import/lichessService.test.mjs
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { readGamesFromLichess } from '../../src/features/import/lichessService.js';
-import { expect } from 'chai';
-import sinon from 'sinon';
-import buildGame from '../../src/features/import/buildGameService.js';
+import { readGamesFromLichess } from '../../src/features/import/lichessService';
+import buildGame from '../../src/features/import/buildGameService';
 import fs from 'fs';
 import path from 'path';
-
 import { fileURLToPath } from 'url';
 
 describe('readGamesFromLichess', () => {
-  let mock;
+  let mock: MockAdapter;
   const username = 'blackfromchina';
-  // Get the directory name
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
   const mockPgnPath = path.join(__dirname, 'lichess-import.pgn');
@@ -29,29 +24,22 @@ describe('readGamesFromLichess', () => {
 
   it('should fetch PGN data, process it with buildGame, and call save', async () => {
     // Mock the API call
-    mock
-      .onGet(`https://lichess.org/api/games/user/${username}`)
-      .reply(200, mockPgn);
+    mock.onGet(`https://lichess.org/api/games/user/${username}`).reply(200, mockPgn);
 
     // Create a mock game object with a save method
     const mockGame = {
-      save: sinon.stub().resolves(),
+      save: jest.fn().mockResolvedValue(undefined),
     };
 
     // Stub the buildGame function to return the mock game
-    const buildGameStub = sinon.stub(buildGame, 'buildGame').returns(mockGame);
+    const buildGameStub = jest.spyOn(buildGame, 'buildGame').mockReturnValue(mockGame as any);
 
     // Call the function
     await readGamesFromLichess(username);
 
     // Verify that buildGame was called with the correct parameters
-    expect(buildGameStub.called).to.be.true;
-    expect(buildGameStub.calledWith(sinon.match.any, 'Pgn')).to.be.true;
+    expect(buildGameStub).toHaveBeenCalled();
+    expect(buildGameStub).toHaveBeenCalledWith(expect.anything(), 'Pgn');
 
     // Verify that save was called on the mock game
-    expect(mockGame.save.called).to.be.true;
-
-    // Restore the stub
-    buildGameStub.restore();
-  });
-});
+    expect(mock
