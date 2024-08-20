@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import parsePgn from '../../src/features/import/parsePgn.js.js'; // Adjust the path as needed
+import parsePgn from '../../src/features/import/parsePgn.js'; // Adjust the path as needed
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

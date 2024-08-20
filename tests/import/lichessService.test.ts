@@ -1,10 +1,10 @@
 // tests/import/lichessService.test.mjs
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { readGamesFromLichess } from '../../src/features/import/lichessService.js.js';
+import { readGamesFromLichess } from '../../src/features/import/lichessService.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
-import buildGame from '../../src/features/import/buildGameService.js.js';
+import buildGame from '../../src/features/import/buildGameService.js';
 import fs from 'fs';
 import path from 'path';
 
