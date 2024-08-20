@@ -42,4 +42,9 @@ describe('readGamesFromLichess', () => {
     expect(buildGameStub).toHaveBeenCalledWith(expect.anything(), 'Pgn');
 
     // Verify that save was called on the mock game
-    expect(mock
+    expect(mockGame.save).toHaveBeenCalled();
+
+    // Restore the stub
+    buildGameStub.mockRestore();
+  });
+});

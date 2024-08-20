@@ -7,6 +7,7 @@
   ],
   "plugins": ["@typescript-eslint", "prettier"],
   "env": {
+    "jest/globals": true,
     "node": true,
     "es2021": true
   },
