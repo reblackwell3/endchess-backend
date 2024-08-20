@@ -11,13 +11,13 @@ const app = express();
 app.use(express.json());
 
 before(async () => {
-    await connectDB();
-    app.use('/api/puzzles', puzzleRoutes);
+  await connectDB();
+  app.use('/api/puzzles', puzzleRoutes);
 });
 
 describe('Puzzles Controller', () => {
-    it('should get random puzzle', async () => {
-        const res = await request(app).get('/api/puzzles/random');
-        expect(res.status).to.equal(200);
-    });
+  it('should get random puzzle', async () => {
+    const res = await request(app).get('/api/puzzles/random');
+    expect(res.status).to.equal(200);
+  });
 });

@@ -12,20 +12,17 @@ const app = express();
 app.use(express.json());
 
 before(async () => {
-    await connectDB();
-    app.use('/api', interactionsRoutes);
+  await connectDB();
+  app.use('/api', interactionsRoutes);
 });
-
 
 describe('Interactions Controller', () => {
   it('should create or update a user interaction', async () => {
-    const res = await request(app)
-      .post('/api/interactions/testuser')
-      .send({
-        featureName: 'solve_puzzles',
-        featureId: 'puzzle001',
-        result: 'success'
-      });
+    const res = await request(app).post('/api/interactions/testuser').send({
+      featureName: 'solve_puzzles',
+      featureId: 'puzzle001',
+      result: 'success',
+    });
     expect(res.status).to.equal(200);
     expect(res.body.message).to.equal('Interaction updated successfully');
   });
@@ -37,26 +34,32 @@ describe('Interactions Controller', () => {
 
     // Convert interactions to a Map
     const interactions = new Map(Object.entries(res.body.interactions));
-    
+
     // Access solve_puzzles
     const solvePuzzles = interactions.get('solve_puzzles');
     expect(solvePuzzles[0]).to.have.property('feature_id', 'puzzle001');
-    expect(solvePuzzles[0].interactions[0]).to.have.property('result', 'success');
+    expect(solvePuzzles[0].interactions[0]).to.have.property(
+      'result',
+      'success',
+    );
   });
-
 
   it('should create or update specific feature interaction', async () => {
     const res = await request(app)
       .post('/api/interactions/testuser/solve_puzzles/puzzle002')
       .send({
-        result: 'fail'
+        result: 'fail',
       });
     expect(res.status).to.equal(200);
-    expect(res.body.message).to.equal('Feature interaction updated successfully');
+    expect(res.body.message).to.equal(
+      'Feature interaction updated successfully',
+    );
   });
 
   it('should get specific feature interactions for a user', async () => {
-    const res = await request(app).get('/api/interactions/testuser/solve_puzzles/puzzle002');
+    const res = await request(app).get(
+      '/api/interactions/testuser/solve_puzzles/puzzle002',
+    );
     expect(res.status).to.equal(200);
     expect(res.body).to.have.property('feature_id', 'puzzle002');
     expect(res.body.interactions[0]).to.have.property('result', 'fail');
@@ -68,6 +71,9 @@ describe('Interactions Controller', () => {
     const solvePuzzles = res.body;
     expect(solvePuzzles).to.be.an('array');
     expect(solvePuzzles[0]).to.have.property('feature_id', 'puzzle001');
-    expect(solvePuzzles[0].interactions[0]).to.have.property('result', 'success');
+    expect(solvePuzzles[0].interactions[0]).to.have.property(
+      'result',
+      'success',
+    );
   });
 });

@@ -8,11 +8,10 @@ import playerRoutes from './features/players/playerRoutes';
 import gameRoutes from './features/games/gameRoutes';
 import importRoutes from './features/import/importRoutes';
 
-
 dotenv.config({ path: '.env' });
 
 const app = express();
-app.use(cors())
+app.use(cors());
 
 connectDB();
 

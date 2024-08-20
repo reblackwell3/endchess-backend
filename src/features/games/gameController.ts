@@ -19,18 +19,21 @@ const getRandomGame = async (req: Request, res: Response): Promise<void> => {
 // @desc    Get a random rated game
 // @route   GET /api/games/random-rated/:rating
 // @access  Public
-const getRandomGameRated = async (req: Request, res: Response): Promise<void> => {
+const getRandomGameRated = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   const rating = parseInt(req.params.rating, 10);
 
   try {
     const count = await Game.countDocuments({
-      'WhiteElo': { $gt: rating },
-      'BlackElo': { $gt: rating }
+      WhiteElo: { $gt: rating },
+      BlackElo: { $gt: rating },
     });
     const randomIndex = Math.floor(Math.random() * count);
     const game = await Game.findOne({
-      'WhiteElo': { $gt: rating },
-      'BlackElo': { $gt: rating }
+      WhiteElo: { $gt: rating },
+      BlackElo: { $gt: rating },
     }).skip(randomIndex);
     res.json(game);
   } catch (err) {
@@ -56,8 +59,4 @@ const getGameById = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export {
-  getRandomGame,
-  getGameById,
-  getRandomGameRated
-};
+export { getRandomGame, getGameById, getRandomGameRated };

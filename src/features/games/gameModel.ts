@@ -35,7 +35,7 @@ const gameSchema = new Schema<IGame>({
   BlackRatingDiff: { type: String },
   ECO: { type: String },
   TimeControl: { type: String },
-  Termination: { type: String }
+  Termination: { type: String },
 });
 
 const Game: Model<IGame> = model<IGame>('Game', gameSchema);

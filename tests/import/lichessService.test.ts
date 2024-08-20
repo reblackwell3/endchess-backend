@@ -13,9 +13,9 @@ import { fileURLToPath } from 'url';
 describe('readGamesFromLichess', () => {
   let mock;
   const username = 'blackfromchina';
-    // Get the directory name
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
+  // Get the directory name
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
   const mockPgnPath = path.join(__dirname, 'lichess-import.pgn');
   const mockPgn = fs.readFileSync(mockPgnPath, 'utf8');
 
@@ -29,7 +29,9 @@ describe('readGamesFromLichess', () => {
 
   it('should fetch PGN data, process it with buildGame, and call save', async () => {
     // Mock the API call
-    mock.onGet(`https://lichess.org/api/games/user/${username}`).reply(200, mockPgn);
+    mock
+      .onGet(`https://lichess.org/api/games/user/${username}`)
+      .reply(200, mockPgn);
 
     // Create a mock game object with a save method
     const mockGame = {
