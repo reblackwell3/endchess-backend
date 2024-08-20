@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "type": "module",
   "main": "src/server.ts",
-"scripts": {
-  "test": "mocha --loader ts-node/esm --require tsconfig-paths/register 'tests/**/*.test.ts'",
-  "start": "npm run build && node dist/server.mjs",
-  "build": "tsc",
-  "postbuild": "npm run rename-to-mjs",
-  "rename-to-mjs": "find dist -name '*.js' -exec bash -c 'mv \"$0\" \"${0%.js}.mjs\"' {} \\;",
-  "serve": "node dist/server.mjs"
-},
+  "scripts": {
+    "test": "mocha --loader ts-node/esm --require tsconfig-paths/register 'tests/**/*.test.ts'",
+    "start": "npm run build && node dist/server.mjs",
+    "build": "tsc",
+    "postbuild": "npm run rename-to-mjs",
+    "rename-to-mjs": "find dist -name '*.js' -exec bash -c 'mv \"$0\" \"${0%.js}.mjs\"' {} \\;",
+    "serve": "node dist/server.mjs"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -27,9 +27,15 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^22.4.1",
+    "@typescript-eslint/eslint-plugin": "^8.2.0",
+    "@typescript-eslint/parser": "^8.2.0",
     "axios-mock-adapter": "^2.0.0",
     "chai": "^5.1.1",
+    "eslint": "^9.9.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "mocha": "^10.7.0",
+    "prettier": "^3.3.3",
     "sinon": "^18.0.0",
     "supertest": "^7.0.0",
     "ts-node": "^10.9.2",
