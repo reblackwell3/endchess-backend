@@ -11,6 +11,8 @@ backend/data/
 #Build
 build/
 
+dist/
+
 # Logs
 logs/
 *.log
