@@ -2,9 +2,9 @@
 import request from 'supertest';
 import express from 'express';
 import { expect } from 'chai';
-import interactionsRoutes from '../../src/features/interactions/interactionsRoutes.mjs'; // Adjust the path as necessary
+import interactionsRoutes from '../../src/features/interactions/interactionsRoutes.mjs.js'; // Adjust the path as necessary
 import mongoose from 'mongoose';
-import connectDB from '../../src/config/db.js';
+import connectDB from '../../src/config/db.js.js';
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env.test' });
 

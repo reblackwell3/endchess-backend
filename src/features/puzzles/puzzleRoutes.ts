@@ -1,22 +1,26 @@
-// backend/puzzles/puzzleRoutes.js
-import express from 'express';
+// backend/puzzles/puzzleRoutes.ts
+import express, { Request, Response } from 'express';
+import { getRandomPuzzle, getRandomPuzzleRated, getNextPuzzle, getPuzzleById } from './puzzleController.js';
+
 const router = express.Router();
-const {
-  getRandomPuzzle,
-  getRandomPuzzleRated,
-  getNextPuzzle,
-  getPuzzleById,
-} = require('./puzzleController');
 
 // Get a random puzzle
-router.get('/random', getRandomPuzzle);
+router.get('/random', (req: Request, res: Response) => {
+  getRandomPuzzle(req, res);
+});
 
-router.get('/random-rated/:rating', getRandomPuzzleRated);
+router.get('/random-rated/:rating', (req: Request, res: Response) => {
+  getRandomPuzzleRated(req, res);
+});
 
 // Get the next puzzle based on elo and player ID
-router.get('/next', getNextPuzzle);
+router.get('/next', (req: Request, res: Response) => {
+  getNextPuzzle(req, res);
+});
 
 // Get a single puzzle by ID
-router.get('/:id', getPuzzleById);
+router.get('/:id', (req: Request, res: Response) => {
+  getPuzzleById(req, res);
+});
 
 export default router;

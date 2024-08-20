@@ -1,6 +1,6 @@
 // routes/interactionsRoutes.mjs
 import express from 'express';
-import { createOrUpdateInteraction, getInteractions, getFeatureIdInteractions, createOrUpdateFeatureIdInteraction, getUserFeatureInteractions } from './interactionsController.mjs';
+import { createOrUpdateInteraction, getInteractions, getFeatureIdInteractions, createOrUpdateFeatureIdInteraction, getUserFeatureInteractions } from './interactionsController.mjs.js';
 
 const router = express.Router();
 

@@ -1,8 +1,8 @@
 import request from 'supertest';
 import express from 'express';
 import { expect } from 'chai';
-import playerRoutes from '../../src/features/players/playerRoutes.js'; // Adjust the path as necessary
-import connectDB from '../../src/config/db.js';
+import playerRoutes from '../../src/features/players/playerRoutes.js.js'; // Adjust the path as necessary
+import connectDB from '../../src/config/db.js.js';
 
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env.test' });

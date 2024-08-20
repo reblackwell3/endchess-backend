@@ -1,4 +1,4 @@
-import Player from './playerModel';
+import Player from './playerModel.js';
 import { Request, Response } from 'express';
 
 // @desc    Create a new player

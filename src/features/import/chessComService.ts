@@ -1,7 +1,7 @@
 import axios from 'axios';
-import buildGame from './buildGameService';
-import { IGame } from '../games/gameModel';
-import { ChessComGameData } from './gameDataInterfaces';
+import buildGame from './buildGameService.js';
+import { IGame } from '../games/gameModel.js';
+import { ChessComGameData } from './gameDataInterfaces.js';
 
 async function importGamesChessCom(
   gamesData: ChessComGameData[],

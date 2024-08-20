@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import Puzzle from './puzzleModel';
-import Player from '../players/playerModel';
+import Puzzle from './puzzleModel.js';
+import Player from '../players/playerModel.js';
 
 // @desc    Get a random puzzle
 // @route   GET /api/puzzles/random
