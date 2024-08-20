@@ -1,12 +1,12 @@
 // backend/server.js
 import express from 'express';
 import cors from 'cors';
-import connectDB from './config/db.js';
+import connectDB from './config/db';
 import dotenv from 'dotenv';
-import puzzleRoutes from './features/puzzles/puzzleRoutes.js';
-import playerRoutes from './features/players/playerRoutes.js';
-import gameRoutes from './features/games/gameRoutes.js';
-import importRoutes from './features/import/importRoutes.js';
+import puzzleRoutes from './features/puzzles/puzzleRoutes';
+import playerRoutes from './features/players/playerRoutes';
+import gameRoutes from './features/games/gameRoutes';
+import importRoutes from './features/import/importRoutes';
 
 dotenv.config({ path: '.env' });
 

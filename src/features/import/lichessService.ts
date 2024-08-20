@@ -1,7 +1,7 @@
 import axios from 'axios';
-import buildGame from './buildGameService.js';
-import parsePgn from './parsePgn.js';
-import { IGame } from '../games/gameModel.js';
+import buildGame from './buildGameService';
+import parsePgn from './parsePgn';
+import { IGame } from '../games/gameModel';
 
 async function importGamesLichess(games: IGame[]): Promise<void> {
   try {

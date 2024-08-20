@@ -1,10 +1,10 @@
-import Game, { IGame } from '../games/gameModel.js';
+import Game, { IGame } from '../games/gameModel';
 import {
   GameData,
   LichessGameData,
   ChessComGameData,
   PgnGameData,
-} from './gameDataInterfaces.js';
+} from './gameDataInterfaces';
 
 function buildGame(gameData: GameData, source: string): IGame | null {
   try {

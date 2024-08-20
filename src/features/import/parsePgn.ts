@@ -1,5 +1,5 @@
 import pgnParser from 'pgn-parser';
-import { PgnGameData } from './gameDataInterfaces.js';
+import { PgnGameData } from './gameDataInterfaces';
 
 interface PgnHeader {
   name: string;

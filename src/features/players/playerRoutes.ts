@@ -7,7 +7,7 @@ import {
   addCompletedPuzzle,
   addCompletedGame,
   // deletePlayer,
-} from './playerController.js';
+} from './playerController';
 
 const router = express.Router();
 

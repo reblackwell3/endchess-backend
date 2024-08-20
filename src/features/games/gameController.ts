@@ -1,4 +1,4 @@
-import Game from './gameModel.js';
+import Game from './gameModel';
 import { Request, Response } from 'express';
 
 // @desc    Get a random game

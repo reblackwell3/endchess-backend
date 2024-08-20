@@ -4,7 +4,7 @@ import {
   getRandomGame,
   getRandomGameRated,
   getGameById,
-} from './gameController.js';
+} from './gameController';
 
 const router = express.Router();
 

@@ -3,7 +3,7 @@ import express, { Request, Response } from 'express';
 import {
   importChesscomGames,
   importLichessGames,
-} from './importController.js';
+} from './importController';
 
 const router = express.Router();
 
