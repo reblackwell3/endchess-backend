@@ -1,81 +1,5 @@
 import Game, { IGame } from '../games/gameModel';
-
-// ChessComGameData represents the structure of a game returned by Chess.com API
-interface ChessComGameData {
-    white: {
-        username: string;
-        result: string;
-        rating: number;
-        ratingDiff?: number;
-    };
-    black: {
-        username: string;
-        result: string;
-        rating: number;
-        ratingDiff?: number;
-    };
-    end_time: number;
-    opening?: {
-        name: string;
-        eco: string;
-    };
-    pgn: string;
-    time_control: string;
-    termination: string;
-}
-
-// LichessGameData represents the structure of a game returned by Lichess API
-interface LichessGameData {
-    players: {
-        white: {
-            user: {
-                name: string;
-            };
-            rating: number;
-        };
-        black: {
-            user: {
-                name: string;
-            };
-            rating: number;
-        };
-    };
-    createdAt: number;
-    winner?: string;
-    opening?: {
-        name: string;
-        code: string;
-    };
-    moves: string;
-    pgn: string;
-    clock: {
-        initial: number;
-        increment: number;
-    };
-    status: string;
-}
-
-// PgnGameData represents the structure of a parsed PGN game
-interface PgnGameData {
-    headers: {
-        White: string;
-        Black: string;
-        Result: string;
-        UTCDate: string;
-        Opening?: string;
-        WhiteElo: string;
-        BlackElo: string;
-        WhiteRatingDiff?: string;
-        BlackRatingDiff?: string;
-        ECO?: string;
-        TimeControl?: string;
-        Termination?: string;
-    };
-    moves: { move: string }[];
-    raw: string;
-}
-
-type GameData = ChessComGameData | LichessGameData | PgnGameData;
+import { GameData, LichessGameData, ChessComGameData, PgnGameData } from './gameDataInterfaces';
 
 function buildGame(gameData: GameData, source: string): IGame | null {
     try {
@@ -103,7 +27,7 @@ function buildGame(gameData: GameData, source: string): IGame | null {
                 Termination: chessComGameData.termination || '',
                 ImportFrom: 'Chess.com'
             });
-        } else if (source === 'Lichess') {
+        } else if (source === 'Lichess') { // TODO this may be removed
             const lichessGameData = gameData as LichessGameData;
             game = new Game({
                 GameId: `game_${lichessGameData.players.white.user.name}_${lichessGameData.players.black.user.name}_${new Date(lichessGameData.createdAt).toISOString().split('T')[0]}`,

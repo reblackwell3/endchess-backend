@@ -1,14 +1,9 @@
 import axios from 'axios'; 
 import buildGame from './buildGameService'; 
-import { IGame } from '../games/gameModel'
+import { IGame } from '../games/gameModel';
+import {ChessComGameData} from './gameDataInterfaces';
 
-interface ChessComGame {
-    Moves: string;
-    save: () => Promise<void>;
-    // Add other properties that you expect from a game object if needed
-}
-
-async function importGamesChessCom(gamesData: ChessComGame[]): Promise<void> {
+async function importGamesChessCom(gamesData: ChessComGameData[]): Promise<void> {
     try {
         const games = gamesData
             .map(g => buildGame(g, 'Chess.com'))
@@ -31,7 +26,7 @@ export async function readGamesFromChessCom(username: string): Promise<void> {
 
         for (const url of archiveUrls) {
             const gamesResponse = await axios.get(url);
-            const gamesData: ChessComGame[] = gamesResponse.data.games;
+            const gamesData: ChessComGameData[] = gamesResponse.data.games;
             console.log(gamesData);
 
             await importGamesChessCom(gamesData);

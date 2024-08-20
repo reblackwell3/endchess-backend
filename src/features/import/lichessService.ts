@@ -3,20 +3,17 @@ import buildGame from './buildGameService';
 import parsePgn from './parsePgn'; 
 import { IGame } from '../games/gameModel'
 
-interface LichessGame {
-    Moves: string;
-    save: () => Promise<void>;
-    // Add other properties that you expect from a game object if needed
-}
-
-async function importGamesLichess(gamesData: LichessGame[]): Promise<void> {
+async function importGamesLichess(games: IGame[]): Promise<void> {
     try {
-        const games = gamesData
-            .map(g => buildGame(g, 'Lichess'))
-            .filter((game): game is IGame => game !== null);
+        // Update each game to indicate it was imported from Lichess-Pgn and save it
+        await Promise.all(
+            games.map(async game => {
+                game.ImportFrom = 'Lichess-Pgn';
+                await game.save();
+            })
+        );
 
-        console.log(`${games.length} games have been built`);
-        await Promise.all(games.map(game => game.save()));
+        console.log(`${games.length} games have been built and saved.`);
         console.log('Lichess games successfully processed and data imported');
     } catch (err) {
         const error = err as Error;
@@ -44,11 +41,11 @@ export async function readGamesFromLichess(username: string): Promise<void> {
         const pgnText = response.data;
         console.log(`pgnText: ${pgnText}`);
 
-        const gamesData: LichessGame[] = parsePgn(pgnText)
+        const games: IGame[] = parsePgn(pgnText)
             .map(parsed => buildGame(parsed, 'Pgn'))
             .filter((game): game is IGame => game !== null);
 
-        await importGamesLichess(gamesData);
+        await importGamesLichess(games);
 
         console.log('Lichess games successfully processed and data imported');
     } catch (err) {

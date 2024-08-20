@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "type": "module",
   "main": "src/server.ts",
-  "scripts": {
-    "test": "mocha --loader ts-node/esm --require tsconfig-paths/register 'tests/**/*.test.ts'",
-    "start": "node --loader ts-node/esm src/server.ts",
-    "build": "tsc",
-    "serve": "node dist/server.js"
-  },
+"scripts": {
+  "test": "mocha --loader ts-node/esm --require tsconfig-paths/register 'tests/**/*.test.ts'",
+  "start": "npm run build && node dist/server.mjs",
+  "build": "tsc",
+  "postbuild": "npm run rename-to-mjs",
+  "rename-to-mjs": "find dist -name '*.js' -exec bash -c 'mv \"$0\" \"${0%.js}.mjs\"' {} \\;",
+  "serve": "node dist/server.mjs"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
