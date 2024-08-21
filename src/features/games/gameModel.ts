@@ -26,6 +26,7 @@ export interface IGame extends Document {
     result: string;
     username: string;
   };
+  result: string;
 }
 
 const gameSchema = new Schema<IGame>({
@@ -42,7 +43,6 @@ const gameSchema = new Schema<IGame>({
   time_class: { type: String, required: true },
   rules: { type: String, required: true },
   eco: { type: String },
-  eco_url: { type: String },
   white: {
     rating: { type: Number, required: true },
     result: { type: String, required: true },
@@ -53,6 +53,7 @@ const gameSchema = new Schema<IGame>({
     result: { type: String, required: true },
     username: { type: String, required: true },
   },
+  result: { type: String },
 });
 
 const Game: Model<IGame> = model<IGame>('Game', gameSchema);

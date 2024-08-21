@@ -4,29 +4,10 @@ declare module 'pgn-parser' {
     value: string;
   }
 
-  export interface ParsedMove {
-    move: string;
-    // Add other properties if needed, such as move number, annotations, etc.
-  }
-
   export interface PgnGameData {
-    headers: {
-      White: string;
-      Black: string;
-      Result: string;
-      UTCDate: string;
-      Opening?: string;
-      WhiteElo: string;
-      BlackElo: string;
-      WhiteRatingDiff?: string;
-      BlackRatingDiff?: string;
-      ECO?: string;
-      TimeControl?: string;
-      Termination?: string;
-    };
-    moves: { move: string }[];
-    raw: string;
+    headers: PgnHeader[];
+    pgn: string; // this property is not on pgn-parser, but needs to be returned by endchess/parsePgn
   }
 
-  export function parse(pgn: string): ParsedPgn[];
+  export function parse(pgn: string): PgnGameData[];
 }

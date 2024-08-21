@@ -1,40 +1,86 @@
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
-import parsePgn from './parsePgn';
-import Game, { IGame } from '../games/gameModel'; // Assuming Game is the Mongoose model
+import { parsePgn } from './parsePgn';
 import { PgnGameData } from 'pgn-parser';
+import Game, { IGame } from '../games/gameModel'; // Assuming Game is the Mongoose model
+import { log } from 'console';
+
+interface LichessHeaders {
+  Event: string;
+  Site: string;
+  Date: string;
+  White: string;
+  Black: string;
+  Result: string;
+  UTCDate: string;
+  UTCTime: string;
+  Opening: string;
+  WhiteElo: string;
+  BlackElo: string;
+  // WhiteRatingDiff: string;
+  // BlackRatingDiff: string;
+  ECO: string;
+  FEN: string;
+  TimeControl: string;
+  Termination: string;
+  Variant: string;
+}
+
+function mapHeaders(
+  headersArray: { name: string; value: string }[],
+): LichessHeaders {
+  return headersArray.reduce((acc, { name, value }) => {
+    (acc as any)[name] = value; // Temporarily casting acc as any
+    return acc;
+  }, {} as LichessHeaders);
+}
 
 function buildGame(pgn: PgnGameData): IGame | null {
   try {
+    const headers = mapHeaders(pgn.headers); // Map headers to LichessHeaders format
+
+    console.log(`Headers: ${JSON.stringify(headers, null, 2)}`);
+
+    const formattedUTCDate = headers.UTCDate.replace(/\./g, '-');
+    const dateTimeString = `${formattedUTCDate}T${headers.UTCTime}Z`;
+    log(`dts: ${dateTimeString}`);
+    // Parse the datetime string into a Date object
+    const endTime = new Date(dateTimeString).getTime() / 1000; // Con
+    log(endTime);
+
+    const UNKNOWN_VALUE_PLACEHOLDER = 'UNKNOWN';
     const game: IGame = new Game({
       import_from: 'lichess',
-      url: '', // Lichess PGN data might not include a URL, so it's left empty or can be populated if available
-      pgn: pgn.raw || '',
-      time_control: pgn.headers.TimeControl || '',
-      end_time: new Date(), // You might need to calculate or approximate this if not available in the PGN
+      url: headers.Site, // Use the mapped headers
+      pgn: pgn.pgn,
+      time_control: headers.TimeControl,
+      end_time: endTime, // You might need to calculate or approximate this if not available in the PGN
       rated: true, // Assuming all games are rated; adjust if necessary
-      tcn: '', // Not available in Lichess data
-      uuid: '', // Not available in Lichess data
-      initial_setup: '', // Not available in Lichess data
-      fen: '', // Not available in Lichess data, could derive from PGN
-      time_class: 'unknown', // Map this from Lichess-specific fields
-      rules: 'chess', // Assuming standard chess, adjust if necessary
-      eco: pgn.headers.ECO || 'Unknown',
-      eco_url: '', // Not available in Lichess data
+      tcn: UNKNOWN_VALUE_PLACEHOLDER, // Not available in Lichess data
+      uuid: UNKNOWN_VALUE_PLACEHOLDER, // Not available in Lichess data
+      initial_setup:
+        headers.Variant === 'Chess960'
+          ? headers.FEN
+          : UNKNOWN_VALUE_PLACEHOLDER, // Not available in Lichess data
+      fen: UNKNOWN_VALUE_PLACEHOLDER, // Not available in Lichess data, could derive from PGN
+      time_class: UNKNOWN_VALUE_PLACEHOLDER, // Map this from Lichess-specific fields
+      rules: headers.Variant, // Assuming standard chess, adjust if necessary
+      eco: headers.ECO || UNKNOWN_VALUE_PLACEHOLDER,
       white: {
-        rating: parseInt(pgn.headers.WhiteElo) || 0,
-        result: pgn.headers.Result?.startsWith('1') ? 'win' : 'lose',
-        username: pgn.headers.White || '',
+        rating: parseInt(headers.WhiteElo) || 0,
+        result: headers.Result.startsWith('1') ? 'win' : 'lose',
+        username: headers.White || '',
       },
       black: {
-        rating: parseInt(pgn.headers.BlackElo) || 0,
-        result: pgn.headers.Result?.endsWith('1') ? 'win' : 'lose',
-        username: pgn.headers.Black || '',
+        rating: parseInt(headers.BlackElo) || 0,
+        result: headers.Result.endsWith('1') ? 'win' : 'lose',
+        username: headers.Black || '',
       },
+      result: headers.Result || '',
     });
 
-    console.log(`Built game: ${game}`);
+    console.log(`Built game: ${JSON.stringify(game, null, 2)}`);
 
     return game;
   } catch (err) {
