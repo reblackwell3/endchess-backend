@@ -23,36 +23,29 @@ interface ChessComGameData {
   termination: string;
 }
 
-function buildGame(
-  chessComGameData: ChessComGameData,
-  source: string,
-): IGame | null {
+function buildGame(gameData: ChessComGameData, source: string): IGame | null {
   try {
     const game = new Game({
-      GameId: `game_${chessComGameData.white.username}_${chessComGameData.black.username}_${new Date(chessComGameData.end_time * 1000).toISOString().split('T')[0]}`,
-      WhitePlayer: chessComGameData.white.username || '',
-      BlackPlayer: chessComGameData.black.username || '',
+      GameId: `game_${gameData.white.username}_${gameData.black.username}_${new Date(gameData.end_time * 1000).toISOString().split('T')[0]}`,
+      WhitePlayer: gameData.white.username || '',
+      BlackPlayer: gameData.black.username || '',
       Result:
-        chessComGameData.white.result === 'win'
+        gameData.white.result === 'win'
           ? '1-0'
-          : chessComGameData.black.result === 'win'
+          : gameData.black.result === 'win'
             ? '0-1'
             : '1/2-1/2',
-      Date: new Date(chessComGameData.end_time * 1000)
-        .toISOString()
-        .split('T')[0],
-      Opening: chessComGameData.opening
-        ? chessComGameData.opening.name
-        : 'Unknown',
-      Moves: chessComGameData.pgn || '',
-      PGN: chessComGameData.pgn || '',
-      WhiteElo: chessComGameData.white.rating || 0,
-      BlackElo: chessComGameData.black.rating || 0,
-      WhiteRatingDiff: chessComGameData.white.ratingDiff || 0,
-      BlackRatingDiff: chessComGameData.black.ratingDiff || 0,
-      ECO: chessComGameData.opening?.eco || 'Unknown',
-      TimeControl: chessComGameData.time_control || '',
-      Termination: chessComGameData.termination || '',
+      Date: new Date(gameData.end_time * 1000).toISOString().split('T')[0],
+      Opening: gameData.opening ? gameData.opening.name : 'Unknown',
+      Moves: gameData.pgn || '',
+      PGN: gameData.pgn || '',
+      WhiteElo: gameData.white.rating || 0,
+      BlackElo: gameData.black.rating || 0,
+      WhiteRatingDiff: gameData.white.ratingDiff || 0,
+      BlackRatingDiff: gameData.black.ratingDiff || 0,
+      ECO: gameData.opening?.eco || 'Unknown',
+      TimeControl: gameData.time_control || '',
+      Termination: gameData.termination || '',
       ImportFrom: source,
     });
 

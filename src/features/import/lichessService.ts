@@ -5,28 +5,28 @@ import parsePgn from './parsePgn';
 import Game, { IGame } from '../games/gameModel'; // Assuming Game is the Mongoose model
 import { PgnGameData } from 'pgn-parser';
 
-function buildGame(pgnGameData: PgnGameData, source: string): IGame | null {
+function buildGame(pgn: PgnGameData, source: string): IGame | null {
   try {
     const game = new Game({
-      GameId: `game_${pgnGameData.headers.White}_${pgnGameData.headers.Black}_${pgnGameData.headers.UTCDate}`,
-      WhitePlayer: pgnGameData.headers.White || '',
-      BlackPlayer: pgnGameData.headers.Black || '',
-      Result: pgnGameData.headers.Result || '1/2-1/2',
-      Date: pgnGameData.headers.UTCDate,
-      Opening: pgnGameData.headers.Opening || 'Unknown',
-      Moves: pgnGameData.moves.map((m) => m.move).join(' ') || '',
-      PGN: pgnGameData.raw || '',
-      WhiteElo: parseInt(pgnGameData.headers.WhiteElo) || 0,
-      BlackElo: parseInt(pgnGameData.headers.BlackElo) || 0,
-      WhiteRatingDiff: pgnGameData.headers.WhiteRatingDiff
-        ? parseInt(pgnGameData.headers.WhiteRatingDiff)
+      GameId: `game_${pgn.headers.White}_${pgn.headers.Black}_${pgn.headers.UTCDate}`,
+      WhitePlayer: pgn.headers.White || '',
+      BlackPlayer: pgn.headers.Black || '',
+      Result: pgn.headers.Result || '1/2-1/2',
+      Date: pgn.headers.UTCDate,
+      Opening: pgn.headers.Opening || 'Unknown',
+      Moves: pgn.moves.map((m) => m.move).join(' ') || '',
+      PGN: pgn.raw || '',
+      WhiteElo: parseInt(pgn.headers.WhiteElo) || 0,
+      BlackElo: parseInt(pgn.headers.BlackElo) || 0,
+      WhiteRatingDiff: pgn.headers.WhiteRatingDiff
+        ? parseInt(pgn.headers.WhiteRatingDiff)
         : 0,
-      BlackRatingDiff: pgnGameData.headers.BlackRatingDiff
-        ? parseInt(pgnGameData.headers.BlackRatingDiff)
+      BlackRatingDiff: pgn.headers.BlackRatingDiff
+        ? parseInt(pgn.headers.BlackRatingDiff)
         : 0,
-      ECO: pgnGameData.headers.ECO || 'Unknown',
-      TimeControl: pgnGameData.headers.TimeControl || '',
-      Termination: pgnGameData.headers.Termination || '',
+      ECO: pgn.headers.ECO || 'Unknown',
+      TimeControl: pgn.headers.TimeControl || '',
+      Termination: pgn.headers.Termination || '',
       ImportFrom: source,
     });
 
