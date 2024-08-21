@@ -6,7 +6,16 @@ import Game, { IGame } from '../games/gameModel'; // Assuming Game is the Mongoo
 async function importGamesChessCom(games: IGame[]): Promise<void> {
   try {
     console.log(`${games.length} games have been built`);
-    await Promise.all(games.map((game) => game!.save()));
+    await Promise.all(
+      games
+        .map((game) => {
+          const newGame = new Game(game);
+          newGame.import_from = 'chess.com';
+          return newGame;
+        })
+        .map((game) => game.save()),
+    );
+
     console.log('Chess.com games successfully processed and data imported');
   } catch (err) {
     const error = err as Error;

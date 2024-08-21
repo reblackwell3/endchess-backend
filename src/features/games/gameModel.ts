@@ -1,66 +1,57 @@
 import { Document, Model, model, Schema } from 'mongoose';
 
 export interface IGame extends Document {
-  importFrom: string; // 'chess.com' or 'lichess'
+  import_from: string; // 'chess.com' or 'lichess'
   url: string;
   pgn: string;
-  timeControl: string;
-  endTime: Date;
+  time_control: string;
+  end_time: number;
   rated: boolean;
   tcn?: string;
   uuid: string;
-  initialSetup: string;
+  initial_setup: string;
   fen: string;
-  timeClass: string;
+  time_class: string;
   rules: string;
   eco?: string;
-  ecoUrl?: string;
+  eco_url?: string;
   termination: string;
   white: {
     rating: number;
     result: string;
-    id: string;
     username: string;
-    uuid: string;
   };
   black: {
     rating: number;
     result: string;
-    id: string;
     username: string;
-    uuid: string;
   };
 }
 
 const gameSchema = new Schema<IGame>({
-  importFrom: { type: String, required: true },
+  import_from: { type: String, required: true },
   url: { type: String, required: true },
   pgn: { type: String, required: true },
-  timeControl: { type: String, required: true },
-  endTime: { type: Date, required: true },
+  time_control: { type: String, required: true },
+  end_time: { type: Number, required: true },
   rated: { type: Boolean, required: true },
   tcn: { type: String },
   uuid: { type: String, required: true },
-  initialSetup: { type: String, required: true },
+  initial_setup: { type: String, required: true },
   fen: { type: String, required: true },
-  timeClass: { type: String, required: true },
+  time_class: { type: String, required: true },
   rules: { type: String, required: true },
   eco: { type: String },
-  ecoUrl: { type: String },
-  termination: { type: String, required: true },
+  eco_url: { type: String },
   white: {
     rating: { type: Number, required: true },
     result: { type: String, required: true },
-    id: { type: String, required: true },
     username: { type: String, required: true },
-    uuid: { type: String, required: true },
   },
   black: {
     rating: { type: Number, required: true },
     result: { type: String, required: true },
-    id: { type: String, required: true },
     username: { type: String, required: true },
-    uuid: { type: String, required: true },
   },
 });
 

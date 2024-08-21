@@ -8,34 +8,29 @@ import { PgnGameData } from 'pgn-parser';
 function buildGame(pgn: PgnGameData): IGame | null {
   try {
     const game: IGame = new Game({
-      importFrom: 'lichess',
+      import_from: 'lichess',
       url: '', // Lichess PGN data might not include a URL, so it's left empty or can be populated if available
       pgn: pgn.raw || '',
-      timeControl: pgn.headers.TimeControl || '',
-      endTime: new Date(), // You might need to calculate or approximate this if not available in the PGN
+      time_control: pgn.headers.TimeControl || '',
+      end_time: new Date(), // You might need to calculate or approximate this if not available in the PGN
       rated: true, // Assuming all games are rated; adjust if necessary
       tcn: '', // Not available in Lichess data
       uuid: '', // Not available in Lichess data
-      initialSetup: '', // Not available in Lichess data
+      initial_setup: '', // Not available in Lichess data
       fen: '', // Not available in Lichess data, could derive from PGN
-      timeClass: 'unknown', // Map this from Lichess-specific fields
+      time_class: 'unknown', // Map this from Lichess-specific fields
       rules: 'chess', // Assuming standard chess, adjust if necessary
       eco: pgn.headers.ECO || 'Unknown',
-      ecoUrl: '', // Not available in Lichess data
-      termination: pgn.headers.Termination || 'Unknown',
+      eco_url: '', // Not available in Lichess data
       white: {
         rating: parseInt(pgn.headers.WhiteElo) || 0,
         result: pgn.headers.Result?.startsWith('1') ? 'win' : 'lose',
-        id: '', // Not available in PGN
         username: pgn.headers.White || '',
-        uuid: '', // Not available in PGN
       },
       black: {
         rating: parseInt(pgn.headers.BlackElo) || 0,
         result: pgn.headers.Result?.endsWith('1') ? 'win' : 'lose',
-        id: '', // Not available in PGN
         username: pgn.headers.Black || '',
-        uuid: '', // Not available in PGN
       },
     });
 

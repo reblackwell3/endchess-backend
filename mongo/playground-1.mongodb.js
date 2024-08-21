@@ -12,7 +12,7 @@
 // Select the database to use.
 use('endchess');
 
-db.getCollection('games').findOne({ImportFrom: 'Chess.com'});
+db.getCollection('games').find({import_from: 'chess.com'});
 
 // // Insert a few documents into the sales collection.
 // db.getCollection('sales').insertMany([
