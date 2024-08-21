@@ -5,34 +5,45 @@ import parsePgn from './parsePgn';
 import Game, { IGame } from '../games/gameModel'; // Assuming Game is the Mongoose model
 import { PgnGameData } from 'pgn-parser';
 
-function buildGame(pgn: PgnGameData, source: string): IGame | null {
+function buildGame(pgn: PgnGameData): IGame | null {
   try {
-    const game = new Game({
-      GameId: `game_${pgn.headers.White}_${pgn.headers.Black}_${pgn.headers.UTCDate}`,
-      WhitePlayer: pgn.headers.White || '',
-      BlackPlayer: pgn.headers.Black || '',
-      Result: pgn.headers.Result || '1/2-1/2',
-      Date: pgn.headers.UTCDate,
-      Opening: pgn.headers.Opening || 'Unknown',
-      Moves: pgn.moves.map((m) => m.move).join(' ') || '',
-      PGN: pgn.raw || '',
-      WhiteElo: parseInt(pgn.headers.WhiteElo) || 0,
-      BlackElo: parseInt(pgn.headers.BlackElo) || 0,
-      WhiteRatingDiff: pgn.headers.WhiteRatingDiff
-        ? parseInt(pgn.headers.WhiteRatingDiff)
-        : 0,
-      BlackRatingDiff: pgn.headers.BlackRatingDiff
-        ? parseInt(pgn.headers.BlackRatingDiff)
-        : 0,
-      ECO: pgn.headers.ECO || 'Unknown',
-      TimeControl: pgn.headers.TimeControl || '',
-      Termination: pgn.headers.Termination || '',
-      ImportFrom: source,
+    const game: IGame = new Game({
+      importFrom: 'lichess',
+      url: '', // Lichess PGN data might not include a URL, so it's left empty or can be populated if available
+      pgn: pgn.raw || '',
+      timeControl: pgn.headers.TimeControl || '',
+      endTime: new Date(), // You might need to calculate or approximate this if not available in the PGN
+      rated: true, // Assuming all games are rated; adjust if necessary
+      tcn: '', // Not available in Lichess data
+      uuid: '', // Not available in Lichess data
+      initialSetup: '', // Not available in Lichess data
+      fen: '', // Not available in Lichess data, could derive from PGN
+      timeClass: 'unknown', // Map this from Lichess-specific fields
+      rules: 'chess', // Assuming standard chess, adjust if necessary
+      eco: pgn.headers.ECO || 'Unknown',
+      ecoUrl: '', // Not available in Lichess data
+      termination: pgn.headers.Termination || 'Unknown',
+      white: {
+        rating: parseInt(pgn.headers.WhiteElo) || 0,
+        result: pgn.headers.Result?.startsWith('1') ? 'win' : 'lose',
+        id: '', // Not available in PGN
+        username: pgn.headers.White || '',
+        uuid: '', // Not available in PGN
+      },
+      black: {
+        rating: parseInt(pgn.headers.BlackElo) || 0,
+        result: pgn.headers.Result?.endsWith('1') ? 'win' : 'lose',
+        id: '', // Not available in PGN
+        username: pgn.headers.Black || '',
+        uuid: '', // Not available in PGN
+      },
     });
+
+    console.log(`Built game: ${game}`);
 
     return game;
   } catch (err) {
-    console.error('Error building game:', err);
+    console.error('Error building Lichess game:', err);
     return null;
   }
 }
@@ -40,14 +51,9 @@ function buildGame(pgn: PgnGameData, source: string): IGame | null {
 async function importGamesLichess(games: IGame[]): Promise<void> {
   try {
     await Promise.all(
-      games
-        .map((g) => {
-          g.ImportFrom = 'Lichess-Pgn-TESTING';
-          return g;
-        })
-        .map(async (game) => {
-          await game.save();
-        }),
+      games.map(async (game) => {
+        await game.save();
+      }),
     );
 
     console.log(`${games.length} games have been built and saved.`);
@@ -98,7 +104,7 @@ export async function readGamesFromLichess(username: string): Promise<void> {
     }
 
     const games: IGame[] = parsePgn(pgnText)
-      .map((parsed) => buildGame(parsed, 'Lichess'))
+      .map((pgn) => buildGame(pgn))
       .filter((game): game is IGame => game !== null);
 
     if (games.length === 0) {

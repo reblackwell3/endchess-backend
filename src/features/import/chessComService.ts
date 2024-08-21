@@ -3,68 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import Game, { IGame } from '../games/gameModel'; // Assuming Game is the Mongoose model
 
-interface ChessComGameData {
-  white: {
-    username: string;
-    result: string;
-    rating: number;
-    ratingDiff?: number;
-  };
-  black: {
-    username: string;
-    result: string;
-    rating: number;
-    ratingDiff?: number;
-  };
-  end_time: number;
-  opening?: { name: string; eco: string };
-  pgn: string;
-  time_control: string;
-  termination: string;
-}
-
-function buildGame(gameData: ChessComGameData, source: string): IGame | null {
+async function importGamesChessCom(games: IGame[]): Promise<void> {
   try {
-    const game = new Game({
-      // todo game id is bad because players can play twice in one day
-      GameId: `game_${gameData.white.username}_${gameData.black.username}_${new Date(gameData.end_time * 1000).toISOString().split('T')[0]}`,
-      WhitePlayer: gameData.white.username || '',
-      BlackPlayer: gameData.black.username || '',
-      Result:
-        gameData.white.result === 'win'
-          ? '1-0'
-          : gameData.black.result === 'win'
-            ? '0-1'
-            : '1/2-1/2',
-      Date: new Date(gameData.end_time * 1000).toISOString().split('T')[0],
-      Opening: gameData.opening ? gameData.opening.name : 'Unknown',
-      Moves: gameData.pgn || '',
-      PGN: gameData.pgn || '',
-      WhiteElo: gameData.white.rating || 0,
-      BlackElo: gameData.black.rating || 0,
-      WhiteRatingDiff: gameData.white.ratingDiff || 0,
-      BlackRatingDiff: gameData.black.ratingDiff || 0,
-      ECO: gameData.opening?.eco || 'Unknown',
-      TimeControl: gameData.time_control || '',
-      Termination: gameData.termination || '',
-      ImportFrom: source,
-    });
-
-    return game;
-  } catch (err) {
-    console.error('Error building game:', err);
-    return null;
-  }
-}
-
-async function importGamesChessCom(
-  gamesData: ChessComGameData[],
-): Promise<void> {
-  try {
-    const games = gamesData
-      .map((g) => buildGame(g, 'Chess.com'))
-      .filter((game): game is IGame => game !== null);
-
     console.log(`${games.length} games have been built`);
     await Promise.all(games.map((game) => game!.save()));
     console.log('Chess.com games successfully processed and data imported');
@@ -83,12 +23,12 @@ export async function readGamesFromChessCom(username: string): Promise<void> {
       `${username}_games.chesscom.json`,
     );
 
-    let gamesData: ChessComGameData[];
+    let gamesData: IGame[];
 
     if (fs.existsSync(filePath)) {
       console.log(`File found at ${filePath}, reading game data...`);
       const fileData = fs.readFileSync(filePath, 'utf8');
-      gamesData = JSON.parse(fileData) as ChessComGameData[];
+      gamesData = JSON.parse(fileData) as IGame[];
     } else {
       console.log(
         `File not found at ${filePath}, fetching game data from Chess.com...`,
@@ -103,7 +43,7 @@ export async function readGamesFromChessCom(username: string): Promise<void> {
 
       for (const url of archiveUrls) {
         const gamesResponse = await axios.get(url);
-        const newGamesData: ChessComGameData[] = gamesResponse.data.games;
+        const newGamesData: IGame[] = gamesResponse.data.games;
         gamesData.push(...newGamesData);
       }
 
