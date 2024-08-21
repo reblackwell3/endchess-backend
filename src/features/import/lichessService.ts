@@ -41,9 +41,7 @@ function buildGame(pgn: PgnGameData): IGame | null {
     const headers = mapHeaders(pgn.headers); // Map headers to LichessHeaders format
 
     const formattedUTCDate = headers.UTCDate.replace(/\./g, '-');
-    const dateTimeString = `${formattedUTCDate}T${headers.UTCTime}Z`;
     // Parse the datetime string into a Date object
-    const endTime = new Date(dateTimeString).getTime() / 1000; // Con
 
     const UNKNOWN_VALUE_PLACEHOLDER = 'UNKNOWN';
     const game: IGame = new Game({
@@ -51,7 +49,8 @@ function buildGame(pgn: PgnGameData): IGame | null {
       url: headers.Site, // Use the mapped headers
       pgn: pgn.pgn,
       time_control: headers.TimeControl,
-      end_time: endTime, // You might need to calculate or approximate this if not available in the PGN
+      end_time:
+        new Date(`${formattedUTCDate}T${headers.UTCTime}Z`).getTime() / 1000, // You might need to calculate or approximate this if not available in the PGN
       rated: true, // Assuming all games are rated; adjust if necessary
       tcn: UNKNOWN_VALUE_PLACEHOLDER, // Not available in Lichess data
       uuid: UNKNOWN_VALUE_PLACEHOLDER, // Not available in Lichess data
