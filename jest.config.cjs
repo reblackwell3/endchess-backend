@@ -1,10 +1,10 @@
-// jest.config.js
+// jest.config.cjs
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
   testMatch: ['**/tests/**/*.test.ts'],
-  testPathIgnorePatterns: ['**/tests/import/**/*.integration.test.ts'], // Exclude integration tests
+  testPathIgnorePatterns: ['/tests/.*\\.integration\\.test\\.ts$'], // Corrected pattern to ignore integration tests
   moduleNameMapper: {
     '^(src/.+).js$': '<rootDir>/$1.ts',
   },

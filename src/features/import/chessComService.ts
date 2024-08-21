@@ -2,6 +2,7 @@ import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
 import Game, { IGame } from '../games/gameModel'; // Assuming Game is the Mongoose model
+import { log } from 'console';
 
 async function importGamesChessCom(games: IGame[]): Promise<void> {
   try {
@@ -24,11 +25,12 @@ async function importGamesChessCom(games: IGame[]): Promise<void> {
   }
 }
 
+const PATH_TO_DATA = '../../../data';
 export async function readGamesFromChessCom(username: string): Promise<void> {
   try {
     const filePath = path.join(
       __dirname,
-      '../../../data',
+      PATH_TO_DATA,
       `${username}_games.chesscom.json`,
     );
 
@@ -52,6 +54,7 @@ export async function readGamesFromChessCom(username: string): Promise<void> {
 
       for (const url of archiveUrls) {
         const gamesResponse = await axios.get(url);
+        log(gamesResponse);
         const newGamesData: IGame[] = gamesResponse.data.games;
         gamesData.push(...newGamesData);
       }
