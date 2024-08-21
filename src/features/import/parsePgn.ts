@@ -1,9 +1,22 @@
 import pgnParser from 'pgn-parser';
-import { PgnGameData } from './gameDataInterfaces';
 
-interface PgnHeader {
-  name: string;
-  value: string;
+export interface PgnGameData {
+  headers: {
+    White: string;
+    Black: string;
+    Result: string;
+    UTCDate: string;
+    Opening?: string;
+    WhiteElo: string;
+    BlackElo: string;
+    WhiteRatingDiff?: string;
+    BlackRatingDiff?: string;
+    ECO?: string;
+    TimeControl?: string;
+    Termination?: string;
+  };
+  moves: { move: string }[];
+  raw: string;
 }
 
 // Updated chessVariants to include both variations of certain variants

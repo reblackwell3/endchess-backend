@@ -4,15 +4,13 @@ import { readGamesFromLichess } from '../../src/features/import/lichessService';
 import buildGame from '../../src/features/import/buildGameService';
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+
+const mockPgnPath = path.resolve(__dirname, 'lichess-import.pgn');
+const mockPgn = fs.readFileSync(mockPgnPath, 'utf8');
 
 describe('readGamesFromLichess', () => {
   let mock: MockAdapter;
   const username = 'blackfromchina';
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  const mockPgnPath = path.join(__dirname, 'lichess-import.pgn');
-  const mockPgn = fs.readFileSync(mockPgnPath, 'utf8');
 
   beforeEach(() => {
     mock = new MockAdapter(axios);
@@ -32,7 +30,7 @@ describe('readGamesFromLichess', () => {
     };
 
     // Stub the buildGame function to return the mock game
-    const buildGameStub = jest.spyOn(buildGame, 'buildGame').mockReturnValue(mockGame as any);
+    const buildGameStub = jest.spyOn({ buildGame }, 'buildGame').mockReturnValue(mockGame as any);
 
     // Call the function
     await readGamesFromLichess(username);
