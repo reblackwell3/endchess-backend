@@ -54,7 +54,7 @@ export async function readGamesFromChessCom(username: string): Promise<void> {
 
       for (const url of archiveUrls) {
         const gamesResponse = await axios.get(url);
-        log(gamesResponse);
+        // log(gamesResponse);
         const newGamesData: IGame[] = gamesResponse.data.games;
         gamesData.push(...newGamesData);
       }
