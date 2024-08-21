@@ -1,10 +1,7 @@
 import axios from 'axios';
-import fs from 'fs';
-import path from 'path';
 import { parsePgn } from './parsePgn';
 import { PgnGameData } from 'pgn-parser';
 import Game, { IGame } from '../games/gameModel'; // Assuming Game is the Mongoose model
-import { log } from 'console';
 
 interface LichessHeaders {
   Event: string;
@@ -18,8 +15,6 @@ interface LichessHeaders {
   Opening: string;
   WhiteElo: string;
   BlackElo: string;
-  // WhiteRatingDiff: string;
-  // BlackRatingDiff: string;
   ECO: string;
   FEN: string;
   TimeControl: string;
@@ -41,8 +36,6 @@ function buildGame(pgn: PgnGameData): IGame | null {
     const headers = mapHeaders(pgn.headers); // Map headers to LichessHeaders format
 
     const formattedUTCDate = headers.UTCDate.replace(/\./g, '-');
-    // Parse the datetime string into a Date object
-
     const UNKNOWN_VALUE_PLACEHOLDER = 'UNKNOWN';
     const game: IGame = new Game({
       import_from: 'lichess',
@@ -104,38 +97,16 @@ async function importGamesLichess(games: IGame[]): Promise<void> {
 
 export async function readGamesFromLichess(username: string): Promise<void> {
   try {
-    const filePath = path.join(
-      __dirname,
-      '../../../data',
-      `${username}_games.lichess.pgn`,
+    const response = await axios.get(
+      `https://lichess.org/api/games/user/${username}`,
+      {
+        headers: { Accept: 'application/x-chess-pgn' },
+        params: { evals: true, opening: true, moves: true },
+        responseType: 'text',
+      },
     );
 
-    var pgnText;
-    if (fs.existsSync(filePath)) {
-      console.log(`File found at ${filePath}, reading PGN data...`);
-      pgnText = fs.readFileSync(filePath, 'utf8');
-    } else {
-      console.log(
-        `File not found at ${filePath}, fetching PGN data from Lichess...`,
-      );
-      try {
-        const response = await axios.get(
-          `https://lichess.org/api/games/user/${username}`,
-          {
-            headers: { Accept: 'application/x-chess-pgn' },
-            params: { evals: true, opening: true, moves: true },
-            responseType: 'text',
-          },
-        );
-        fs.writeFileSync(filePath, response.data, 'utf8');
-        console.log(`PGN data fetched and saved to ${filePath}`);
-        pgnText = response.data;
-      } catch (err) {
-        const error = err as Error;
-        console.error(`Error fetching PGN data: ${error.message}`);
-        throw error; // Optionally rethrow the error to handle it further up
-      }
-    }
+    const pgnText = response.data;
 
     const games: IGame[] = parsePgn(pgnText)
       .map((pgn) => buildGame(pgn))
