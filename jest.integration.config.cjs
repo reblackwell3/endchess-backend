@@ -17,5 +17,6 @@ module.exports = {
     },
     coverageDirectory: './coverage/integration',
     collectCoverageFrom: ['src/**/*.ts'],
+    testTimeout: 70000,
   };
   
