@@ -22,7 +22,9 @@ describe('readGamesFromLichess', () => {
 
   it('should fetch PGN data, process it with buildGame, and call save', async () => {
     // Mock the API call
-    mock.onGet(`https://lichess.org/api/games/user/${username}`).reply(200, mockPgn);
+    mock
+      .onGet(`https://lichess.org/api/games/user/${username}`)
+      .reply(200, mockPgn);
 
     // Create a mock game object with a save method
     const mockGame = {
@@ -30,7 +32,9 @@ describe('readGamesFromLichess', () => {
     };
 
     // Stub the buildGame function to return the mock game
-    const buildGameStub = jest.spyOn({ buildGame }, 'buildGame').mockReturnValue(mockGame as any);
+    const buildGameStub = jest
+      .spyOn({ buildGame }, 'buildGame')
+      .mockReturnValue(mockGame as any);
 
     // Call the function
     await readGamesFromLichess(username);

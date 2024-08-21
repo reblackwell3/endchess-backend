@@ -21,24 +21,38 @@ export interface PgnGameData {
 
 // Updated chessVariants to include both variations of certain variants
 const chessVariants = [
-  'ultraBullet', 'bullet', 'blitz', 'rapid', 'classical', 'correspondence',
-  'chess960', 'crazyhouse', 'antichess', 'atomic', 'horde',
-  'king of the hill', 'kingOfTheHill',
-  'racing kings', 'racingKings',
-  'three-check', 'threeCheck'
+  'ultraBullet',
+  'bullet',
+  'blitz',
+  'rapid',
+  'classical',
+  'correspondence',
+  'chess960',
+  'crazyhouse',
+  'antichess',
+  'atomic',
+  'horde',
+  'king of the hill',
+  'kingOfTheHill',
+  'racing kings',
+  'racingKings',
+  'three-check',
+  'threeCheck',
 ];
 
 function doesNotContainVariant(pgn: string): boolean {
   // Perform a case-insensitive search in the entire PGN string
   const lowerCasePgn = pgn.toLowerCase();
-  return !chessVariants.some(variant => lowerCasePgn.includes(variant.toLowerCase()));
+  return !chessVariants.some((variant) =>
+    lowerCasePgn.includes(variant.toLowerCase()),
+  );
 }
 
 function createPgnGameData(parsed: any, raw: string): PgnGameData {
   const headers = parsed.headers.reduce((acc: any, header: any) => {
     acc[header.name] = header.value;
     return acc;
-  }, {});  
+  }, {});
 
   return {
     headers: {
@@ -54,11 +68,11 @@ function createPgnGameData(parsed: any, raw: string): PgnGameData {
       ECO: headers['ECO'],
       TimeControl: headers['TimeControl'],
       Termination: headers['Termination'],
-    },  
+    },
     moves: parsed.moves.map((move: any) => ({ move: move.move })),
     raw: raw,
-  };  
-}  
+  };
+}
 
 function parsePgn(pgnText: string): PgnGameData[] {
   try {
@@ -67,16 +81,15 @@ function parsePgn(pgnText: string): PgnGameData[] {
     console.log(`${pgns.length} number of pgns in pgn parser`);
 
     const parsedPgns = pgns
-    .filter(pgn => doesNotContainVariant(pgn))
-    .map((pgn) =>
-      createPgnGameData(pgnParser.parse(pgn)[0], pgn),  
-    );
+      .filter((pgn) => doesNotContainVariant(pgn))
+      .map((pgn) => createPgnGameData(pgnParser.parse(pgn)[0], pgn));
 
+    console.log(`${parsedPgns.length} pgns returned from parse pgn`);
     return parsedPgns;
   } catch (error) {
     console.error('Error parsing PGN data:', error);
     throw error;
-  }  
-}  
+  }
+}
 
 export default parsePgn;
