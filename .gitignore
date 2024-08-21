@@ -6,7 +6,7 @@ node_modules/
 .env.test
 
 # Data files
-backend/data/
+data/
 
 #Build
 build/

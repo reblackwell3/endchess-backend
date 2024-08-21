@@ -1,4 +1,6 @@
 import axios from 'axios';
+import fs from 'fs';
+import path from 'path';
 import parsePgn from './parsePgn';
 import Game, { IGame } from '../games/gameModel';  // Assuming Game is the Mongoose model
 import { PgnGameData } from 'pgn-parser';
@@ -77,7 +79,12 @@ export async function readGamesFromLichess(username: string): Promise<void> {
     );
 
     const pgnText = response.data;
-    console.log(`PGN data retrieved: ${pgnText.slice(0, 200)}...`); // Log only the first 200 characters for brevity
+    console.log(`PGN data retrieved: ${pgnText.slice(0, 2000)}...`); // Log only the first 2000 characters for brevity
+    const filePath = path.join(__dirname, '../../../data', `${username}_games.pgn`);
+    console.log(filePath);
+
+    // Write the PGN text to a file
+    fs.writeFileSync(filePath, pgnText, 'utf8');
 
     const games: IGame[] = parsePgn(pgnText)
       .map((parsed) => buildGame(parsed, 'Lichess'))
