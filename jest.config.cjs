@@ -4,6 +4,7 @@ module.exports = {
   testEnvironment: 'node',
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
   testMatch: ['**/tests/**/*.test.ts'],
+  testPathIgnorePatterns: ['**/tests/import/**/*.integration.test.ts'], // Exclude integration tests
   moduleNameMapper: {
     '^(src/.+).js$': '<rootDir>/$1.ts',
   },

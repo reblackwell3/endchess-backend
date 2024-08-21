@@ -2,12 +2,14 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "src/server.ts",
-  "scripts": {
-    "test": "jest --config jest.config.cjs",
-    "start": "npm run build && node dist/server.js",
-    "build": "tsc",
-    "serve": "node dist/server.js"
-  },
+"scripts": {
+  "test": "jest --config jest.config.cjs",
+  "test:integration": "jest --config jest.integration.config.cjs",
+  "start": "npm run build && node dist/server.js",
+  "build": "tsc",
+  "serve": "node dist/server.js"
+}
+,
   "keywords": [],
   "author": "",
   "license": "ISC",

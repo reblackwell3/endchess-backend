@@ -40,14 +40,10 @@ function buildGame(pgn: PgnGameData): IGame | null {
   try {
     const headers = mapHeaders(pgn.headers); // Map headers to LichessHeaders format
 
-    console.log(`Headers: ${JSON.stringify(headers, null, 2)}`);
-
     const formattedUTCDate = headers.UTCDate.replace(/\./g, '-');
     const dateTimeString = `${formattedUTCDate}T${headers.UTCTime}Z`;
-    log(`dts: ${dateTimeString}`);
     // Parse the datetime string into a Date object
     const endTime = new Date(dateTimeString).getTime() / 1000; // Con
-    log(endTime);
 
     const UNKNOWN_VALUE_PLACEHOLDER = 'UNKNOWN';
     const game: IGame = new Game({
@@ -79,8 +75,6 @@ function buildGame(pgn: PgnGameData): IGame | null {
       },
       result: headers.Result || '',
     });
-
-    console.log(`Built game: ${JSON.stringify(game, null, 2)}`);
 
     return game;
   } catch (err) {
