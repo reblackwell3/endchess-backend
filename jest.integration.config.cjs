@@ -3,7 +3,7 @@ module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
     moduleFileExtensions: ['ts', 'js', 'json', 'node'],
-    testMatch: ['**/tests/import/**/*.integration.test.ts'], // Only run integration tests
+    testMatch: ['**/tests/**/*.integration.test.ts'], // Only run integration tests
     moduleNameMapper: {
       '^(src/.+).js$': '<rootDir>/$1.ts',
     },
