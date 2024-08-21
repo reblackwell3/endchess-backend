@@ -26,6 +26,7 @@ interface ChessComGameData {
 function buildGame(gameData: ChessComGameData, source: string): IGame | null {
   try {
     const game = new Game({
+      // todo game id is bad because players can play twice in one day
       GameId: `game_${gameData.white.username}_${gameData.black.username}_${new Date(gameData.end_time * 1000).toISOString().split('T')[0]}`,
       WhitePlayer: gameData.white.username || '',
       BlackPlayer: gameData.black.username || '',
