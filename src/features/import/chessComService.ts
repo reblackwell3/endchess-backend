@@ -79,7 +79,7 @@ export async function readGamesFromChessCom(username: string): Promise<void> {
     const filePath = path.join(
       __dirname,
       '../../../data',
-      `${username}_chesscom_games.json`,
+      `${username}_games.chesscom.json`,
     );
 
     let gamesData: ChessComGameData[];

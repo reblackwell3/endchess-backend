@@ -67,7 +67,7 @@ export async function readGamesFromLichess(username: string): Promise<void> {
     const filePath = path.join(
       __dirname,
       '../../../data',
-      `${username}_games.pgn`,
+      `${username}_games.lichess.pgn`,
     );
 
     var pgnText;
