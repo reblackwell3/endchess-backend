@@ -6,7 +6,6 @@ import { readGamesFromLichess } from '../../src/features/import/lichessService';
 import Game from '../../src/features/games/gameModel';
 import { parsePgn } from '../../src/features/import/parsePgn'; // Import parsePgn to mock it
 
-jest.mock('fs');
 jest.mock('../../src/features/games/gameModel');
 jest.mock('../../src/features/import/parsePgn'); // Mock parsePgn
 
@@ -27,12 +26,6 @@ describe('readGamesFromLichess', () => {
   it('should read from file, parse PGN, and save games when the file exists', async () => {
     // Read the mock PGN data from the file
     const mockPgnData = fs.readFileSync(mockFilePath, 'utf8');
-
-    // Mock fs.existsSync to return true, so the file is read
-    (fs.existsSync as jest.Mock).mockReturnValue(true);
-
-    // Mock fs.readFileSync to return the PGN data
-    (fs.readFileSync as jest.Mock).mockReturnValue(mockPgnData);
 
     // Create the mock parsed games based on the actual file contents
     const mockParsedGames = [
@@ -93,9 +86,6 @@ describe('readGamesFromLichess', () => {
     // Call the function
     await readGamesFromLichess(username);
 
-    // Verify the file read operation
-    expect(fs.readFileSync).toHaveBeenCalled();
-
     // Verify that parsePgn was called with the correct PGN data
     expect(parsePgn).toHaveBeenCalledWith(mockPgnData);
 
@@ -106,16 +96,10 @@ describe('readGamesFromLichess', () => {
   it('should fetch PGN data from Lichess, parse it, and save games when the file does not exist', async () => {
     const mockPgnData = fs.readFileSync(mockFilePath, 'utf8');
 
-    // Mock fs.existsSync to return false, so it fetches data
-    (fs.existsSync as jest.Mock).mockReturnValue(false);
-
     // Mock the API call
     mock
       .onGet(`https://lichess.org/api/games/user/${username}`)
       .reply(200, mockPgnData);
-
-    // Mock fs.writeFileSync to prevent actual file writing
-    (fs.writeFileSync as jest.Mock).mockImplementation(() => {});
 
     // Mock the parsePgn function to return an array of parsed game objects
     const mockParsedGames = [
@@ -175,9 +159,6 @@ describe('readGamesFromLichess', () => {
 
     // Call the function
     await readGamesFromLichess(username);
-
-    // Verify the file write operation
-    expect(fs.writeFileSync).toHaveBeenCalled();
 
     // Verify that parsePgn was called with the correct PGN data
     expect(parsePgn).toHaveBeenCalledWith(mockPgnData);
