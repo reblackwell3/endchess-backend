@@ -11,7 +11,7 @@ import importRoutes from './features/import/importRoutes';
 dotenv.config({ path: '.env' });
 
 const app = express();
-app.use(cors<Request>({ origin: process.env.REACT_APP_URL }));
+app.use(cors<Request>());
 
 connectDB();
 
