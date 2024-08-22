@@ -1,5 +1,5 @@
 // backend/server.js
-import express from 'express';
+import express, { Request } from 'express';
 import cors from 'cors';
 import connectDB from './config/db';
 import dotenv from 'dotenv';
@@ -11,7 +11,7 @@ import importRoutes from './features/import/importRoutes';
 dotenv.config({ path: '.env' });
 
 const app = express();
-app.use(cors({ origin: 'https://chipper-jalebi-30c07b.netlify.app' }));
+app.use(cors<Request>({ origin: process.env.REACT_APP_URL }));
 
 connectDB();
 
