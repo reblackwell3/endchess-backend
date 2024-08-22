@@ -11,7 +11,7 @@ import importRoutes from './features/import/importRoutes';
 dotenv.config({ path: '.env' });
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: 'https://chipper-jalebi-30c07b.netlify.app' }));
 
 connectDB();
 
