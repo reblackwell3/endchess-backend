@@ -8,9 +8,11 @@
   "scripts": {
     "test": "jest --config jest.config.cjs",
     "test:integration": "jest --config jest.integration.config.cjs",
-    "start": "npm run build && npm run serve",
+    "start": "npm run serve",
     "build": "tsc",
-    "serve": "node dist/server.js"
+    "serve": "node dist/server.js",
+    "heroku-postbuild": "npm run build",
+    "dev": "npm run build && npm run serve"
   },
   "keywords": [],
   "author": "",
