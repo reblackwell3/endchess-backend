@@ -9,9 +9,10 @@
     "test": "jest --config jest.config.cjs",
     "test:integration": "jest --config jest.integration.config.cjs",
     "start": "npm run serve",
+    "tsc": "./node_modules/typescript/bin/tsc",
     "build": "tsc",
     "serve": "node dist/server.js",
-    "heroku-postbuild": "npm run build",
+    "postinstall": "npm run build",
     "dev": "npm run build && npm run serve"
   },
   "keywords": [],
