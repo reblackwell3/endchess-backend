@@ -1,5 +1,5 @@
 // backend/server.js
-import express, { Request } from 'express';
+import express, { Express, Request } from 'express';
 import cors from 'cors';
 import connectDB from './config/db';
 import dotenv from 'dotenv';
@@ -10,7 +10,7 @@ import importRoutes from './features/import/importRoutes';
 
 dotenv.config({ path: '.env' });
 
-const app = express();
+const app: Express = express();
 app.use(cors<Request>({ origin: process.env.REACT_APP_URL }));
 
 connectDB();

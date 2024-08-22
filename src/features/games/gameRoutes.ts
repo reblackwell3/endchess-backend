@@ -1,12 +1,12 @@
 // backend/games/gameRoutes.ts
-import express, { Request, Response } from 'express';
+import express, { Router, Request, Response } from 'express';
 import {
   getRandomGame,
   getRandomGameRated,
   getGameById,
 } from './gameController';
 
-const router = express.Router();
+const router: Router = express.Router();
 
 // Get a random game
 router.get('/random', (req: Request, res: Response) => {
