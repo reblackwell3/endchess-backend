@@ -1,1 +1,1 @@
-web: node --loader ts-node/esm src/server.ts
+web: npm run build && npm run serve
