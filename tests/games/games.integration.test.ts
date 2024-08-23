@@ -11,12 +11,12 @@ app.use(express.json());
 
 beforeAll(async () => {
   await connectDB();
-  app.use('/api/games', gameRoutes);
+  app.use('/games', gameRoutes);
 });
 
 describe('Games Controller', () => {
   it('should get random game', async () => {
-    const res = await request(app).get('/api/games/random');
+    const res = await request(app).get('/games/random');
     expect(res.status).toBe(200);
     expect(res.body).not.toBeNull();
   });

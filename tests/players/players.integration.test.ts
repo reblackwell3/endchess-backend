@@ -11,21 +11,21 @@ app.use(express.json());
 
 beforeAll(async () => {
   await connectDB();
-  app.use('/api/players', playerRoutes);
+  app.use('/players', playerRoutes);
 });
 
 describe('Players Controller', () => {
   const newUserId = 'jimmy' + Math.random();
   it('should create a new player', async () => {
     const res = await request(app)
-      .post('/api/players')
+      .post('/players')
       .send({ userId: newUserId });
     expect(res.status).toBe(201);
     expect(res.body).toHaveProperty('userId', newUserId);
   });
 
   it('should get user by id', async () => {
-    const res = await request(app).get('/api/players/' + newUserId);
+    const res = await request(app).get('/players/' + newUserId);
     expect(res.status).toBe(200);
     expect(typeof res.body).toBe('object');
   });

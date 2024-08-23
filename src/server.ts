@@ -17,13 +17,13 @@ connectDB();
 
 app.use(express.json());
 
-app.use('/api/puzzles', puzzleRoutes);
+app.use('/puzzles', puzzleRoutes);
 
-app.use('/api/players', playerRoutes);
+app.use('/players', playerRoutes);
 
-app.use('/api/games', gameRoutes);
+app.use('/games', gameRoutes);
 
-app.use('/api/import', importRoutes);
+app.use('/import', importRoutes);
 
 const PORT = process.env.PORT || 5000;
 

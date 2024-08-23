@@ -3,7 +3,7 @@ import Puzzle from './puzzleModel';
 import Player from '../players/playerModel';
 
 // @desc    Get a random puzzle
-// @route   GET /api/puzzles/random
+// @route   GET /puzzles/random
 // @access  Public
 export const getRandomPuzzle = async (
   req: Request,
@@ -25,7 +25,7 @@ export const getRandomPuzzle = async (
 };
 
 // @desc    Get a random rated puzzle
-// @route   GET /api/puzzles/random-rated/:rating
+// @route   GET /puzzles/random-rated/:rating
 // @access  Public
 export const getRandomPuzzleRated = async (
   req: Request,
@@ -51,7 +51,7 @@ export const getRandomPuzzleRated = async (
 };
 
 // @desc    Get the next puzzle based on elo and player ID
-// @route   GET /api/puzzles/next
+// @route   GET /puzzles/next
 // @access  Public
 export const getNextPuzzle = async (
   req: Request,
@@ -85,7 +85,7 @@ export const getNextPuzzle = async (
 };
 
 // @desc    Get a single puzzle by ID
-// @route   GET /api/puzzles/:id
+// @route   GET /puzzles/:id
 // @access  Public
 export const getPuzzleById = async (
   req: Request,
