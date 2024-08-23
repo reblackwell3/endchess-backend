@@ -1,0 +1,56 @@
+[
+    {
+      "url": "https://www.chess.com/game/live/1545503502",
+      "pgn": "[Event \"Live Chess\"]\n[Site \"Chess.com\"]\n[Date \"2016.04.19\"]\n[Round \"-\"]\n[White \"blackfromchina\"]\n[Black \"GM_TARUN\"]\n[Result \"1-0\"]\n[CurrentPosition \"rnbqkbnr/pppppppp/8/8/8/6P1/PPPPPP1P/RNBQKBNR b KQkq -\"]\n[Timezone \"UTC\"]\n[ECO \"A00\"]\n[ECOUrl \"https://www.chess.com/openings/Kings-Fianchetto-Opening\"]\n[UTCDate \"2016.04.19\"]\n[UTCTime \"03:24:11\"]\n[WhiteElo \"1231\"]\n[BlackElo \"1187\"]\n[TimeControl \"900+10\"]\n[Termination \"blackfromchina won - game abandoned\"]\n[StartTime \"03:24:11\"]\n[EndDate \"2016.04.19\"]\n[EndTime \"03:25:22\"]\n[Link \"https://www.chess.com/game/live/1545503502\"]\n\n1. g3 {[%clk 0:15:00]} 1-0\n",
+      "time_control": "900+10",
+      "end_time": 1461036322,
+      "rated": true,
+      "tcn": "ow",
+      "uuid": "6f01788c-76aa-11e0-8000-000000010001",
+      "initial_setup": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "fen": "rnbqkbnr/pppppppp/8/8/8/6P1/PPPPPP1P/RNBQKBNR b KQkq -",
+      "time_class": "rapid",
+      "rules": "chess",
+      "white": {
+        "rating": 1231,
+        "result": "win",
+        "@id": "https://api.chess.com/pub/player/blackfromchina",
+        "username": "blackfromchina",
+        "uuid": "7c4e1140-05dd-11e6-8062-000000000000"
+      },
+      "black": {
+        "rating": 1187,
+        "result": "abandoned",
+        "@id": "https://api.chess.com/pub/player/gm_tarun",
+        "username": "GM_TARUN",
+        "uuid": "9050dfee-dc9c-11e4-800c-000000000000"
+      }
+    },
+    {
+      "url": "https://www.chess.com/game/live/1545504483",
+      "pgn": "[Event \"Live Chess\"]\n[Site \"Chess.com\"]\n[Date \"2016.04.19\"]\n[Round \"-\"]\n[White \"abstra349\"]\n[Black \"blackfromchina\"]\n[Result \"0-1\"]\n[CurrentPosition \"1k2K3/1p1q1r2/p1p5/6p1/P7/5P2/8/8 w - -\"]\n[Timezone \"UTC\"]\n[ECO \"C46\"]\n[ECOUrl \"https://www.chess.com/openings/Three-Knights-Opening-3...Bc5\"]\n[UTCDate \"2016.04.19\"]\n[UTCTime \"03:26:44\"]\n[WhiteElo \"973\"]\n[BlackElo \"1304\"]\n[TimeControl \"900+10\"]\n[Termination \"blackfromchina won by checkmate\"]\n[StartTime \"03:26:44\"]\n[EndDate \"2016.04.19\"]\n[EndTime \"04:01:09\"]\n[Link \"https://www.chess.com/game/live/1545504483\"]\n\n1. e4 {[%clk 0:15:07]} 1... e5 {[%clk 0:15:08.1]} 2. Nf3 {[%clk 0:15:14.3]} 2... Nc6 {[%clk 0:15:14.7]} 3. Nc3 {[%clk 0:15:16.1]} 3... Bc5 {[%clk 0:15:17.1]} 4. Bc4 {[%clk 0:15:00.2]} 4... a6 {[%clk 0:15:11.6]} 5. a4 {[%clk 0:14:51.7]} 5... Nd4 {[%clk 0:14:55.4]} 6. Nxe5 {[%clk 0:14:35.9]} 6... Qg5 {[%clk 0:14:48.6]} 7. d3 {[%clk 0:14:07]} 7... Qxe5 {[%clk 0:14:05.4]} 8. O-O {[%clk 0:13:48.7]} 8... d5 {[%clk 0:13:36.4]} 9. Bxd5 {[%clk 0:13:44]} 9... Bd6 {[%clk 0:13:35.7]} 10. g3 {[%clk 0:13:33.5]} 10... Nf6 {[%clk 0:13:01.1]} 11. Bf4 {[%clk 0:13:19.6]} 11... Qh5 {[%clk 0:12:29.8]} 12. Re1 {[%clk 0:12:57.3]} 12... Nf3+ {[%clk 0:12:32.9]} 13. Kf1 {[%clk 0:12:08.8]} 13... Nxh2+ {[%clk 0:11:59.8]} 14. Kg1 {[%clk 0:11:34.6]} 14... Nf3+ {[%clk 0:12:06.6]} 15. Kf1 {[%clk 0:11:41.4]} 15... Qh1+ {[%clk 0:11:14.9]} 16. Ke2 {[%clk 0:11:34.5]} 16... Nxe1 {[%clk 0:10:54.1]} 17. e5 {[%clk 0:11:15.4]} 17... Bg4+ {[%clk 0:10:49.5]} 18. Kd2 {[%clk 0:10:56.4]} 18... Bxd1 {[%clk 0:10:46.8]} 19. Bxh1 {[%clk 0:11:02.1]} 19... Nxc2 {[%clk 0:08:49.8]} 20. Rxd1 {[%clk 0:10:54.4]} 20... Nd4 {[%clk 0:07:46.8]} 21. exf6 {[%clk 0:10:42.2]} 21... Bxf4+ {[%clk 0:07:36]} 22. gxf4 {[%clk 0:10:35]} 22... g6 {[%clk 0:07:22]} 23. Nd5 {[%clk 0:10:36.2]} 23... O-O-O {[%clk 0:07:21.2]} 24. Ne7+ {[%clk 0:10:34.5]} 24... Kb8 {[%clk 0:07:26.2]} 25. Rc1 {[%clk 0:10:06.7]} 25... Nb3+ {[%clk 0:07:24.3]} 26. Kc2 {[%clk 0:09:59.3]} 26... Nxc1 {[%clk 0:07:31]} 27. Kxc1 {[%clk 0:10:06.1]} 27... Rxd3 {[%clk 0:07:38.2]} 28. Be4 {[%clk 0:09:57.3]} 28... Rd6 {[%clk 0:07:39.3]} 29. Nd5 {[%clk 0:09:45.1]} 29... Rhd8 {[%clk 0:07:23]} 30. Nc3 {[%clk 0:09:12.2]} 30... Rxf6 {[%clk 0:07:16.6]} 31. Nd5 {[%clk 0:09:00.5]} 31... Rfd6 {[%clk 0:06:59]} 32. Nc3 {[%clk 0:09:05.2]} 32... c6 {[%clk 0:06:52.7]} 33. b4 {[%clk 0:08:51.5]} 33... Rf6 {[%clk 0:06:24.2]} 34. Ne2 {[%clk 0:08:53.5]} 34... Re8 {[%clk 0:06:12.2]} 35. Bd3 {[%clk 0:08:50.2]} 35... h5 {[%clk 0:06:19.1]} 36. Kd1 {[%clk 0:08:45.1]} 36... h4 {[%clk 0:06:11.8]} 37. Ke1 {[%clk 0:08:44]} 37... Rxf4 {[%clk 0:06:18.9]} 38. Kf1 {[%clk 0:08:40]} 38... Rxb4 {[%clk 0:06:26]} 39. Bc2 {[%clk 0:08:10.4]} 39... Rg4 {[%clk 0:05:58.3]} 40. f3 {[%clk 0:08:08.7]} 40... Rg5 {[%clk 0:05:34]} 41. Bb3 {[%clk 0:08:03.8]} 41... h3 {[%clk 0:05:27.2]} 42. Kf2 {[%clk 0:07:44.1]} 42... h2 {[%clk 0:05:22.5]} 43. Ng3 {[%clk 0:07:49.4]} 43... Rxg3 {[%clk 0:05:17.3]} 44. Kxg3 {[%clk 0:07:34.2]} 44... h1=Q {[%clk 0:05:19.6]} 45. Bxf7 {[%clk 0:07:41.3]} 45... Qg1+ {[%clk 0:05:15.1]} 46. Kf4 {[%clk 0:07:41.5]} 46... g5+ {[%clk 0:05:17.8]} 47. Kf5 {[%clk 0:07:45.5]} 47... Rf8 {[%clk 0:05:08.7]} 48. Kf6 {[%clk 0:07:46.8]} 48... Qd4+ {[%clk 0:05:07.5]} 49. Ke7 {[%clk 0:07:54]} 49... Qd8+ {[%clk 0:04:58.6]} 50. Ke6 {[%clk 0:07:58.1]} 50... Qd5+ {[%clk 0:05:05]} 51. Ke7 {[%clk 0:07:59.4]} 51... Rxf7+ {[%clk 0:05:10.7]} 52. Ke8 {[%clk 0:08:04.3]} 52... Qd7# {[%clk 0:05:17.4]} 0-1\n",
+      "time_control": "900+10",
+      "end_time": 1461038469,
+      "rated": true,
+      "tcn": "mC0Kgv5Qbs9IfAWOiyQBvK7MltMKegZJAJIRow!TcDKNfeBvgfvpfgpvgfNhfmveCK6EmlEdJhekadkBKTRDwD2UsJ86J065dcBrlkrckc7thCtR0J?7JsRTsJTRJsYQjzRTsm78Ct3NcdNFdeTDefDztkzEnvEMkrFxfnxpmwMwnwp~r1hgwDUMDL89LTgBT0B70S7JS09108JZ",
+      "uuid": "93f5eb1e-76aa-11e0-8000-000000010001",
+      "initial_setup": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "fen": "1k2K3/1p1q1r2/p1p5/6p1/P7/5P2/8/8 w - -",
+      "time_class": "rapid",
+      "rules": "chess",
+      "white": {
+        "rating": 973,
+        "result": "checkmated",
+        "@id": "https://api.chess.com/pub/player/abstra349",
+        "username": "abstra349",
+        "uuid": "ce24bd96-f022-11e5-8042-000000000000"
+      },
+      "black": {
+        "rating": 1304,
+        "result": "win",
+        "@id": "https://api.chess.com/pub/player/blackfromchina",
+        "username": "blackfromchina",
+        "uuid": "7c4e1140-05dd-11e6-8062-000000000000"
+      }
+    }
+]

@@ -22,7 +22,7 @@ describe('Import Controller', () => {
   });
 
   it('should load games from lichess', async () => {
-    const res = await request(app).get('/api/import/lichess/minhnotminh');
+    const res = await request(app).get('/api/import/lichess/Minhnotminh');
     expect(res.status).toBe(200);
     expect(res.body).not.toBeNull();
   });
