@@ -1,1 +1,1 @@
-api.endchess.training
+http://api.endchess.training
