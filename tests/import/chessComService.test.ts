@@ -31,11 +31,11 @@ describe('readGamesFromChessCom', () => {
   it('should fetch from URL and save games', async () => {
     const mockUsername = 'testuser';
     const mockArchivesResponse = {
-      archives: ['https://api.chess.com/pub/player/testuser/games/2024/01'],
+      archives: ['https:/.chess.com/pub/player/testuser/games/2024/01'],
     };
 
     axiosMock
-      .onGet(`https://api.chess.com/pub/player/${mockUsername}/games/archives`)
+      .onGet(`https:/.chess.com/pub/player/${mockUsername}/games/archives`)
       .reply(200, mockArchivesResponse);
     axiosMock
       .onGet(mockArchivesResponse.archives[0])

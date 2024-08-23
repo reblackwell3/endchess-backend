@@ -2,7 +2,7 @@ import Game from './gameModel';
 import { Request, Response } from 'express';
 
 // @desc    Get a random game
-// @route   GET /api/games/random
+// @route   GET /games/random
 // @access  Public
 const getRandomGame = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -17,7 +17,7 @@ const getRandomGame = async (req: Request, res: Response): Promise<void> => {
 };
 
 // @desc    Get a random rated game
-// @route   GET /api/games/random-rated/:rating
+// @route   GET /games/random-rated/:rating
 // @access  Public
 const getRandomGameRated = async (
   req: Request,
@@ -43,7 +43,7 @@ const getRandomGameRated = async (
 };
 
 // @desc    Get a game by ID
-// @route   GET /api/games/:id
+// @route   GET /games/:id
 // @access  Public
 const getGameById = async (req: Request, res: Response): Promise<void> => {
   try {

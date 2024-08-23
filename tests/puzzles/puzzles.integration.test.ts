@@ -11,12 +11,12 @@ app.use(express.json());
 
 beforeAll(async () => {
   await connectDB();
-  app.use('/api/puzzles', puzzleRoutes);
+  app.use('/puzzles', puzzleRoutes);
 });
 
 describe('Puzzles Controller', () => {
   it('should get random puzzle', async () => {
-    const res = await request(app).get('/api/puzzles/random');
+    const res = await request(app).get('/puzzles/random');
     expect(res.status).toBe(200);
   });
 });

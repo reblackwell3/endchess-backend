@@ -2,7 +2,7 @@ import Player from './playerModel';
 import { Request, Response } from 'express';
 
 // @desc    Create a new player
-// @route   POST /api/players
+// @route   POST /players
 // @access  Public
 export const createPlayer = async (
   req: Request,
@@ -26,7 +26,7 @@ export const createPlayer = async (
 };
 
 // @desc    Get a single player by userId
-// @route   GET /api/players/:userId
+// @route   GET /players/:userId
 // @access  Public
 export const getPlayerByUserId = async (
   req: Request,
@@ -46,7 +46,7 @@ export const getPlayerByUserId = async (
 };
 
 // @desc    Update a player's ELO
-// @route   PUT /api/players/:userId/elo
+// @route   PUT /players/:userId/elo
 // @access  Public
 export const updatePlayerElo = async (
   req: Request,
@@ -70,7 +70,7 @@ export const updatePlayerElo = async (
 };
 
 // @desc    Add a completed puzzle to a player
-// @route   PUT /api/players/:userId/completed
+// @route   PUT /players/:userId/completed
 // @access  Public
 export const addCompletedPuzzle = async (
   req: Request,
@@ -98,7 +98,7 @@ export const addCompletedPuzzle = async (
 };
 
 // @desc    Add a completed game to a player
-// @route   PUT /api/players/:userId/completed-game
+// @route   PUT /players/:userId/completed-game
 // @access  Public
 export const addCompletedGame = async (
   req: Request,
@@ -126,7 +126,7 @@ export const addCompletedGame = async (
 };
 
 // // @desc    Delete a player
-// // @route   DELETE /api/players/:userId
+// // @route   DELETE /players/:userId
 // // @access  Public
 // export const deletePlayer = async (req: Request, res: Response): Promise<void> => {
 //   try {

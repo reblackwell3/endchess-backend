@@ -11,18 +11,18 @@ app.use(express.json());
 
 beforeAll(async () => {
   await connectDB();
-  app.use('/api/import', importRoutes);
+  app.use('/import', importRoutes);
 });
 
 describe('Import Controller', () => {
   it('should load games from chess.com', async () => {
-    const res = await request(app).get('/api/import/chesscom/minhnotminh');
+    const res = await request(app).get('/import/chesscom/minhnotminh');
     expect(res.status).toBe(200);
     expect(res.body).not.toBeNull();
   });
 
   it('should load games from lichess', async () => {
-    const res = await request(app).get('/api/import/lichess/Minhnotminh');
+    const res = await request(app).get('/import/lichess/Minhnotminh');
     expect(res.status).toBe(200);
     expect(res.body).not.toBeNull();
   });

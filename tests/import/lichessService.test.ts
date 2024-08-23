@@ -28,7 +28,7 @@ describe('readGamesFromLichess', () => {
 
     // Mock the API call
     mock
-      .onGet(`https://lichess.org/api/games/user/${username}`)
+      .onGet(`https://lichess.org/games/user/${username}`)
       .reply(200, mockPgnData);
 
     // Mock the parsePgn function to return an array of parsed game objects
