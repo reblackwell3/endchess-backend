@@ -37,13 +37,13 @@ async function saveGame(
   source: string,
 ): Promise<Types.ObjectId | null> {
   try {
+    if (source === 'lichess' && !game.uuid) {
+      game.uuid = generateLichessUUID(game);
+    }
+
     if (await isDuplicateGame(game, source)) {
       console.log(`Game with UUID ${game.uuid} already exists, skipping...`);
       return null;
-    }
-
-    if (source === 'lichess' && !game.uuid) {
-      game.uuid = generateLichessUUID(game);
     }
 
     const newGame = new Game(game);
