@@ -1,19 +1,13 @@
-// backend/import/importRoutes.ts
 import express, { Request, Response } from 'express';
-import {
-  importChesscomGames,
-  importLichessGames,
-} from './importController';
+import { importChesscomGames, importLichessGames } from './importController';
 
 const router = express.Router();
 
-// Route to import games from Chess.com by username
-router.get('/chesscom/:username', (req: Request, res: Response) => {
+router.post('/chesscom', (req: Request, res: Response) => {
   importChesscomGames(req, res);
 });
 
-// Route to import games from Lichess by username
-router.get('/lichess/:username', (req: Request, res: Response) => {
+router.post('/lichess', (req: Request, res: Response) => {
   importLichessGames(req, res);
 });
 

@@ -1,5 +1,5 @@
-import { readGamesFromChessCom } from './chessComImportService'; // Adjust the path if necessary
-import { readGamesFromLichess } from './lichessImportService'; // Adjust the path if necessary
+import { readGamesFromChessCom } from './chessComImportService';
+import { readGamesFromLichess } from './lichessImportService';
 import { Request, Response } from 'express';
 
 export async function importChesscomGames(
@@ -8,8 +8,8 @@ export async function importChesscomGames(
 ): Promise<void> {
   try {
     await readGamesFromChessCom(
-      req.params.chesscom_username,
-      req.params.enchess_username,
+      req.body.chesscom_username,
+      req.body.endchess_username,
     );
     res.status(200).json({ message: 'Chess.com games imported successfully' });
   } catch (error) {
@@ -22,12 +22,10 @@ export async function importLichessGames(
   req: Request,
   res: Response,
 ): Promise<void> {
-  const username = req.params.username;
-
   try {
     await readGamesFromLichess(
-      req.params.lichess_username,
-      req.params.endchess_username,
+      req.body.lichess_username,
+      req.body.endchess_username,
     );
     res.status(200).json({ message: 'Lichess games imported successfully' });
   } catch (error) {
