@@ -1,11 +1,11 @@
 import axios from 'axios';
 import Game, { IGame } from '../games/gameModel';
-import { saveGames } from './importService'; // Assuming importService has been refactored to export functions
+import { saveGames, SaveFeedback } from './importService'; // Assuming importService has been refactored to export functions
 
 export async function readGamesFromChessCom(
   chesscom_username: string,
   endchess_username: string,
-): Promise<void> {
+): Promise<SaveFeedback> {
   try {
     const archivesResponse = await axios.get(
       `https://api.chess.com/pub/player/${chesscom_username}/games/archives`,
@@ -20,7 +20,8 @@ export async function readGamesFromChessCom(
       gamesData.push(...newGamesData);
     }
 
-    await saveGames(gamesData, endchess_username, 'chess.com');
+    const feedback = await saveGames(gamesData, endchess_username, 'chess.com');
+    return feedback;
   } catch (err) {
     const error = err as Error;
     console.error(

@@ -2,12 +2,12 @@ import axios from 'axios';
 import { parsePgn } from './parsePgn';
 import { PgnGameData } from 'pgn-parser';
 import Game, { IGame } from '../games/gameModel';
-import { saveGames } from './importService';
+import { saveGames, SaveFeedback } from './importService';
 
 export async function readGamesFromLichess(
   lichess_username: string,
   endchess_username: string,
-): Promise<void> {
+): Promise<SaveFeedback> {
   try {
     const response = await axios.get(
       `https://lichess.org/api/games/user/${lichess_username}`,
@@ -26,10 +26,12 @@ export async function readGamesFromLichess(
 
     if (games.length === 0) {
       console.log('No valid games found in the PGN data.');
-      return;
+      const emptyFeedback = {};
+      return emptyFeedback;
     }
 
-    await saveGames(games, endchess_username, 'lichess');
+    const feedback = await saveGames(games, endchess_username, 'lichess');
+    return feedback;
   } catch (err) {
     const error = err as Error;
     console.error(

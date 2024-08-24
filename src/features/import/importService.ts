@@ -2,17 +2,25 @@ import Game, { IGame } from '../games/gameModel';
 import Player from '../players/playerModel'; // Assuming this is the Player model
 import mongoose, { Types } from 'mongoose';
 
+export type SaveFeedback = {
+  inserts?: Types.ObjectId[];
+  duplicates?: Types.ObjectId[];
+};
+
 export async function saveGames(
   games: IGame[],
   endchess_username: string,
   source: string,
-): Promise<void> {
+): Promise<SaveFeedback> {
   const savedGameIds: Types.ObjectId[] = [];
+  const duplicateGameIds: Types.ObjectId[] = [];
 
   for (const game of games) {
     const savedGameId = await saveGame(game, source);
     if (savedGameId) {
       savedGameIds.push(savedGameId);
+    } else {
+      duplicateGameIds.push(game._id);
     }
   }
 
@@ -21,6 +29,7 @@ export async function saveGames(
   }
 
   console.log(`${savedGameIds.length} games have been saved from ${source}.`);
+  return { inserts: savedGameIds, duplicates: duplicateGameIds };
 }
 
 async function saveGame(
@@ -57,12 +66,12 @@ async function updateUserImportedGames(
   userId: string,
   gameIds: mongoose.Types.ObjectId[],
 ): Promise<void> {
-  await Player.findByIdAndUpdate(userId, {
-    $push: { importedGames: { $each: gameIds } },
-  });
+  await Player.findOneAndUpdate(
+    { userId: userId },
+    { $push: { importedGames: { $each: gameIds } } },
+  );
 }
 
 function generateLichessUUID(game: IGame): string {
-  console.log(`white ${game.white} black ${game.black}`);
   return `${game.white.username}-${game.black.username}-${game.end_time}`;
 }
