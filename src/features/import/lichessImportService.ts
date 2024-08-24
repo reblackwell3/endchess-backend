@@ -69,16 +69,17 @@ function buildGame(pgn: PgnGameData): IGame | null {
       white: {
         rating: parseInt(headers.WhiteElo) || 0,
         result: headers.Result.startsWith('1') ? 'win' : 'lose',
-        username: headers.White || '',
+        username: headers.White,
       },
       black: {
         rating: parseInt(headers.BlackElo) || 0,
         result: headers.Result.endsWith('1') ? 'win' : 'lose',
-        username: headers.Black || '',
+        username: headers.Black,
       },
       result: headers.Result || '',
     });
 
+    game.uuid = generateLichessUUID(game);
     return game;
   } catch (err) {
     console.error('Error building Lichess game:', err);
@@ -93,6 +94,10 @@ function mapHeaders(
     (acc as any)[name] = value;
     return acc;
   }, {} as LichessHeaders);
+}
+
+function generateLichessUUID(game: IGame): string {
+  return `${game.white.username}-${game.black.username}-${game.end_time}`;
 }
 
 interface LichessHeaders {

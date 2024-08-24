@@ -37,10 +37,6 @@ async function saveGame(
   source: string,
 ): Promise<Types.ObjectId | null> {
   try {
-    if (source === 'lichess' && !game.uuid) {
-      game.uuid = generateLichessUUID(game);
-    }
-
     if (await isDuplicateGame(game, source)) {
       console.log(`Game with UUID ${game.uuid} already exists, skipping...`);
       return null;
@@ -70,8 +66,4 @@ async function updateUserImportedGames(
     { userId: userId },
     { $push: { importedGames: { $each: gameIds } } },
   );
-}
-
-function generateLichessUUID(game: IGame): string {
-  return `${game.white.username}-${game.black.username}-${game.end_time}`;
 }
