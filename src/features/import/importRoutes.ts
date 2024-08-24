@@ -1,14 +1,10 @@
 import express, { Request, Response } from 'express';
-import { importChesscomGames, importLichessGames } from './importController';
+import { importGames } from './importController';
 
 const router = express.Router();
 
-router.post('/chesscom', (req: Request, res: Response) => {
-  importChesscomGames(req, res);
-});
-
-router.post('/lichess', (req: Request, res: Response) => {
-  importLichessGames(req, res);
+router.post('/', (req: Request, res: Response) => {
+  importGames(req, res);
 });
 
 export default router;
