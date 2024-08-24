@@ -63,5 +63,6 @@ async function updateUserImportedGames(
 }
 
 function generateLichessUUID(game: IGame): string {
+  console.log(`white ${game.white} black ${game.black}`);
   return `${game.white.username}-${game.black.username}-${game.end_time}`;
 }
