@@ -1,22 +1,17 @@
 import axios from 'axios';
-import axiosMockAdapter from 'axios-mock-adapter';
-import path from 'path';
-import { readGamesFromChessCom } from '../../src/features/import/chessComService'; // Adjust the import path accordingly
-import Game, { IGame } from '../../src/features/games/gameModel'; // Adjust path if necessary
-import twoUserGames from '../data/two-games.blackfromchina.chesscom.json';
+import MockAdapter from 'axios-mock-adapter';
+import { readGamesFromChessCom } from '../../src/features/import/chessComImportService';
+import { saveGames } from '../../src/features/import/importService'; // Ensure correct import path
+import twoUserGames from '../__data__/two-games.blackfromchina.chesscom.json';
 
-jest.mock('../../src/features/games/gameModel');
-
-const PATH_TO_DATA = '../../data';
-const TWO_USER_GAMES_WRAPPED = {
-  games: twoUserGames,
-};
+jest.mock('../../src/features/import/importService');
+jest.mock('../../src/features/players/playerModel'); // Mock Player model
 
 describe('readGamesFromChessCom', () => {
-  let axiosMock: axiosMockAdapter;
+  let axiosMock: MockAdapter;
 
   beforeAll(() => {
-    axiosMock = new axiosMockAdapter(axios);
+    axiosMock = new MockAdapter(axios);
   });
 
   afterEach(() => {
@@ -29,20 +24,28 @@ describe('readGamesFromChessCom', () => {
   });
 
   it('should fetch from URL and save games', async () => {
-    const mockUsername = 'testuser';
+    const chesscom_username = 'chesscom';
+    const endchess_username = 'endchess';
+
     const mockArchivesResponse = {
       archives: ['https://api.chess.com/pub/player/testuser/games/2024/01'],
     };
 
     axiosMock
-      .onGet(`https://api.chess.com/pub/player/${mockUsername}/games/archives`)
+      .onGet(
+        `https://api.chess.com/pub/player/${chesscom_username}/games/archives`,
+      )
       .reply(200, mockArchivesResponse);
     axiosMock
       .onGet(mockArchivesResponse.archives[0])
-      .reply(200, TWO_USER_GAMES_WRAPPED);
+      .reply(200, { games: twoUserGames });
 
-    await readGamesFromChessCom(mockUsername);
+    (saveGames as jest.Mock).mockResolvedValue(undefined);
 
-    expect(Game.prototype.save).toHaveBeenCalledTimes(twoUserGames.length);
+    await readGamesFromChessCom(chesscom_username, endchess_username);
+    const saveGamesArgs = (saveGames as jest.Mock).mock.calls[0];
+    expect(saveGamesArgs[0]).toEqual(twoUserGames);
+    expect(saveGamesArgs[1]).toBe(endchess_username);
+    expect(saveGamesArgs[2]).toBe('chess.com');
   });
 });
