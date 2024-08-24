@@ -40,21 +40,12 @@ describe('readGamesFromChessCom', () => {
       .onGet(mockArchivesResponse.archives[0])
       .reply(200, { games: twoUserGames });
 
-    // Mock the saveGames function to simulate saving games
     (saveGames as jest.Mock).mockResolvedValue(undefined);
 
     await readGamesFromChessCom(chesscom_username, endchess_username);
-
-    // Capture and inspect the arguments passed to saveGames
     const saveGamesArgs = (saveGames as jest.Mock).mock.calls[0];
-
-    // Compare the first argument (the games) to twoUserGames or the processed equivalent
     expect(saveGamesArgs[0]).toEqual(twoUserGames);
-
-    // Compare the second argument (username)
     expect(saveGamesArgs[1]).toBe(endchess_username);
-
-    // Compare the third argument (source)
     expect(saveGamesArgs[2]).toBe('chess.com');
   });
 });
