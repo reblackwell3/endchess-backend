@@ -6,6 +6,7 @@ const playerSchema = new mongoose.Schema({
   elo: { type: Number, required: true, default: 1200 },
   puzzlesCompleted: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Puzzle' }],
   gamesCompleted: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Game' }],
+  importedGames: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Game' }],
 });
 
 const Player = mongoose.model('Player', playerSchema);

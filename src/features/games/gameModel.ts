@@ -1,6 +1,7 @@
-import { Document, Model, model, Schema } from 'mongoose';
+import { Document, Model, model, Schema, Types } from 'mongoose';
 
 export interface IGame extends Document {
+  _id: Types.ObjectId;
   import_from: string; // 'chess.com' or 'lichess'
   url: string;
   pgn: string;
@@ -14,8 +15,6 @@ export interface IGame extends Document {
   time_class: string;
   rules: string;
   eco?: string;
-  eco_url?: string;
-  termination: string;
   white: {
     rating: number;
     result: string;

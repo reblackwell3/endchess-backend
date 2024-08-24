@@ -1,5 +1,5 @@
-import { readGamesFromChessCom } from './chessComService'; // Adjust the path if necessary
-import { readGamesFromLichess } from './lichessService'; // Adjust the path if necessary
+import { readGamesFromChessCom } from './chessComImportService'; // Adjust the path if necessary
+import { readGamesFromLichess } from './lichessImportService'; // Adjust the path if necessary
 import { Request, Response } from 'express';
 
 export async function importChesscomGames(
