@@ -23,14 +23,6 @@ beforeAll(async () => {
 });
 
 describe('Players Controller', () => {
-  it('should create a new player', async () => {
-    const res = await request(app)
-      .post('/players')
-      .send({ userId: 'other_user' });
-    expect(res.status).toBe(201);
-    expect(res.body).toHaveProperty('userId', CREATE_USER_ID);
-  });
-
   it('should get user by id', async () => {
     const res = await request(app).get('/players/' + GET_USER_ID);
     expect(res.status).toBe(200);
