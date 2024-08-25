@@ -3,8 +3,8 @@ import {
   createOrUpdateAuth,
   getAuthByProviderId,
   AuthRequestParams,
-} from '../../src/features/auth/authController';
-import Auth, { IAuth } from '../../src/features/auth/authModel';
+} from '../../src/features/_auth/authController';
+import Auth, { IAuth } from '../../src/features/_auth/authModel';
 import Player from '../../src/features/players/playerModel';
 import mongoose from 'mongoose';
 

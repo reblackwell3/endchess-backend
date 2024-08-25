@@ -17,6 +17,8 @@ connectDB();
 
 app.use(express.json());
 
+app.use(authenticateToken);
+
 app.use('/puzzles', puzzleRoutes);
 
 app.use('/players', playerRoutes);
