@@ -11,22 +11,42 @@ const app = express();
 app.use(express.json());
 
 const endchess_username = 'end_minh';
+const chesscom_username = 'minhnotminh';
+const lichess_username = 'Minhnotminh';
+const CHESSCOM_GAMES_NUM = 16;
+const LICHESS_GAMES_NUM = 1;
+
 beforeAll(async () => {
   await connectDB();
-  await Game.deleteMany({});
-  await Player.deleteMany({});
+  await Game.deleteMany({
+    $or: [
+      { 'white.username': chesscom_username },
+      { 'black.username': chesscom_username },
+      { 'white.username': lichess_username },
+      { 'black.username': lichess_username },
+    ],
+  });
+  await Player.updateOne(
+    { userId: endchess_username }, // Filter: find the document with the given userId
+    { $set: { userId: endchess_username } }, // Update: set the userId (can include other fields to set as well)
+    { upsert: true }, // If no document matches the filter, insert a new one
+  );
 
   app.use('/import', importRoutes);
+});
 
-  // Insert a player for the user before running the tests
-  await Player.create({ userId: endchess_username });
+beforeEach(async () => {
+  await Player.updateOne(
+    { userId: endchess_username },
+    { $set: { importedGames: [] } },
+  );
 });
 
 describe('Import Controller', () => {
   it('should import games, and verify the data', async () => {
     const chesscomRes = await request(app).post('/import').send({
       other_platform: 'chesscom',
-      other_username: 'minhnotminh',
+      other_username: chesscom_username,
       endchess_username,
     });
 
@@ -35,7 +55,6 @@ describe('Import Controller', () => {
     expect(chesscomRes.body.message).toBe(
       'Chess.com games imported successfully',
     );
-    const CHESSCOM_GAMES_NUM = 16;
     expect(chesscomRes.body.feedback.inserts.length).toBeGreaterThanOrEqual(
       CHESSCOM_GAMES_NUM,
     );
@@ -49,17 +68,16 @@ describe('Import Controller', () => {
     const gamesInDB = await Game.find({
       _id: { $in: updatedPlayer!.importedGames },
     });
-    expect(gamesInDB.length).toBe(updatedPlayer!.importedGames.length);
+    expect(gamesInDB.length).toBe(CHESSCOM_GAMES_NUM);
   });
 
   it('should import games from lichess and verify', async () => {
     const lichessRes = await request(app).post('/import').send({
       other_platform: 'lichess',
-      other_username: 'Minhnotminh',
+      other_username: lichess_username,
       endchess_username,
     });
 
-    const LICHESS_GAMES_NUM = 1;
     expect(lichessRes.status).toBe(200);
     expect(lichessRes.body).not.toBeNull();
     expect(lichessRes.body.message).toBe('Lichess games imported successfully');
@@ -75,6 +93,6 @@ describe('Import Controller', () => {
     const gamesInDB = await Game.find({
       _id: { $in: updatedPlayer!.importedGames },
     });
-    expect(gamesInDB.length).toBe(updatedPlayer!.importedGames.length);
+    expect(gamesInDB.length).toBe(LICHESS_GAMES_NUM);
   });
 });
