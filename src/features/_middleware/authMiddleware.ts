@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import axios from 'axios';
 import jwksClient from 'jwks-rsa';
 
 // Google OAuth2 public keys endpoint
@@ -38,7 +37,7 @@ export const authenticateToken = async (
       algorithms: ['RS256'], // Google uses RS256
     });
 
-    req.user = decoded_token; // Attach the user to the request object
+    req.decodedToken = decoded_token; // Attach the user to the request object
     next();
   } catch (err) {
     return res.status(403).json({ message: 'Invalid or expired token' });

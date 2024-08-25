@@ -57,7 +57,7 @@ export const createOrUpdateAuth = async (
 
       await authRecord.save();
 
-      return res.status(201).json(authRecord);
+      return res.status(201).json(player._id);
     }
   } catch (err) {
     const error = err as Error;
