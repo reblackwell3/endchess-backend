@@ -2,12 +2,12 @@ import axios from 'axios';
 import { parsePgn } from './parsePgn';
 import { PgnGameData } from 'pgn-parser';
 import Game, { IGame } from '../games/gameModel';
-import { saveGames } from './importService';
+import { saveGames, SaveFeedback } from './importService';
 
 export async function readGamesFromLichess(
   lichess_username: string,
   endchess_username: string,
-): Promise<void> {
+): Promise<SaveFeedback> {
   try {
     const response = await axios.get(
       `https://lichess.org/api/games/user/${lichess_username}`,
@@ -26,10 +26,12 @@ export async function readGamesFromLichess(
 
     if (games.length === 0) {
       console.log('No valid games found in the PGN data.');
-      return;
+      const emptyFeedback = {};
+      return emptyFeedback;
     }
 
-    await saveGames(games, endchess_username, 'lichess');
+    const feedback = await saveGames(games, endchess_username, 'lichess');
+    return feedback;
   } catch (err) {
     const error = err as Error;
     console.error(
@@ -44,37 +46,45 @@ function buildGame(pgn: PgnGameData): IGame | null {
   try {
     const headers = mapHeaders(pgn.headers);
 
-    const formattedUTCDate = headers.UTCDate.replace(/\./g, '-');
-    const UNKNOWN_VALUE_PLACEHOLDER = 'UNKNOWN';
+    // Format the UTC date
+    const formattedUTCDate =
+      headers.UTCDate?.replace(/\./g, '-') || '1970-01-01';
+
+    // Compute the end_time in Unix timestamp format
+    const endTimeDate = new Date(
+      `${formattedUTCDate}T${headers.UTCTime || '00:00:00'}Z`,
+    );
+    const end_time = endTimeDate.getTime() / 1000;
+
+    // Generate the UUID using the refactored function
+    const uuid = generateLichessUUID(headers, end_time);
+
+    // Construct the Game object with all required fields
     const game: IGame = new Game({
       import_from: 'lichess',
-      url: headers.Site,
-      pgn: pgn.pgn,
-      time_control: headers.TimeControl,
-      end_time:
-        new Date(`${formattedUTCDate}T${headers.UTCTime}Z`).getTime() / 1000,
+      url: headers.Site || 'unknown-url',
+      pgn: pgn.pgn || '',
+      time_control: headers.TimeControl || 'unknown',
+      end_time: end_time,
       rated: true,
-      tcn: UNKNOWN_VALUE_PLACEHOLDER,
-      uuid: UNKNOWN_VALUE_PLACEHOLDER,
-      initial_setup:
-        headers.Variant === 'Chess960'
-          ? headers.FEN
-          : UNKNOWN_VALUE_PLACEHOLDER,
-      fen: UNKNOWN_VALUE_PLACEHOLDER,
-      time_class: UNKNOWN_VALUE_PLACEHOLDER,
-      rules: headers.Variant,
-      eco: headers.ECO || UNKNOWN_VALUE_PLACEHOLDER,
+      tcn: '',
+      uuid: uuid,
+      initial_setup: headers.Variant === 'Chess960' ? headers.FEN || '' : '',
+      fen: '',
+      time_class: 'standard', // Default value; adjust if necessary
+      rules: headers.Variant || 'standard',
+      eco: headers.ECO || '',
       white: {
-        rating: parseInt(headers.WhiteElo) || 0,
-        result: headers.Result.startsWith('1') ? 'win' : 'lose',
-        username: headers.White || '',
+        rating: parseInt(headers.WhiteElo || '0', 10),
+        result: headers.Result?.startsWith('1') ? 'win' : 'lose',
+        username: headers.White || 'unknown',
       },
       black: {
-        rating: parseInt(headers.BlackElo) || 0,
-        result: headers.Result.endsWith('1') ? 'win' : 'lose',
-        username: headers.Black || '',
+        rating: parseInt(headers.BlackElo || '0', 10),
+        result: headers.Result?.endsWith('1') ? 'win' : 'lose',
+        username: headers.Black || 'unknown',
       },
-      result: headers.Result || '',
+      result: headers.Result || '1/2-1/2',
     });
 
     return game;
@@ -91,6 +101,13 @@ function mapHeaders(
     (acc as any)[name] = value;
     return acc;
   }, {} as LichessHeaders);
+}
+
+function generateLichessUUID(
+  headers: LichessHeaders,
+  end_time: number,
+): string {
+  return `${headers.White}-${headers.Black}-${end_time}`;
 }
 
 interface LichessHeaders {

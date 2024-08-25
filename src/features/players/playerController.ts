@@ -8,12 +8,10 @@ export const createPlayer = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const { userId, elo } = req.body;
+  const { userId } = req.body;
 
   const player = new Player({
     userId,
-    elo: elo || 1200,
-    puzzlesCompleted: [],
   });
 
   try {
