@@ -43,7 +43,7 @@ describe('readGamesFromLichess', () => {
 
     (parsePgn as jest.Mock).mockReturnValue(mockParsedGames);
 
-    (saveGames as jest.Mock).mockResolvedValue(undefined);
+    (saveGames as jest.Mock).mockResolvedValue({ inserts: 2 });
 
     // (Game.findOne as jest.Mock).mockResolvedValue(null);
 
