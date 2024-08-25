@@ -1,7 +1,7 @@
 import { Document, model, Schema, Types } from 'mongoose';
 
 export interface IAuth extends Document {
-  player: Types.ObjectId;
+  playerId: Types.ObjectId;
   provider: string;
   providerId: string;
   accessToken: string;
@@ -11,7 +11,7 @@ export interface IAuth extends Document {
 }
 
 const authSchema = new Schema<IAuth>({
-  player: {
+  playerId: {
     type: Schema.Types.ObjectId,
     ref: 'Player',
     required: true,

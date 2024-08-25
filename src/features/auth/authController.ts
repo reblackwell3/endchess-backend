@@ -12,10 +12,10 @@ interface AuthRequestBody {
 }
 
 // Define types for request params
-interface AuthRequestParams {
+export interface AuthRequestParams {
   providerId: string;
   provider: string;
-  playerId: string;
+  playerId: Types.ObjectId;
 }
 
 // Create or update an auth record
@@ -37,7 +37,7 @@ export const createOrUpdateAuth = async (
       // Update the access and refresh tokens
       authRecord.accessToken = accessToken;
       authRecord.refreshToken = refreshToken;
-    //   authRecord.updatedAt = new Date();
+      //   authRecord.updatedAt = new Date();
       await authRecord.save();
 
       return res.status(200).json(authRecord);
@@ -74,41 +74,16 @@ export const getAuthByProviderId = async (
   const { providerId, provider } = req.params;
 
   try {
-    const authRecord = (await Auth.findOne({ providerId, provider }).populate(
-      'player',
-    )) as IAuth | null;
+    const authRecord = await Auth.findOne({
+      providerId,
+      provider,
+    });
 
     if (!authRecord) {
       return res.status(404).json({ error: 'Auth record not found' });
     }
 
     return res.status(200).json(authRecord);
-  } catch (err) {
-    const error = err as Error;
-    return res.status(500).json({ error: error.message });
-  }
-};
-
-// Get all auth records for a specific player
-export const getAuthByPlayerId = async (
-  req: Request<AuthRequestParams>,
-  res: Response,
-  next: NextFunction,
-): Promise<Response> => {
-  const { playerId } = req.params;
-
-  try {
-    const authRecords = (await Auth.find({ player: playerId }).populate(
-      'player',
-    )) as IAuth[];
-
-    if (authRecords.length === 0) {
-      return res
-        .status(404)
-        .json({ error: 'No auth records found for this player' });
-    }
-
-    return res.status(200).json(authRecords);
   } catch (err) {
     const error = err as Error;
     return res.status(500).json({ error: error.message });
