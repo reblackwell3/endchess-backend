@@ -13,7 +13,13 @@ app.use(express.json());
 beforeAll(async () => {
   await connectDB();
   app.use('/games', gameRoutes);
-  (await Game.create(mockBuiltGames[0])).save();
+
+  const game = mockBuiltGames[0];
+  await Game.updateOne(
+    { url: game.url }, // Filter by a unique field like `uuid`
+    { $setOnInsert: game }, // Only set this if inserting
+    { upsert: true }, // Perform insert if no document matches the filter
+  );
 });
 
 describe('Games Controller', () => {
