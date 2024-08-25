@@ -1,8 +1,18 @@
-import mongoose from 'mongoose';
+import { Document, model, Schema, Types } from 'mongoose';
 
-const authSchema = new mongoose.Schema({
+export interface IAuth extends Document {
+  player: Types.ObjectId;
+  provider: string;
+  providerId: string;
+  accessToken: string;
+  refreshToken: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const authSchema = new Schema<IAuth>({
   player: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Player',
     required: true,
   },
@@ -38,5 +48,5 @@ authSchema.pre('save', function (next) {
   next();
 });
 
-const Auth = mongoose.model('Auth', authSchema);
+const Auth = model<IAuth>('Auth', authSchema);
 export default Auth;

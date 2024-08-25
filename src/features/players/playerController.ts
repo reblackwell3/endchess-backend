@@ -1,28 +1,6 @@
 import Player from './playerModel';
 import { Request, Response } from 'express';
 
-// @desc    Create a new player
-// @route   POST /players
-// @access  Public
-export const createPlayer = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
-  const { userId } = req.body;
-
-  const player = new Player({
-    userId,
-  });
-
-  try {
-    const newPlayer = await player.save();
-    res.status(201).json(newPlayer);
-  } catch (err) {
-    const error = err as Error;
-    res.status(400).json({ message: error.message });
-  }
-};
-
 // @desc    Get a single player by userId
 // @route   GET /players/:userId
 // @access  Public
@@ -122,23 +100,3 @@ export const addCompletedGame = async (
     res.status(400).json({ message: error.message });
   }
 };
-
-// // @desc    Delete a player
-// // @route   DELETE /players/:userId
-// // @access  Public
-// export const deletePlayer = async (req: Request, res: Response): Promise<void> => {
-//   try {
-//     const player = await Player.findOne({ userId: req.params.userId });
-//     if (!player) {
-//       res.status(404).json({ message: 'Player not found' });
-//     } else {
-
-//           await player.remove();
-//           res.json({ message: 'Player deleted' });
-
-//     }
-//   } catch (err) {
-//     const error = err as Error;
-//     res.status(500).json({ message: error.message });
-//   }
-// };
