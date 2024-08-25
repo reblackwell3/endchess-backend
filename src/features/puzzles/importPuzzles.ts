@@ -20,7 +20,7 @@ async function importPuzzles(): Promise<void> {
     // Read and parse the CSV file
     const puzzles: any[] = []; // Store puzzles to insert them at once
 
-    fs.createReadStream('./data/lichess_db_puzzle.csv')
+    fs.createReadStream('./__data__/lichess_db_puzzle.csv')
       .pipe(csv())
       .on('data', (row) => {
         const puzzle = new Puzzle({
