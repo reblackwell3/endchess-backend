@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import Auth from '../_auth/authModel'; // Adjust the import path as needed
+import IAuth from '../_auth/authModel'; // Adjust the import path as needed
 
 // JWT Secret or Public Key (replace with your setup, if needed)
 const JWT_SECRET = 'your_jwt_secret_key'; // Only needed if you're signing JWTs yourself
@@ -10,20 +10,11 @@ export const attachPlayerId = async (
   next: NextFunction,
 ) => {
   try {
-    const decodedToken: any = req.user;
-
-    // Find the corresponding auth record using providerId (sub from token)
-    const authRecord = await Auth.findOne({
-      provider: decodedToken.iss,
-      providerId: decodedToken.sub,
-    });
-
-    if (!authRecord) {
-      return res.status(404).json({ message: 'User not found' });
-    }
+    console.log('player id middleware');
+    const authRecord = (req as any).authRecord;
 
     // Attach the playerId to the request object
-    req.playerId = authRecord.playerId;
+    (req as any).playerId = authRecord.playerId;
 
     // Proceed to the next middleware or route handler
     next();

@@ -8,7 +8,10 @@ import playerRoutes from './features/players/playerRoutes';
 import gameRoutes from './features/games/gameRoutes';
 import importRoutes from './features/import/importRoutes';
 import { attachPlayerId } from './features/_middleware/addPlayerIdMiddleware';
-import { authenticateToken } from './features/_middleware/authMiddleware';
+import {
+  authenticateToken,
+  createOrUpdateAuth,
+} from './features/_middleware/authMiddleware';
 
 dotenv.config({ path: '.env' });
 
@@ -21,7 +24,11 @@ app.use(express.json());
 
 app.use(authenticateToken);
 
+app.use(createOrUpdateAuth);
+
 app.use(attachPlayerId);
+
+app.use('/auth', authRoutes);
 
 app.use('/puzzles', puzzleRoutes);
 

@@ -1,12 +1,10 @@
-import express from 'express';
-import { createOrUpdateAuth, getAuthByProviderId } from './authController';
-
+import express, { Request, Response } from 'express';
 const router = express.Router();
 
-// Route to create or update an auth record
-router.post('/auth', createOrUpdateAuth);
-
 // Route to get an auth record by providerId and provider
-router.get('/auth/:provider/:providerId', getAuthByProviderId);
+router.post('/auth', (req: Request, res: Response) => {
+  const token = (req as any).decodedToken;
+  res.status(!!token ? 200 : 403);
+});
 
 export default router;
