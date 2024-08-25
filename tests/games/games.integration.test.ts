@@ -13,7 +13,7 @@ app.use(express.json());
 beforeAll(async () => {
   await connectDB();
   app.use('/games', gameRoutes);
-  await Game.create(mockBuiltGames[0]);
+  (await Game.create(mockBuiltGames[0])).save();
 });
 
 describe('Games Controller', () => {
