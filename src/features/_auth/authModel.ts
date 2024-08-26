@@ -16,67 +16,57 @@ export interface IAuth extends Document {
   updatedAt: Date;
 }
 
-const authSchema = new Schema<IAuth>({
-  playerId: {
-    type: Schema.Types.ObjectId,
-    ref: 'Player',
-    required: true,
+const authSchema = new Schema<IAuth>(
+  {
+    playerId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Player',
+      required: true,
+    },
+    provider: {
+      type: String,
+      required: true,
+    },
+    providerId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    accessToken: {
+      type: String,
+      required: true,
+    },
+    refreshToken: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    emailVerified: {
+      type: Boolean,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    picture: {
+      type: String,
+      required: true,
+    },
+    givenName: {
+      type: String,
+      required: true,
+    },
+    familyName: {
+      type: String,
+      required: true,
+    },
   },
-  provider: {
-    type: String,
-    required: true,
-  },
-  providerId: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  accessToken: {
-    type: String,
-    required: true,
-  },
-  refreshToken: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  emailVerified: {
-    type: Boolean,
-    required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  picture: {
-    type: String,
-    required: true,
-  },
-  givenName: {
-    type: String,
-    required: true,
-  },
-  familyName: {
-    type: String,
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: new Date(),
-  },
-  updatedAt: {
-    type: Date,
-    default: new Date(),
-  },
-});
-
-authSchema.pre('save', function (next) {
-  this.updatedAt = new Date();
-  next();
-});
+  { timestamps: true },
+);
 
 const Auth = model<IAuth>('Auth', authSchema);
 export default Auth;
