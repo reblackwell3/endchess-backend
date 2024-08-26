@@ -6,6 +6,7 @@ import { attachPlayerId } from '../../src/features/_middleware/addPlayerIdMiddle
 import Auth from '../../src/features/_auth/authModel';
 import Player from '../../src/features/players/playerModel';
 import jwt from 'jsonwebtoken';
+import { Types } from 'mongoose';
 
 jest.mock('jwks-rsa', () => {
   return jest.fn().mockImplementation(() => ({
@@ -101,6 +102,33 @@ describe('Google Auth Middleware Unit Tests', () => {
 
   it('should return 401 if no token is provided', async () => {
     jest.spyOn(Auth, 'findOne').mockResolvedValue(null);
+
+    const response = await request(app).post('/auth').send({});
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe('Access token missing or invalid');
+  });
+
+  it('should pass if auth record is available', async () => {
+    const mockAuthRecord = new Auth({
+      _id: new Types.ObjectId(),
+      playerId: new Types.ObjectId(),
+      provider: 'google',
+      providerId: '100604868571465174281',
+      accessToken: 'mockAccessToken',
+      refreshToken: 'mockRefreshToken',
+      email: 'reblackwell3@gmail.com',
+      emailVerified: true,
+      name: 'Robert Blackwell',
+      picture:
+        'https://lh3.googleusercontent.com/a/ACg8ocJFqO3qeA6JftoCX6PzBO3OsQqSfCXc3aUP34NUZC6ghJZIF0hv=s96-c',
+      givenName: 'Robert',
+      familyName: 'Blackwell',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    jest.spyOn(Auth, 'findOne').mockResolvedValue(mockAuthRecord);
 
     const response = await request(app).post('/auth').send({});
 
