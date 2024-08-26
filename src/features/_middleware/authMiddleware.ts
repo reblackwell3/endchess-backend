@@ -29,7 +29,7 @@ export const authenticateToken = async (
     const jwtoken = jwt.decode(token, { complete: true }) as Jwt;
 
     let decodedPayload: JwtPayload;
-    if (jwtoken.header.kid === 'testKid') {
+    if (jwtoken.header.kid === 'fakeEndchessKid') {
       console.log('The token is fake, but for pre-alpha it is accepted');
       decodedPayload = jwtoken.payload as JwtPayload;
     } else {

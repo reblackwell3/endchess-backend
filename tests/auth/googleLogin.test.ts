@@ -6,7 +6,6 @@ import { attachPlayerId } from '../../src/features/_middleware/addPlayerIdMiddle
 import Auth from '../../src/features/_auth/authModel';
 import Player from '../../src/features/players/playerModel';
 import jwt from 'jsonwebtoken';
-import jwksClient from 'jwks-rsa';
 
 jest.mock('jwks-rsa', () => {
   return jest.fn().mockImplementation(() => ({
