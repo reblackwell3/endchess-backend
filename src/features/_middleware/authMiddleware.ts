@@ -28,7 +28,31 @@ export const authenticateToken = async (
   try {
     const decodedHeader: any = jwt.decode(token, { complete: true });
 
-    // Get the kid (key ID) from the token header
+    let decodedToken;
+    if (decodedHeader.isFakeToken) {
+      console.log('the token is fake, but for pre-alpha it is accepted');
+      decodedToken = decodeFakeToken(decodedHeader);
+    } else {
+      // Get the kid (key ID) from the token header
+      decodedToken = await verifyGoogleToken(token, decodedHeader);
+    }
+
+    console.log(`${JSON.stringify(decodedToken, null, 2)}`);
+    (req as any).decodedToken = decodedToken; // Attach the user to the request object
+    next();
+  } catch (err) {
+    return res.status(403).json({ message: 'Invalid or expired token' });
+  }
+
+  async function decodeFakeToken(decodedHeader: any) {
+    const payloadBase64 = decodedHeader.payload;
+    const payloadJson = Buffer.from(payloadBase64, 'base64').toString('utf-8');
+    const decodedPayload = JSON.parse(payloadJson);
+
+    return decodedPayload;
+  }
+
+  async function verifyGoogleToken(token: string, decodedHeader: any) {
     const kid = decodedHeader.header.kid;
 
     // Get the signing key from Google's public keys
@@ -39,12 +63,7 @@ export const authenticateToken = async (
     const decodedToken = jwt.verify(token, publicKey, {
       algorithms: ['RS256'], // Google uses RS256
     });
-
-    console.log(`${JSON.stringify(decodedToken, null, 2)}`);
-    (req as any).decodedToken = decodedToken; // Attach the user to the request object
-    next();
-  } catch (err) {
-    return res.status(403).json({ message: 'Invalid or expired token' });
+    return decodedToken;
   }
 };
 
