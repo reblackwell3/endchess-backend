@@ -52,16 +52,21 @@ app.post(
 describe('Google Auth Middleware Unit Tests', () => {
   const mockTokenPayload = {
     iss: 'https://accounts.google.com',
+    azp: '906803804045-red0f0hgb8gchqfd0n8gu049k39bra8e.apps.googleusercontent.com',
+    aud: '906803804045-red0f0hgb8gchqfd0n8gu049k39bra8e.apps.googleusercontent.com',
     sub: '100604868571465174281',
     email: 'reblackwell3@gmail.com',
     email_verified: true,
+    nbf: 1724706043,
     name: 'Robert Blackwell',
     picture:
       'https://lh3.googleusercontent.com/a/ACg8ocJFqO3qeA6JftoCX6PzBO3OsQqSfCXc3aUP34NUZC6ghJZIF0hv=s96-c',
     given_name: 'Robert',
     family_name: 'Blackwell',
+    iat: 1724706343,
+    exp: 1724709943,
+    jti: 'b6bb2bf2eb50c6bceb0a4a080a423cc352ea505c',
   };
-
   const base64Encode = (obj: object) => {
     return Buffer.from(JSON.stringify(obj)).toString('base64');
   };
@@ -90,6 +95,9 @@ describe('Google Auth Middleware Unit Tests', () => {
 
   it('should pass through all middleware and return playerId and authRecord', async () => {
     jest.spyOn(Auth, 'findOne').mockResolvedValue(null);
+    jest
+      .spyOn(Player, 'findOneAndUpdate')
+      .mockResolvedValue(new Player({ userId: mockTokenPayload.sub }));
     const response = await request(app)
       .post('/auth')
       .set('Authorization', `Bearer ${mockToken}`)

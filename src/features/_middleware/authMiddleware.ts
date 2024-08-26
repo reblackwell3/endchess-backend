@@ -87,9 +87,9 @@ export const createOrUpdateAuth = async (
       authRecord.updatedAt = new Date();
       await authRecord.save();
     } else {
-      // Create a new player (if needed)
-      const player = new Player({ userId: providerId });
-      await player.save();
+      // Usage example
+      const playerData = { userId: providerId };
+      const player = await findOneOrCreate({ userId: providerId }, playerData);
 
       // Create a new auth record with all available fields
       authRecord = new Auth({
@@ -120,4 +120,14 @@ export const createOrUpdateAuth = async (
       .status(403)
       .json({ message: 'Failure creating or updating auth' });
   }
+};
+
+const findOneOrCreate = async (filter: any, data: any) => {
+  const result = await Player.findOneAndUpdate(
+    filter,
+    { $setOnInsert: data }, // Set the data only if inserting
+    { upsert: true, new: true, setDefaultsOnInsert: true }, // Options to control the behavior
+  );
+
+  return result;
 };
