@@ -1,5 +1,5 @@
 import request from 'supertest';
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response } from 'express';
 import { authenticateToken } from '../../src/features/_middleware/authMiddleware';
 import { createOrUpdateAuth } from '../../src/features/_middleware/authMiddleware';
 import { attachPlayerId } from '../../src/features/_middleware/addPlayerIdMiddleware';
@@ -18,7 +18,7 @@ jest.mock('jwks-rsa', () => {
 
 jest.mock('jsonwebtoken', () => ({
   decode: jest.fn().mockReturnValue({
-    header: { kid: 'testKid' },
+    header: { kid: 'googleKid' },
   }),
   verify: jest.fn().mockReturnValue({
     iss: 'https://accounts.google.com',
@@ -42,7 +42,6 @@ app.post(
   createOrUpdateAuth,
   attachPlayerId,
   (req: Request, res: Response) => {
-    // Final handler for the /auth route
     res.json({
       playerId: (req as any).playerId,
       authRecord: (req as any).authRecord,
@@ -50,46 +49,30 @@ app.post(
   },
 );
 
-describe('Auth Middleware Unit Tests', () => {
+describe('Google Auth Middleware Unit Tests', () => {
   const mockTokenPayload = {
     iss: 'https://accounts.google.com',
-    azp: '906803804045-red0f0hgb8gchqfd0n8gu049k39bra8e.apps.googleusercontent.com',
-    aud: '906803804045-red0f0hgb8gchqfd0n8gu049k39bra8e.apps.googleusercontent.com',
     sub: '100604868571465174281',
     email: 'reblackwell3@gmail.com',
     email_verified: true,
-    nbf: 1724622353,
     name: 'Robert Blackwell',
     picture:
       'https://lh3.googleusercontent.com/a/ACg8ocJFqO3qeA6JftoCX6PzBO3OsQqSfCXc3aUP34NUZC6ghJZIF0hv=s96-c',
     given_name: 'Robert',
     family_name: 'Blackwell',
-    iat: 1724622653,
-    exp: 1724626253,
-    jti: 'd81f489f0be08aee86267942b7c1deca583c1b9b',
   };
 
   const base64Encode = (obj: object) => {
     return Buffer.from(JSON.stringify(obj)).toString('base64');
   };
 
-  // Create the mock token by encoding the header and payload, and joining with a signature placeholder
   const mockToken = [
-    base64Encode({ alg: 'RS256', typ: 'JWT' }), // Header
-    base64Encode(mockTokenPayload), // Payload
-    'signature-placeholder', // Signature (just a placeholder for the test)
+    base64Encode({ alg: 'RS256', typ: 'JWT' }),
+    base64Encode(mockTokenPayload),
+    'signature-placeholder',
   ].join('.');
 
   beforeEach(() => {
-    const mockGetSigningKey = jest.fn((kid, callback) => {
-      callback(null, { getPublicKey: () => 'mock-public-key' });
-    });
-    (jwksClient as any).mockReturnValue({
-      getSigningKey: mockGetSigningKey,
-    });
-
-    (jwt.verify as jest.Mock).mockReturnValue(mockTokenPayload);
-
     jest.spyOn(Auth.prototype, 'save').mockResolvedValue(function (this: any) {
       return this;
     });

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload, Jwt } from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
 import Auth from '../_auth/authModel'; // Adjust the import path as needed
 import Player from '../players/playerModel'; // Adjust the import path as needed
@@ -26,44 +26,36 @@ export const authenticateToken = async (
   }
 
   try {
-    const decodedHeader: any = jwt.decode(token, { complete: true });
+    const jwtoken = jwt.decode(token, { complete: true }) as Jwt;
 
-    let decodedToken;
-    if (decodedHeader.isFakeToken) {
-      console.log('the token is fake, but for pre-alpha it is accepted');
-      decodedToken = decodeFakeToken(decodedHeader);
+    let decodedPayload: JwtPayload;
+    if (jwtoken.header.kid === 'testKid') {
+      console.log('The token is fake, but for pre-alpha it is accepted');
+      decodedPayload = jwtoken.payload as JwtPayload;
     } else {
       // Get the kid (key ID) from the token header
-      decodedToken = await verifyGoogleToken(token, decodedHeader);
+      decodedPayload = await verifyGoogleToken(token, jwtoken.header);
     }
 
-    console.log(`${JSON.stringify(decodedToken, null, 2)}`);
-    (req as any).decodedToken = decodedToken; // Attach the user to the request object
+    console.log(`${JSON.stringify(decodedPayload, null, 2)}`);
+    (req as any).decodedToken = decodedPayload; // Attach the user to the request object
     next();
   } catch (err) {
     return res.status(403).json({ message: 'Invalid or expired token' });
   }
 
-  async function decodeFakeToken(decodedHeader: any) {
-    const payloadBase64 = decodedHeader.payload;
-    const payloadJson = Buffer.from(payloadBase64, 'base64').toString('utf-8');
-    const decodedPayload = JSON.parse(payloadJson);
-
-    return decodedPayload;
-  }
-
-  async function verifyGoogleToken(token: string, decodedHeader: any) {
-    const kid = decodedHeader.header.kid;
+  async function verifyGoogleToken(token: string, header: any) {
+    const kid = header.kid;
 
     // Get the signing key from Google's public keys
-    const signingKey = await client.getSigningKey(kid);
+    const signingKey = await client.getSigningKey(kid!); // "!" asserts that kid is defined
     const publicKey = signingKey.getPublicKey();
 
     // Verify the token with the public key
-    const decodedToken = jwt.verify(token, publicKey, {
+    const verifiedToken = jwt.verify(token, publicKey, {
       algorithms: ['RS256'], // Google uses RS256
-    });
-    return decodedToken;
+    }) as JwtPayload;
+    return verifiedToken;
   }
 };
 
