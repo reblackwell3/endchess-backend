@@ -2,11 +2,9 @@ import request from 'supertest';
 import express from 'express';
 import fs from 'fs';
 import path from 'path';
-import {
-  authenticateToken,
-  createOrUpdateAuth,
-} from '../../src/features/_middleware/authMiddleware';
+import { authenticateToken } from '../../src/features/_middleware/authenticateToken';
 import { attachPlayerId } from '../../src/features/_middleware/addPlayerIdMiddleware';
+import { createOrUpdateAuth } from '../../src/features/_middleware/createOrUpdateAuth';
 import Auth from '../../src/features/_auth/authModel';
 import Player from '../../src/features/players/playerModel';
 import connectDB from '../../src/config/db';
@@ -19,7 +17,7 @@ const app = express();
 app.use(express.json());
 
 app.post(
-  '/auth',
+  '/test-all-middleware',
   authenticateToken,
   createOrUpdateAuth,
   attachPlayerId,
@@ -82,7 +80,7 @@ describe('Auth Middleware Integration Tests', () => {
     const mockToken = jwt.sign(mockTokenPayload, privateKey, signOptions);
 
     const response = await request(app)
-      .post('/auth')
+      .post('/test-all-middleware')
       .set('Authorization', `Bearer ${mockToken}`)
       .send({});
 

@@ -1,15 +1,12 @@
 // backend/features/tokens/tokenController.ts
 import { Request, Response } from 'express';
 import jwt, { JwtPayload, SignOptions } from 'jsonwebtoken';
-import jwksClient from 'jwks-rsa';
-import Auth from '../_auth/authModel'; // Adjust the import path as needed
-import Player from '../players/playerModel'; // Adjust the import path as needed
 import fs from 'fs';
 import path from 'path';
 
 const endchessPrivateKeyPath = path.join(
   __dirname,
-  '../../keys/private_key.pem',
+  '../../../keys/private_key.pem',
 );
 const endchessPrivateKey = fs.readFileSync(endchessPrivateKeyPath, 'utf8');
 
@@ -24,7 +21,7 @@ export const generateEmailToken = (req: Request, res: Response) => {
   const decodedPayload = buildPayloadForEmail(email);
 
   const signOptions: SignOptions = {
-    algorithm: 'RS256',
+    algorithm: 'HS256', // this algorithm does not take the same kind of key but I'm going to keep using the 256
     keyid: 'ENDCHESS_KID',
   };
 

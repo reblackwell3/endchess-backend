@@ -13,7 +13,10 @@ const client = jwksClient({
 });
 
 // Read the public key from the keys directory
-const endchessPublicKeyPath = path.join(__dirname, '../../keys/public_key.pem');
+const endchessPublicKeyPath = path.join(
+  __dirname,
+  '../../../keys/public_key.pem',
+);
 const endchessPublicKey = fs.readFileSync(endchessPublicKeyPath, 'utf8');
 
 export const authenticateToken = async (
@@ -38,7 +41,7 @@ export const authenticateToken = async (
 
     if (decodedHeader.header.kid === 'ENDCHESS_KID') {
       jwt.verify(token, endchessPublicKey, {
-        algorithms: ['RS256'],
+        algorithms: ['HS256'],
       }) as JwtPayload;
     } else {
       await verifyGoogleToken(token, decodedHeader.header);
