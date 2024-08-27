@@ -29,7 +29,7 @@ export const authenticateToken = async (
     const jwtoken = jwt.decode(token, { complete: true }) as Jwt;
 
     let decodedPayload: JwtPayload;
-    if (jwtoken.header.kid === 'fakeEndchessKid') {
+    if (jwtoken.header.kid == 'EMAIL') {
       //todo cannot figure out why this doesn't equal for fake token
       console.log('The token is fake, but for pre-alpha it is accepted');
       decodedPayload = jwtoken.payload as JwtPayload;
