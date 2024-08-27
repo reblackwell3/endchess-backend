@@ -54,15 +54,12 @@ const authSchema = new Schema<IAuth>(
     },
     picture: {
       type: String,
-      required: true,
     },
     givenName: {
       type: String,
-      required: true,
     },
     familyName: {
       type: String,
-      required: true,
     },
   },
   { timestamps: true },

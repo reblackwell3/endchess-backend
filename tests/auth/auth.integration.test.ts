@@ -1,5 +1,7 @@
 import request from 'supertest';
 import express from 'express';
+import fs from 'fs';
+import path from 'path';
 import {
   authenticateToken,
   createOrUpdateAuth,
@@ -9,13 +11,25 @@ import Auth from '../../src/features/_auth/authModel';
 import Player from '../../src/features/players/playerModel';
 import connectDB from '../../src/config/db';
 import dotenv from 'dotenv';
+import jwt, { SignOptions } from 'jsonwebtoken';
 
 dotenv.config({ path: '.env.test' });
 
 const app = express();
 app.use(express.json());
 
-app.post('/auth', authenticateToken, createOrUpdateAuth, attachPlayerId);
+app.post(
+  '/auth',
+  authenticateToken,
+  createOrUpdateAuth,
+  attachPlayerId,
+  (req, res) => {
+    res.json({
+      playerId: (req as any).playerId,
+      authRecord: (req as any).authRecord,
+    });
+  },
+);
 
 const testProviderId = 'testProviderId_12894589239';
 const testEmail = 'test_123908421390@example.com';
@@ -39,34 +53,33 @@ afterAll(async () => {
 describe('Auth Middleware Integration Tests', () => {
   it('should create an Auth record and a Player record', async () => {
     const mockTokenPayload = {
-      header: {
-        kid: 'fakeEndchessKid',
-      },
-      payload: {
-        iss: 'fake-issuer',
-        sub: 'test-user',
-        email: 'test@example.com',
-        email_verified: true,
-        name: 'Test User',
-        picture: 'https://example.com/test-picture.png',
-        given_name: 'Test',
-        family_name: 'User',
-        isFakeToken: true,
-        iat: 1724689846,
-        exp: 1724693446,
-        jti: 'fake-jti',
-      },
-      signature: 'fake-signature',
-    };
-    const base64Encode = (obj: object) => {
-      return Buffer.from(JSON.stringify(obj)).toString('base64');
+      iss: 'fake-issuer',
+      sub: testProviderId, // Matching the test provider ID
+      email: testEmail, // Matching the test email
+      email_verified: true,
+      name: 'Test User',
+      picture: 'https://example.com/test-picture.png',
+      given_name: 'Test',
+      family_name: 'User',
+      isFakeToken: true,
+      iat: Math.floor(Date.now() / 1000),
+      exp: Math.floor(Date.now() / 1000) + 3600, // 1-hour expiration
+      jti: 'fake-jti',
     };
 
-    const mockToken = [
-      base64Encode({ alg: 'RS256', typ: 'JWT' }),
-      base64Encode(mockTokenPayload),
-      'signature-placeholder',
-    ].join('.');
+    // Load the RSA private key from the file
+    const privateKey = fs.readFileSync(
+      path.join(__dirname, '../../fake_login_keys/private_key.pem'),
+      'utf8',
+    );
+
+    const signOptions: SignOptions = {
+      algorithm: 'RS256',
+      keyid: 'fakeEndchessKid',
+    };
+
+    // Generate the token with the custom header
+    const mockToken = jwt.sign(mockTokenPayload, privateKey, signOptions);
 
     const response = await request(app)
       .post('/auth')

@@ -85,7 +85,6 @@ export const createOrUpdateAuth = async (
     if (authRecord) {
       // Update the existing auth record with new token data
       authRecord.accessToken = accessToken || authRecord.accessToken;
-      authRecord.updatedAt = new Date();
       await authRecord.save();
     } else {
       // Usage example
@@ -97,16 +96,14 @@ export const createOrUpdateAuth = async (
         playerId: player._id,
         provider,
         providerId,
-        accessToken: accessToken || '',
-        refreshToken: '', // Assuming refreshToken is not provided by Google
+        accessToken: accessToken,
+        refreshToken: 'default', // Assuming refreshToken is not provided by Google
         email,
         emailVerified,
         name,
         picture,
         givenName,
         familyName,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       });
       await authRecord.save();
     }
