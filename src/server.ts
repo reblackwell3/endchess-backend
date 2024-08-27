@@ -9,10 +9,8 @@ import gameRoutes from './features/games/gameRoutes';
 import importRoutes from './features/import/importRoutes';
 import authRoutes from './features/_auth/tokenRoutes';
 import { attachPlayerId } from './features/_middleware/addPlayerIdMiddleware';
-import {
-  authenticateToken,
-  createOrUpdateAuth,
-} from './features/_middleware/authMiddleware';
+import { authenticateToken } from './features/_middleware/authenticateToken';
+import { createOrUpdateAuth } from './features/_middleware/createOrUpdateAuth';
 
 dotenv.config({ path: '.env' });
 

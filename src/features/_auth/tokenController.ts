@@ -7,6 +7,12 @@ import Player from '../players/playerModel'; // Adjust the import path as needed
 import fs from 'fs';
 import path from 'path';
 
+const endchessPrivateKeyPath = path.join(
+  __dirname,
+  '../../keys/private_key.pem',
+);
+const endchessPrivateKey = fs.readFileSync(endchessPrivateKeyPath, 'utf8');
+
 // Controller function for generating a token based on email
 export const generateEmailToken = (req: Request, res: Response) => {
   const email = req.body.email;
@@ -17,47 +23,17 @@ export const generateEmailToken = (req: Request, res: Response) => {
 
   const decodedPayload = buildPayloadForEmail(email);
 
-  const privateKey = process.env.PRIVATE_KEY as string;
-
   const signOptions: SignOptions = {
     algorithm: 'RS256',
-    keyid: 'EMAIL_USER_PLACEHOLDER',
+    keyid: 'ENDCHESS_KID',
   };
 
-  const token = jwt.sign(decodedPayload, privateKey, signOptions);
-
-  res.status(200).json({ token });
-};
-
-// Controller function for generating a token based on Google authentication
-export const generateGoogleToken = async (req: Request, res: Response) => {
-  const token = req.body.token;
-
-  if (!token) {
-    return res.status(400).json({ message: 'Token is required' });
-  }
-
   try {
-    const decodedHeader = jwt.decode(token, { complete: true }) as JwtPayload;
+    const token = jwt.sign(decodedPayload, endchessPrivateKey, signOptions);
 
-    if (!decodedHeader || !decodedHeader.header.kid) {
-      return res.status(400).json({ message: 'Invalid token' });
-    }
-
-    const decodedPayload = await verifyGoogleToken(token, decodedHeader.header);
-
-    const privateKey = process.env.PRIVATE_KEY as string;
-
-    const signOptions: SignOptions = {
-      algorithm: 'RS256',
-      keyid: decodedHeader.header.kid,
-    };
-
-    const newToken = jwt.sign(decodedPayload, privateKey, signOptions);
-
-    res.status(200).json({ token: newToken });
+    res.status(200).json({ token });
   } catch (error) {
-    res.status(403).json({ message: 'Invalid or expired token', error });
+    res.status(500).json({ message: 'Token generation failed', error });
   }
 };
 
@@ -78,24 +54,4 @@ function buildPayloadForEmail(email: string) {
     exp: Math.floor(Date.now() / 1000) + 3600, // 1-hour expiration
     jti: EMAIL_USER_PLACEHOLDER,
   };
-}
-
-// Helper function to verify Google token using JWKS
-async function verifyGoogleToken(token: string, header: any) {
-  const GOOGLE_OAUTH2_PUBLIC_KEYS =
-    'https://www.googleapis.com/oauth2/v3/certs';
-  const client = jwksClient({
-    jwksUri: GOOGLE_OAUTH2_PUBLIC_KEYS,
-  });
-
-  const kid = header.kid;
-
-  const signingKey = await client.getSigningKey(kid!); // "!" asserts that kid is defined
-  const publicKey = signingKey.getPublicKey();
-
-  const verifiedToken = jwt.verify(token, publicKey, {
-    algorithms: ['RS256'], // Google uses RS256
-  }) as JwtPayload;
-
-  return verifiedToken;
 }
