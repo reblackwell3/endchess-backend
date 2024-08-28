@@ -1,6 +1,11 @@
 // backend/puzzles/puzzleRoutes.ts
 import express, { Request, Response } from 'express';
-import { getRandomPuzzle, getRandomPuzzleRated, getNextPuzzle, getPuzzleById } from './puzzleController';
+import {
+  getRandomPuzzle,
+  getRandomPuzzleRated,
+  getNextPuzzle,
+  getPuzzleById,
+} from './puzzleController';
 
 const router = express.Router();
 

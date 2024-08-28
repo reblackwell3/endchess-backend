@@ -1,9 +1,9 @@
 import request from 'supertest';
 import express, { Request, Response } from 'express';
-import { authenticateToken } from '../../src/features/_middleware/authMiddleware';
-import { createOrUpdateAuth } from '../../src/features/_middleware/authMiddleware';
+import { authenticateToken } from '../../src/features/_middleware/authenticateToken';
+import { createOrUpdateAuth } from '../../src/features/_middleware/createOrUpdateAuth';
 import { attachPlayerId } from '../../src/features/_middleware/addPlayerIdMiddleware';
-import Auth from '../../src/features/_auth/authModel';
+import User from '../../src/features/user/userModel';
 import Player from '../../src/features/players/playerModel';
 import jwt from 'jsonwebtoken';
 import { Types } from 'mongoose';
@@ -37,7 +37,7 @@ const app = express();
 app.use(express.json());
 
 app.post(
-  '/auth',
+  '/test-middleware-only',
   authenticateToken,
   createOrUpdateAuth,
   attachPlayerId,
@@ -78,7 +78,7 @@ describe('Google Auth Middleware Unit Tests', () => {
   ].join('.');
 
   beforeEach(() => {
-    jest.spyOn(Auth.prototype, 'save').mockResolvedValue(function (this: any) {
+    jest.spyOn(User.prototype, 'save').mockResolvedValue(function (this: any) {
       return this;
     });
 
@@ -94,7 +94,7 @@ describe('Google Auth Middleware Unit Tests', () => {
   });
 
   it('should pass through all middleware and return playerId and authRecord', async () => {
-    jest.spyOn(Auth, 'findOne').mockResolvedValue(null);
+    jest.spyOn(User, 'findOne').mockResolvedValue(null);
     jest
       .spyOn(Player, 'findOneAndUpdate')
       .mockResolvedValue(new Player({ userId: mockTokenPayload.sub }));
@@ -109,7 +109,7 @@ describe('Google Auth Middleware Unit Tests', () => {
   });
 
   it('should return 401 if no token is provided', async () => {
-    jest.spyOn(Auth, 'findOne').mockResolvedValue(null);
+    jest.spyOn(User, 'findOne').mockResolvedValue(null);
 
     const response = await request(app).post('/auth').send({});
 
@@ -118,7 +118,7 @@ describe('Google Auth Middleware Unit Tests', () => {
   });
 
   it('should pass if auth record is available', async () => {
-    const mockAuthRecord = new Auth({
+    const mockAuthRecord = new User({
       _id: new Types.ObjectId(),
       playerId: new Types.ObjectId(),
       provider: 'google',
@@ -136,7 +136,7 @@ describe('Google Auth Middleware Unit Tests', () => {
       updatedAt: new Date(),
     });
 
-    jest.spyOn(Auth, 'findOne').mockResolvedValue(mockAuthRecord);
+    jest.spyOn(User, 'findOne').mockResolvedValue(mockAuthRecord);
 
     const response = await request(app).post('/auth').send({});
 
@@ -145,7 +145,7 @@ describe('Google Auth Middleware Unit Tests', () => {
   });
 
   it('should return 403 if failure in create or update auth', async () => {
-    jest.spyOn(Auth, 'findOne').mockImplementation(() => {
+    jest.spyOn(User, 'findOne').mockImplementation(() => {
       throw new Error('db failure');
     });
 

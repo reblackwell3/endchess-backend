@@ -1,7 +1,9 @@
 import passport from 'passport';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 // import { Strategy as FacebookStrategy } from 'passport-facebook';
 // import { Strategy as AppleStrategy } from 'passport-apple';
+import CookieStrategy from 'passport-cookie';
+import User from '../user/userModel'; // Import the User class from the appropriate location
 
 passport.use(
   new GoogleStrategy(
@@ -28,6 +30,28 @@ passport.use(
       } catch (error) {
         done(error);
       }
+    },
+  ),
+);
+
+passport.use(
+  new CookieStrategy(
+    {
+      cookieName: 'myapp-userid',
+      signed: false,
+      passReqToCallback: true,
+    },
+    (req: any, token: string, done: any) => {
+      User.findById(token, (err: Error | null, user: any) => {
+        // Define the types for err and user parameters
+        if (err) {
+          return done(err);
+        }
+        if (!user) {
+          return done(null, false);
+        }
+        return done(null, user);
+      });
     },
   ),
 );

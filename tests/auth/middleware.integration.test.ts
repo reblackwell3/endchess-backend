@@ -5,7 +5,7 @@ import path from 'path';
 import { authenticateToken } from '../../src/features/_middleware/authenticateToken';
 import { attachPlayerId } from '../../src/features/_middleware/addPlayerIdMiddleware';
 import { createOrUpdateAuth } from '../../src/features/_middleware/createOrUpdateAuth';
-import Auth from '../../src/features/_auth/authModel';
+import User from '../../src/features/user/userModel';
 import Player from '../../src/features/players/playerModel';
 import connectDB from '../../src/config/db';
 import dotenv from 'dotenv';
@@ -38,13 +38,13 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   // Clean up the Auth and Player records related to the test user
-  await Auth.deleteOne({ providerId: testProviderId });
+  await User.deleteOne({ providerId: testProviderId });
   await Player.deleteOne({ userId: testProviderId });
 });
 
 afterAll(async () => {
   // Clean up the Auth and Player records related to the test user after all tests
-  await Auth.deleteOne({ providerId: testProviderId });
+  await User.deleteOne({ providerId: testProviderId });
   await Player.deleteOne({ userId: testProviderId });
 });
 
@@ -89,7 +89,7 @@ describe('Auth Middleware Integration Tests', () => {
     expect(response.body).toHaveProperty('authRecord');
 
     // Verify that the Auth record was created
-    const authRecord = await Auth.findOne({ providerId: testProviderId });
+    const authRecord = await User.findOne({ providerId: testProviderId });
     expect(authRecord).not.toBeNull();
     expect(authRecord?.email).toBe(testEmail);
 

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import IAuth from '../_auth/authModel'; // Adjust the import path as needed
+import IAuth from '../user/userModel'; // Adjust the import path as needed
 
 // JWT Secret or Public Key (replace with your setup, if needed)
 const JWT_SECRET = 'your_jwt_secret_key'; // Only needed if you're signing JWTs yourself

@@ -14,24 +14,20 @@ export async function importGames(req: Request, res: Response): Promise<void> {
           other_username,
           endchess_username,
         );
-        res
-          .status(200)
-          .json({
-            message: 'Chess.com games imported successfully',
-            feedback: feedback,
-          });
+        res.status(200).json({
+          message: 'Chess.com games imported successfully',
+          feedback: feedback,
+        });
         break;
       case 'lichess':
         feedback = await readGamesFromLichess(
           other_username,
           endchess_username,
         );
-        res
-          .status(200)
-          .json({
-            message: 'Lichess games imported successfully',
-            feedback: feedback,
-          });
+        res.status(200).json({
+          message: 'Lichess games imported successfully',
+          feedback: feedback,
+        });
         break;
       default:
         res.status(400).json({ error: 'Unsupported platform' });

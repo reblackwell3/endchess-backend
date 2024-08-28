@@ -1,19 +1,56 @@
 import { Request, Response, Router } from 'express';
 import passport from './passportConfig';
+import session from 'express-session'; // Add this line
 
 const router = Router();
+
+router.use(
+  session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
+
+router.use(passport.initialize());
+router.use(passport.session());
 
 router.get(
   '/google',
   passport.authenticate('google', { scope: ['profile', 'email'] }),
 );
+
 router.get(
   '/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
-  (req: Request, res: Response) => {
-    res.redirect('/');
+  passport.authenticate('google'),
+  setUserIDResponseCookie,
+  (req: Request, res: Response, next) => {
+    // if success
+    if (req.user) {
+      res.redirect('http://localhost:3000');
+    } else {
+      res.redirect('http://localhost:3000/login-failed');
+    }
+    next();
   },
 );
+
+function setUserIDResponseCookie(req: Request, res: Response, next: Function) {
+  // if user-id cookie is out of date, update it
+  if (req.user?.id != req.cookies['myapp-userid']) {
+    // if user successfully signed in, store user-id in cookie
+    if (req.user) {
+      res.cookie('myapp-userid', req.user.id, {
+        // expire in year 9999 (from: https://stackoverflow.com/a/28289961)
+        expires: new Date(253402300000000),
+        httpOnly: false, // allows JS code to access it
+      });
+    } else {
+      res.clearCookie('myapp-userid');
+    }
+  }
+  next();
+}
 
 // router.get(
 //   '/facebook',

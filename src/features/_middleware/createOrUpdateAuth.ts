@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import Auth from '../_auth/authModel'; // Adjust the import path as needed
+import User from '../user/userModel'; // Adjust the import path as needed
 import Player from '../players/playerModel'; // Adjust the import path as needed
 
 export const createOrUpdateAuth = async (
@@ -22,7 +22,7 @@ export const createOrUpdateAuth = async (
     const familyName = decodedToken.family_name;
 
     // Find existing auth record by providerId and provider
-    let authRecord = await Auth.findOne({ providerId, provider });
+    let authRecord = await User.findOne({ providerId, provider });
 
     if (authRecord) {
       // Update the existing auth record with new token data
@@ -34,7 +34,7 @@ export const createOrUpdateAuth = async (
       const player = await findOneOrCreate({ userId: providerId }, playerData);
 
       // Create a new auth record with all available fields
-      authRecord = new Auth({
+      authRecord = new User({
         playerId: player._id,
         provider,
         providerId,

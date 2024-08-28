@@ -1,6 +1,6 @@
 import { Document, model, Schema, Types } from 'mongoose';
 
-export interface IAuth extends Document {
+export interface IUser extends Document {
   playerId: Types.ObjectId;
   provider: string;
   providerId: string;
@@ -16,7 +16,7 @@ export interface IAuth extends Document {
   updatedAt: Date;
 }
 
-const authSchema = new Schema<IAuth>(
+const userSchema = new Schema<IUser>(
   {
     playerId: {
       type: Schema.Types.ObjectId,
@@ -65,5 +65,5 @@ const authSchema = new Schema<IAuth>(
   { timestamps: true },
 );
 
-const Auth = model<IAuth>('Auth', authSchema);
-export default Auth;
+const User = model<IUser>('User', userSchema);
+export default User;
