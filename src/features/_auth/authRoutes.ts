@@ -28,7 +28,7 @@ router.get(
   (req: Request, res: Response, next) => {
     // if success
     if (req.user) {
-      res.redirect('/');
+      res.redirect('/login-success');
     } else {
       res.redirect('/login-failed');
     }
