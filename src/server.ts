@@ -9,43 +9,17 @@ import puzzleRoutes from './features/puzzles/puzzleRoutes';
 import playerRoutes from './features/players/playerRoutes';
 import gameRoutes from './features/games/gameRoutes';
 import importRoutes from './features/import/importRoutes';
-import authRoutes from './features/_auth/authRoutes';
 import { attachPlayerId } from './features/_middleware/addPlayerIdMiddleware';
 import { authenticateCookie } from './features/_middleware/authenticateCookie';
 import { createOrUpdateAuth } from './features/_middleware/createOrUpdateAuth';
-import passport from 'passport';
-import session from 'express-session';
-import { default as connectMongoDBSession } from 'connect-mongodb-session';
-import cookieParser from 'cookie-parser'; // Import the cookie-parser module
+import cookieParser from 'cookie-parser';
 
 const app = express();
 app.use(cors<Request>());
 
 connectDB();
 
-const MongoDBStore = connectMongoDBSession(session);
-const store = new MongoDBStore({
-  uri: process.env.MONGO_URI!,
-  collection: 'session',
-});
-
-app.use(
-  session({
-    secret: 'your-secret-key',
-    resave: false,
-    saveUninitialized: false,
-    store: store,
-  }),
-);
-
 app.use(cookieParser()); // Use the cookie-parser middleware
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-app.use(express.json());
-
-app.use('/auth', authRoutes);
 
 app.use(authenticateCookie);
 
@@ -61,7 +35,7 @@ app.use('/games', gameRoutes);
 
 app.use('/import', importRoutes);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.APP_PORT || 5555;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

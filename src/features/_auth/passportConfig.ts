@@ -14,9 +14,8 @@ passport.serializeUser((user: any, done: any) => {
 
 // Deserialize user from the session
 passport.deserializeUser((id: string, done: any) => {
-  User.findById(id, (err: Error | null, user: any) => {
-    done(err, user);
-  });
+  const user = User.findById(id);
+  done(null, user);
 });
 
 passport.use(
@@ -24,7 +23,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      callbackURL: '/auth/google/callback',
+      callbackURL: '/google/callback',
     },
     async (
       accessToken: string,

@@ -1,1 +1,2 @@
-web: node dist/server.js
+web: npm run serve
+auth: npm run serve:auth
