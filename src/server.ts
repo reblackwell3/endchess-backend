@@ -13,8 +13,9 @@ import authRoutes from './features/_auth/authRoutes';
 import { attachPlayerId } from './features/_middleware/addPlayerIdMiddleware';
 import { authenticateCookie } from './features/_middleware/authenticateCookie';
 import { createOrUpdateAuth } from './features/_middleware/createOrUpdateAuth';
-import passport = require('passport');
-import session = require('express-session');
+import passport from 'passport';
+import session from 'express-session';
+import { default as connectMongoDBSession } from 'connect-mongodb-session';
 import cookieParser from 'cookie-parser'; // Import the cookie-parser module
 
 const app = express();
@@ -22,13 +23,21 @@ app.use(cors<Request>());
 
 connectDB();
 
+const MongoDBStore = connectMongoDBSession(session);
+const store = new MongoDBStore({
+  uri: process.env.MONGO_URI!,
+  collection: 'session',
+});
+
 app.use(
   session({
     secret: 'your-secret-key',
     resave: false,
     saveUninitialized: false,
+    store: store,
   }),
 );
+
 app.use(cookieParser()); // Use the cookie-parser middleware
 
 app.use(passport.initialize());

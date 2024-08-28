@@ -7,6 +7,18 @@ import User from '../user/userModel'; // Import the User class from the appropri
 // import dotenv from 'dotenv';
 // dotenv.config({ path: '.env' });
 
+// Serialize user into the session
+passport.serializeUser((user: any, done: any) => {
+  done(null, user.id);
+});
+
+// Deserialize user from the session
+passport.deserializeUser((id: string, done: any) => {
+  User.findById(id, (err: Error | null, user: any) => {
+    done(err, user);
+  });
+});
+
 passport.use(
   new GoogleStrategy(
     {
