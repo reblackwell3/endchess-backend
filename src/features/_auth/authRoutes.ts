@@ -1,20 +1,8 @@
 import { Request, Response, Router } from 'express';
 import passport from './passportConfig';
-import session from 'express-session'; // Add this line
 import { IUser } from '../user/userModel';
 
 const router = Router();
-
-router.use(
-  session({
-    secret: 'your-secret-key',
-    resave: false,
-    saveUninitialized: false,
-  }),
-);
-
-router.use(passport.initialize());
-router.use(passport.session());
 
 router.get(
   '/google',

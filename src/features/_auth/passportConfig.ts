@@ -4,6 +4,8 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 // import { Strategy as AppleStrategy } from 'passport-apple';
 import CookieStrategy from 'passport-cookie';
 import User from '../user/userModel'; // Import the User class from the appropriate location
+// import dotenv from 'dotenv';
+// dotenv.config({ path: '.env' });
 
 passport.use(
   new GoogleStrategy(

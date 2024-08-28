@@ -1,8 +1,10 @@
 // backend/server.js
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env' });
+
 import express, { NextFunction, Request } from 'express';
 import cors from 'cors';
 import connectDB from './config/db';
-import dotenv from 'dotenv';
 import puzzleRoutes from './features/puzzles/puzzleRoutes';
 import playerRoutes from './features/players/playerRoutes';
 import gameRoutes from './features/games/gameRoutes';
@@ -11,13 +13,24 @@ import authRoutes from './features/_auth/authRoutes';
 import { attachPlayerId } from './features/_middleware/addPlayerIdMiddleware';
 import { authenticateCookie } from './features/_middleware/authenticateCookie';
 import { createOrUpdateAuth } from './features/_middleware/createOrUpdateAuth';
-
-dotenv.config({ path: '.env' });
+import passport = require('passport');
+import session = require('express-session');
 
 const app = express();
 app.use(cors<Request>());
 
 connectDB();
+
+app.use(
+  session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(express.json());
 
