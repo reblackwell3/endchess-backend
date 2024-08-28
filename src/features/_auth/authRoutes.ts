@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import passport from './passportConfig';
 import session from 'express-session'; // Add this line
+import { IUser } from '../user/userModel';
 
 const router = Router();
 
@@ -27,9 +28,9 @@ router.get(
   (req: Request, res: Response, next) => {
     // if success
     if (req.user) {
-      res.redirect('http://localhost:3000');
+      res.redirect('/');
     } else {
-      res.redirect('http://localhost:3000/login-failed');
+      res.redirect('/login-failed');
     }
     next();
   },
@@ -37,13 +38,13 @@ router.get(
 
 function setUserIDResponseCookie(req: Request, res: Response, next: Function) {
   // if user-id cookie is out of date, update it
-  if (req.user?.id != req.cookies['myapp-userid']) {
+  const user = req.user as IUser;
+  if (user.id != req.cookies['myapp-userid']) {
     // if user successfully signed in, store user-id in cookie
     if (req.user) {
-      res.cookie('myapp-userid', req.user.id, {
+      res.cookie('myapp-userid', user.id, {
         // expire in year 9999 (from: https://stackoverflow.com/a/28289961)
-        expires: new Date(253402300000000),
-        httpOnly: false, // allows JS code to access it
+        expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // expires 3 days from now
       });
     } else {
       res.clearCookie('myapp-userid');

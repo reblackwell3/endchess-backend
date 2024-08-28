@@ -2,7 +2,7 @@ import request from 'supertest';
 import express from 'express';
 import fs from 'fs';
 import path from 'path';
-import { authenticateToken } from '../../src/features/_middleware/authenticateToken';
+import { authenticateToken } from '../../src/features/_middleware/authenticateCookie';
 import { attachPlayerId } from '../../src/features/_middleware/addPlayerIdMiddleware';
 import { createOrUpdateAuth } from '../../src/features/_middleware/createOrUpdateAuth';
 import User from '../../src/features/user/userModel';

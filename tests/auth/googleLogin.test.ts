@@ -1,6 +1,6 @@
 import request from 'supertest';
 import express, { Request, Response } from 'express';
-import { authenticateToken } from '../../src/features/_middleware/authenticateToken';
+import { authenticateToken } from '../../src/features/_middleware/authenticateCookie';
 import { createOrUpdateAuth } from '../../src/features/_middleware/createOrUpdateAuth';
 import { attachPlayerId } from '../../src/features/_middleware/addPlayerIdMiddleware';
 import User from '../../src/features/user/userModel';
