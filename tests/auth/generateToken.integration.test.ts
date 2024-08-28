@@ -1,7 +1,7 @@
 import request from 'supertest';
 import express from 'express';
 import dotenv from 'dotenv';
-import tokenRoutes from '../../src/features/_auth/tokenRoutes';
+import tokenRoutes from '../../src/features/_auth/authRoutes';
 import { authenticateToken } from '../../src/features/_middleware/authenticateToken';
 
 dotenv.config({ path: '.env.test' });

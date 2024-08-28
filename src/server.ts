@@ -7,7 +7,7 @@ import puzzleRoutes from './features/puzzles/puzzleRoutes';
 import playerRoutes from './features/players/playerRoutes';
 import gameRoutes from './features/games/gameRoutes';
 import importRoutes from './features/import/importRoutes';
-import authRoutes from './features/_auth/tokenRoutes';
+import authRoutes from './features/_auth/authRoutes';
 import { attachPlayerId } from './features/_middleware/addPlayerIdMiddleware';
 import { authenticateToken } from './features/_middleware/authenticateToken';
 import { createOrUpdateAuth } from './features/_middleware/createOrUpdateAuth';
