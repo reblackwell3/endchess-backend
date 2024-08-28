@@ -24,6 +24,11 @@ router.get(
   },
 );
 
+router.delete('/cookie', (req: Request, res: Response) => {
+  res.clearCookie('myapp-userid');
+  res.sendStatus(200);
+});
+
 function setUserIDResponseCookie(req: Request, res: Response, next: Function) {
   // if user-id cookie is out of date, update it
   const user = req.user as IUser;

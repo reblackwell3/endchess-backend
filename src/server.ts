@@ -15,6 +15,7 @@ import { authenticateCookie } from './features/_middleware/authenticateCookie';
 import { createOrUpdateAuth } from './features/_middleware/createOrUpdateAuth';
 import passport = require('passport');
 import session = require('express-session');
+import cookieParser from 'cookie-parser'; // Import the cookie-parser module
 
 const app = express();
 app.use(cors<Request>());
@@ -28,6 +29,7 @@ app.use(
     saveUninitialized: false,
   }),
 );
+app.use(cookieParser()); // Use the cookie-parser middleware
 
 app.use(passport.initialize());
 app.use(passport.session());
