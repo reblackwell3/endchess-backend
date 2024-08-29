@@ -16,7 +16,7 @@ app.use(cors<Request>());
 const MongoDBStore = connectMongoDBSession(session);
 const store = new MongoDBStore({
   uri: process.env.MONGO_URI!,
-  collection: 'session',
+  collection: 'sessions',
 });
 
 app.use(
@@ -25,6 +25,9 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: store,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+    },
   }),
 );
 

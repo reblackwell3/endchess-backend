@@ -3,7 +3,7 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 // import { Strategy as FacebookStrategy } from 'passport-facebook';
 // import { Strategy as AppleStrategy } from 'passport-apple';
 import CookieStrategy from 'passport-cookie';
-import User from '../user/userModel'; // Import the User class from the appropriate location
+import User, { IUser } from '../user/userModel'; // Import the User class from the appropriate location
 // import dotenv from 'dotenv';
 // dotenv.config({ path: '.env' });
 
@@ -14,8 +14,7 @@ passport.serializeUser((user: any, done: any) => {
 
 // Deserialize user from the session
 passport.deserializeUser((id: string, done: any) => {
-  const user = User.findById(id);
-  done(null, user);
+  done(null, User.findById(id));
 });
 
 passport.use(
@@ -32,13 +31,9 @@ passport.use(
       done: any,
     ) => {
       try {
-        // Handle user data here
-        // Access and use the access token and refresh token as needed
         console.log('Access Token:', accessToken);
         console.log('Refresh Token:', refreshToken);
-
-        // Your code here to handle the tokens
-
+        await User.findOrCreate(profile, accessToken, refreshToken);
         done(null, profile);
       } catch (error) {
         done(error);
@@ -52,11 +47,10 @@ passport.use(
     {
       cookieName: 'myapp-userid',
       signed: false,
-      passReqToCallback: true,
+      passReqToCallback: false,
     },
-    (req: any, token: string, done: any) => {
-      User.findById(token, (err: Error | null, user: any) => {
-        // Define the types for err and user parameters
+    (token: string, done: any) => {
+      User.findByAccessToken({ token: token }, function (err, user) {
         if (err) {
           return done(err);
         }

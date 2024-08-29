@@ -1,6 +1,9 @@
-import { Document, model, Schema, Types } from 'mongoose';
+import { Document, model, Schema, Types, Model } from 'mongoose';
 
-export interface IUser extends Document {
+// EXAMPLE SETUP FROM:
+// https://stackoverflow.com/questions/42448372/typescript-mongoose-static-model-method-property-does-not-exist-on-type
+
+export interface IUserDocument extends Document {
   playerId: Types.ObjectId;
   provider: string;
   providerId: string;
@@ -14,6 +17,30 @@ export interface IUser extends Document {
   familyName: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface IUser extends IUserDocument {
+  // EXAMPLE LINKED BELOW
+  // comparePassword: (password: string) => boolean;
+}
+
+export interface IUserModel extends Model<IUser> {
+  findOrCreate: (
+    profile: {
+      id: string;
+      provider: string;
+      emails: { value: string }[];
+      displayName: string;
+      name: { givenName: string; familyName: string };
+      photos: { value: string }[];
+    },
+    accessToken: string,
+    refreshToken: string,
+  ) => Promise<IUser>;
+  findByAccessToken: (
+    token: { token: string },
+    callback: (err: Error | null, user: IUser) => any,
+  ) => Promise<IUser | null>;
 }
 
 const userSchema = new Schema<IUser>(
@@ -65,6 +92,12 @@ const userSchema = new Schema<IUser>(
   { timestamps: true },
 );
 
+//EXAMPLE LINKED TO IUser
+// userSchema.method('comparePassword', function (password: string): boolean {
+//   if (bcrypt.compareSync(password, this.password)) return true;
+//   return false;
+// });
+
 userSchema.statics.findOrCreate = async function (
   profile: {
     id: string;
@@ -96,5 +129,5 @@ userSchema.statics.findOrCreate = async function (
   return user;
 };
 
-const User = model<IUser>('User', userSchema);
+const User = model<IUser, IUserModel>('User', userSchema);
 export default User;

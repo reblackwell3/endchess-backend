@@ -22,19 +22,19 @@ export const createOrUpdateAuth = async (
     const familyName = decodedToken.family_name;
 
     // Find existing auth record by providerId and provider
-    let authRecord = await User.findOne({ providerId, provider });
+    let user = await User.findOne({ providerId, provider });
 
-    if (authRecord) {
+    if (user) {
       // Update the existing auth record with new token data
-      authRecord.accessToken = accessToken || authRecord.accessToken;
-      await authRecord.save();
+      user.accessToken = accessToken || user.accessToken;
+      await user.save();
     } else {
       // Usage example
       const playerData = { userId: providerId };
       const player = await findOneOrCreate({ userId: providerId }, playerData);
 
       // Create a new auth record with all available fields
-      authRecord = new User({
+      user = new User({
         playerId: player._id,
         provider,
         providerId,
@@ -47,11 +47,11 @@ export const createOrUpdateAuth = async (
         givenName,
         familyName,
       });
-      await authRecord.save();
+      await user.save();
     }
 
     // Attach authRecord to the request object
-    (req as any).authRecord = authRecord;
+    (req as any).authRecord = user;
 
     // Pass control to the next middleware or route handler
     next();
