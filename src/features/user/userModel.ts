@@ -15,6 +15,8 @@ export interface IUserDocument extends Document {
 export interface IUser extends IUserDocument {
   provider: string;
   providerId: string;
+  accessToken: string;
+  refreshToken: string;
   player: IPlayer;
   details: IUserDetails;
 }
@@ -45,6 +47,14 @@ const userSchema = new Schema<IUser>(
       required: true,
       unique: true,
     },
+    accessToken: {
+      type: String,
+      required: true,
+    },
+    refreshToken: {
+      type: String,
+      required: false,
+    },
     player: {
       type: playerSchema,
       required: true,
@@ -74,8 +84,6 @@ userSchema.statics.findOrCreate = async function (
   });
   if (!user) {
     const details = new UserDetails({
-      accessToken,
-      refreshToken,
       email: profile.emails[0].value,
       emailVerified: true, // Assuming email is verified
       name: profile.displayName,
@@ -89,6 +97,8 @@ userSchema.statics.findOrCreate = async function (
     user = await this.create({
       provider: profile.provider,
       providerId: profile.id,
+      accessToken,
+      refreshToken,
       player,
       details,
     });

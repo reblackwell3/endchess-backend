@@ -29,24 +29,19 @@ passport.use(
   new CookieStrategy( // the token is undefined here... is this from setting the value in res.cookie?
     {
       cookieName: 'endchess-token',
-      signed: false,
+      signed: true,
       passReqToCallback: false,
     },
     async (token: string, done: any) => {
       console.log('Cookie Token:', token);
-      await User.findOne(
-        { 'details.accessToken': token },
-        function (err: Error | null, user: IUser) {
-          if (err) {
-            return done(err);
-          }
-          if (!user) {
-            return done(null, false);
-          }
-          console.log('Cookie Strategy found user: ', user);
-          return done(null, user);
-        },
-      );
+      try {
+        const user = await User.findOne({ accessToken: token });
+        if (!user) return done(null, false);
+        console.log('Cookie Strategy found user: ', user);
+        return done(null, user);
+      } catch (error) {
+        return done(error);
+      }
     },
   ),
 );

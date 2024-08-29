@@ -8,7 +8,7 @@ export const authenticateCookie = (
 ) => {
   passport.authenticate(
     'cookie',
-    { session: false },
+    { session: true },
     (err: Error, user: any) => {
       if (err) return next(err);
       if (!user) return res.sendStatus(401);

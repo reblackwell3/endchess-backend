@@ -15,14 +15,6 @@ export interface IUserDetails extends Document {
 
 export const userDetailsSchema = new Schema<IUserDetails>(
   {
-    accessToken: {
-      type: String,
-      required: true,
-    },
-    refreshToken: {
-      type: String,
-      required: false,
-    },
     email: {
       type: String,
       required: true,
