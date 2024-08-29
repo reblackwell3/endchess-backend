@@ -16,9 +16,9 @@ router.get(
   (req: Request, res: Response, next) => {
     // if success
     if (req.user) {
-      res.redirect('/login-success');
+      res.redirect(`${process.env.REACT_APP_URL}/login-success`);
     } else {
-      res.redirect('/login-failed');
+      res.redirect(`${process.env.REACT_APP_URL}/login-failed`);
     }
     next();
   },
