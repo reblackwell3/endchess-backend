@@ -42,7 +42,6 @@ export interface IUserModel extends Model<IUser> {
     callback: (err: Error | null, user: IUser) => any,
   ) => Promise<IUser | null>;
 }
-
 const userSchema = new Schema<IUser>(
   {
     playerId: {
@@ -65,7 +64,7 @@ const userSchema = new Schema<IUser>(
     },
     refreshToken: {
       type: String,
-      required: true,
+      required: false,
     },
     email: {
       type: String,
@@ -81,12 +80,15 @@ const userSchema = new Schema<IUser>(
     },
     picture: {
       type: String,
+      required: false,
     },
     givenName: {
       type: String,
+      required: false,
     },
     familyName: {
       type: String,
+      required: false,
     },
   },
   { timestamps: true },
@@ -110,7 +112,10 @@ userSchema.statics.findOrCreate = async function (
   accessToken: string,
   refreshToken: string,
 ) {
-  let user = await this.findOne({ providerId: profile.id });
+  let user = await this.findOne({
+    provider: profile.provider,
+    providerId: profile.id,
+  });
   if (!user) {
     user = await this.create({
       playerId: new Types.ObjectId(), // You might want to adjust this based on your logic

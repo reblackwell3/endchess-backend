@@ -14,7 +14,7 @@ passport.serializeUser((user: any, done: any) => {
 
 // Deserialize user from the session
 passport.deserializeUser((id: string, done: any) => {
-  done(null, User.findById(id));
+  done(null, User.findById(id).populate('players'));
 });
 
 passport.use(

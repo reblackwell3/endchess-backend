@@ -9,9 +9,12 @@ import puzzleRoutes from './features/puzzles/puzzleRoutes';
 import playerRoutes from './features/players/playerRoutes';
 import gameRoutes from './features/games/gameRoutes';
 import importRoutes from './features/import/importRoutes';
-import { attachPlayerId } from './features/_middleware/addPlayerIdMiddleware';
-import { authenticateCookie } from './features/_middleware/authenticateCookie';
-import { createOrUpdateAuth } from './features/_middleware/createOrUpdateAuth';
+// import { attachPlayerId } from './features/_middleware/addPlayerIdMiddleware';
+// import { authenticateCookie } from './features/_middleware/authenticateCookie';
+// import { createOrUpdateAuth } from './features/_middleware/createOrUpdateAuth';
+import passport from 'passport';
+import session from 'express-session';
+import { default as connectMongoDBSession } from 'connect-mongodb-session';
 import cookieParser from 'cookie-parser';
 
 const app = express();
@@ -19,13 +22,34 @@ app.use(cors<Request>());
 
 connectDB();
 
+const MongoDBStore = connectMongoDBSession(session);
+const store = new MongoDBStore({
+  uri: process.env.MONGO_URI!,
+  collection: 'sessions',
+});
+
+app.use(
+  session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+    },
+  }),
+);
+
 app.use(cookieParser()); // Use the cookie-parser middleware
 
-app.use(authenticateCookie);
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.use(createOrUpdateAuth);
+// todo make sure that all of this functionality is replaced by sessions
 
-app.use(attachPlayerId);
+// app.use(authenticateCookie);
+// app.use(createOrUpdateAuth);
+// app.use(attachPlayerId);
 
 app.use('/puzzles', puzzleRoutes);
 
