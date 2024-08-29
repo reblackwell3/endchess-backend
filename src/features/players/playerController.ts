@@ -1,4 +1,4 @@
-import Player from './playerModel';
+import Player from '../user/playerModel';
 import { Request, Response } from 'express';
 
 // @desc    Get a single player by userId

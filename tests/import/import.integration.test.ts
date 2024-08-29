@@ -3,7 +3,7 @@ import express from 'express';
 import importRoutes from '../../src/features/import/importRoutes';
 import connectDB from '../../src/config/db';
 import Game from '../../src/features/games/gameModel';
-import Player from '../../src/features/players/playerModel';
+import Player from '../../src/features/user/playerModel';
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env.test' });
 

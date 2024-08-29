@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import Puzzle from './puzzleModel';
-import Player from '../players/playerModel';
+import Player from '../user/playerModel';
 
 // @desc    Get a random puzzle
 // @route   GET /puzzles/random

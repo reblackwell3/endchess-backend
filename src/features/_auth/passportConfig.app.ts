@@ -8,16 +8,16 @@ import User, { IUser } from '../user/userModel'; // Import the User class from t
 // dotenv.config({ path: '.env' });
 
 // Serialize user into the session
-passport.serializeUser((_id: any, done: any) => {
-  console.log('Serializing User:', _id);
-  done(null, _id);
+passport.serializeUser((user: any, done: any) => {
+  console.log('Serializing User:', user);
+  done(null, user.userId);
 });
 
 // Deserialize user from the session
-passport.deserializeUser(async (_id: string, done: any) => {
-  console.log('Deserializing User:', _id);
+passport.deserializeUser(async (id: string, done: any) => {
+  console.log('Deserializing User:', id);
   try {
-    const user = await User.findById(_id).populate('playerId').exec();
+    const user = await User.findById(id).populate('playerId').exec();
     console.log('User:', user);
     done(null, user);
   } catch (error) {

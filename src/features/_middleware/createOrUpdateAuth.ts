@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import User from '../user/userModel'; // Adjust the import path as needed
-import Player from '../players/playerModel'; // Adjust the import path as needed
+import Player from '../user/playerModel'; // Adjust the import path as needed
 
 export const createOrUpdateAuth = async (
   req: Request,

@@ -2,8 +2,8 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 // import { Strategy as FacebookStrategy } from 'passport-facebook';
 // import { Strategy as AppleStrategy } from 'passport-apple';
-import { Strategy as CookieStrategy } from 'passport-cookie';
 import User, { IUser } from '../user/userModel'; // Import the User class from the appropriate location
+import Player from '../user/playerModel';
 // import dotenv from 'dotenv';
 // dotenv.config({ path: '.env' });
 
@@ -41,8 +41,12 @@ passport.use(
       try {
         console.log('Access Token:', accessToken);
         console.log('Refresh Token:', refreshToken);
-        const _id = await User.findOrCreate(profile, accessToken, refreshToken);
-        done(null, _id);
+        const user = await User.findOrCreate(
+          profile,
+          accessToken,
+          refreshToken,
+        );
+        done(null, user);
       } catch (error) {
         done(error);
       }

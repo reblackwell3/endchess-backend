@@ -1,27 +1,20 @@
 import { Document, model, Schema, Types, Model } from 'mongoose';
-
-// EXAMPLE SETUP FROM:
-// https://stackoverflow.com/questions/42448372/typescript-mongoose-static-model-method-property-does-not-exist-on-type
+import UserDetails, {
+  IUserDetails,
+  userDetailsSchema,
+} from './userDetailsModel';
+import Player, { playerSchema, IPlayer } from './playerModel';
 
 export interface IUserDocument extends Document {
   playerId: Types.ObjectId;
-  provider: string;
-  providerId: string;
-  accessToken: string;
-  refreshToken: string;
-  email: string;
-  emailVerified: boolean;
-  name: string;
-  picture: string;
-  givenName: string;
-  familyName: string;
+  userDetails: IUserDetails;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface IUser extends IUserDocument {
-  // EXAMPLE LINKED BELOW
-  // comparePassword: (password: string) => boolean;
+  player: IPlayer;
+  userDetails: IUserDetails;
 }
 
 export interface IUserModel extends Model<IUser> {
@@ -38,63 +31,20 @@ export interface IUserModel extends Model<IUser> {
     refreshToken: string,
   ) => Promise<IUser>;
 }
+
 const userSchema = new Schema<IUser>(
   {
-    playerId: {
-      type: Schema.Types.ObjectId,
-      ref: 'Player',
+    player: {
+      type: playerSchema,
       required: true,
     },
-    provider: {
-      type: String,
+    userDetails: {
+      type: userDetailsSchema,
       required: true,
-    },
-    providerId: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    accessToken: {
-      type: String,
-      required: true,
-    },
-    refreshToken: {
-      type: String,
-      required: false,
-    },
-    email: {
-      type: String,
-      required: true,
-    },
-    emailVerified: {
-      type: Boolean,
-      required: true,
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    picture: {
-      type: String,
-      required: false,
-    },
-    givenName: {
-      type: String,
-      required: false,
-    },
-    familyName: {
-      type: String,
-      required: false,
     },
   },
   { timestamps: true },
 );
-
-//EXAMPLE LINKED TO IUser
-// userSchema.method('comparePassword', function (password: string): boolean {
-//   if (bcrypt.compareSync(password, this.password)) return true;
-//   return false;
-// });
 
 userSchema.statics.findOrCreate = async function (
   profile: {
@@ -108,27 +58,31 @@ userSchema.statics.findOrCreate = async function (
   accessToken: string,
   refreshToken: string,
 ) {
-  let user = await this.findOne({
-    provider: profile.provider,
-    providerId: profile.id,
-  });
+  let user = await this.findOne({ 'userDetails.providerId': profile.id });
   if (!user) {
-    user = await this.create({
-      playerId: new Types.ObjectId(), // You might want to adjust this based on your logic
+    const userDetails = new UserDetails({
       provider: profile.provider,
       providerId: profile.id,
       accessToken,
       refreshToken,
       email: profile.emails[0].value,
-      emailVerified: true, // Adjust this based on your logic
+      emailVerified: true, // Assuming email is verified
       name: profile.displayName,
-      picture: profile.photos[0].value,
       givenName: profile.name.givenName,
       familyName: profile.name.familyName,
+      picture: profile.photos[0].value,
+    });
+
+    const player = new Player({});
+
+    user = await this.create({
+      player,
+      userDetails,
     });
   }
-  return user._id;
+  return user;
 };
 
 const User = model<IUser, IUserModel>('User', userSchema);
+
 export default User;

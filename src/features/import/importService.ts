@@ -1,5 +1,5 @@
 import Game, { IGame } from '../games/gameModel';
-import Player from '../players/playerModel'; // Assuming this is the Player model
+import Player from '../user/playerModel'; // Assuming this is the Player model
 import mongoose, { Types } from 'mongoose';
 
 export type SaveFeedback = {
