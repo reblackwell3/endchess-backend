@@ -6,7 +6,8 @@ import { Request, Response } from 'express';
 // @access  Public
 const getRandomGame = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log(`playerId: ${(req as any).playerId}`);
+    console.log('random game');
+    console.log(`req.user: ${req.user}`);
     const count = await Game.countDocuments();
     const randomIndex = Math.floor(Math.random() * count);
     const game = await Game.findOne().skip(randomIndex);

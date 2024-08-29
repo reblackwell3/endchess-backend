@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import passport from 'passport';
+import passport from '../_auth/passportConfig';
 
 export const authenticateCookie = (
   req: Request,
@@ -9,13 +9,9 @@ export const authenticateCookie = (
   passport.authenticate(
     'cookie',
     { session: false },
-    (err: Error, user: any, info: any) => {
-      if (err) {
-        return next(err);
-      }
-      if (!user) {
-        return res.sendStatus(401);
-      }
+    (err: Error, user: any) => {
+      if (err) return next(err);
+      if (!user) return res.sendStatus(401);
       req.user = user;
       next();
     },

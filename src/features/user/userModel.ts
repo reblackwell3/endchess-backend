@@ -37,10 +37,6 @@ export interface IUserModel extends Model<IUser> {
     accessToken: string,
     refreshToken: string,
   ) => Promise<IUser>;
-  findByAccessToken: (
-    token: { token: string },
-    callback: (err: Error | null, user: IUser) => any,
-  ) => Promise<IUser | null>;
 }
 const userSchema = new Schema<IUser>(
   {

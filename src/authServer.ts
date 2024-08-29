@@ -24,7 +24,7 @@ const store = new MongoDBStore({
 
 app.use(
   session({
-    secret: 'your-secret-key',
+    secret: process.env.SESSION_SECRET!,
     resave: false,
     saveUninitialized: false,
     store: store,
@@ -34,7 +34,7 @@ app.use(
   }),
 );
 
-app.use(cookieParser()); // Use the cookie-parser middleware
+app.use(cookieParser(process.env.COOKIE_SECRET)); // Use the cookie-parser middleware
 
 app.use(passport.initialize());
 app.use(passport.session());

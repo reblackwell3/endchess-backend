@@ -2,18 +2,20 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 // import { Strategy as FacebookStrategy } from 'passport-facebook';
 // import { Strategy as AppleStrategy } from 'passport-apple';
-import CookieStrategy from 'passport-cookie';
+import { Strategy as CookieStrategy } from 'passport-cookie';
 import User, { IUser } from '../user/userModel'; // Import the User class from the appropriate location
 // import dotenv from 'dotenv';
 // dotenv.config({ path: '.env' });
 
 // Serialize user into the session
 passport.serializeUser((user: any, done: any) => {
+  console.log('Serializing User:', user);
   done(null, user.id);
 });
 
 // Deserialize user from the session
 passport.deserializeUser((id: string, done: any) => {
+  console.log('Deserializing User:', id);
   done(null, User.findById(id).populate('players'));
 });
 
@@ -43,22 +45,27 @@ passport.use(
 );
 
 passport.use(
-  new CookieStrategy(
+  // 'cookie',
+  new CookieStrategy( // the token is undefined here... is this from setting the value in res.cookie?
     {
       cookieName: 'myapp-userid',
       signed: false,
       passReqToCallback: false,
     },
     (token: string, done: any) => {
-      User.findByAccessToken({ token: token }, function (err, user) {
-        if (err) {
-          return done(err);
-        }
-        if (!user) {
-          return done(null, false);
-        }
-        return done(null, user);
-      });
+      console.log('Cookie Token:', token);
+      User.findOne(
+        { accessToken: token },
+        function (err: Error | null, user: IUser) {
+          if (err) {
+            return done(err);
+          }
+          if (!user) {
+            return done(null, false);
+          }
+          return done(null, user);
+        },
+      );
     },
   ),
 );

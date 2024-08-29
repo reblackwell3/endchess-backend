@@ -10,7 +10,7 @@ import playerRoutes from './features/players/playerRoutes';
 import gameRoutes from './features/games/gameRoutes';
 import importRoutes from './features/import/importRoutes';
 // import { attachPlayerId } from './features/_middleware/addPlayerIdMiddleware';
-// import { authenticateCookie } from './features/_middleware/authenticateCookie';
+import { authenticateCookie } from './features/_middleware/authenticateCookie';
 // import { createOrUpdateAuth } from './features/_middleware/createOrUpdateAuth';
 import passport from 'passport';
 import session from 'express-session';
@@ -30,7 +30,7 @@ const store = new MongoDBStore({
 
 app.use(
   session({
-    secret: 'your-secret-key',
+    secret: process.env.SESSION_SECRET!,
     resave: false,
     saveUninitialized: false,
     store: store,
@@ -40,14 +40,14 @@ app.use(
   }),
 );
 
-app.use(cookieParser()); // Use the cookie-parser middleware
+app.use(cookieParser(process.env.COOKIE_SECRET!)); // Use the cookie-parser middleware
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 // todo make sure that all of this functionality is replaced by sessions
 
-// app.use(authenticateCookie);
+app.use(authenticateCookie);
 // app.use(createOrUpdateAuth);
 // app.use(attachPlayerId);
 

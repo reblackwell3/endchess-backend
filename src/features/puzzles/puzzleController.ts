@@ -10,7 +10,8 @@ export const getRandomPuzzle = async (
   res: Response,
 ): Promise<void> => {
   try {
-    console.log(`user: ${req.user}`);
+    console.log('random puzzle');
+    console.log(`req.user: ${req.user}`);
     const count = await Puzzle.countDocuments();
     const randomIndex = Math.floor(Math.random() * count);
     const puzzle = await Puzzle.findOne().skip(randomIndex);
