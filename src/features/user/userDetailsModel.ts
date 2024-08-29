@@ -15,15 +15,6 @@ export interface IUserDetails extends Document {
 
 export const userDetailsSchema = new Schema<IUserDetails>(
   {
-    provider: {
-      type: String,
-      required: true,
-    },
-    providerId: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     accessToken: {
       type: String,
       required: true,

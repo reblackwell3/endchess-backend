@@ -10,15 +10,15 @@ import User, { IUser } from '../user/userModel'; // Import the User class from t
 // Serialize user into the session
 passport.serializeUser((user: any, done: any) => {
   console.log('Serializing User:', user);
-  done(null, user.userId);
+  done(null, user._id); // todo there is no .id but can get ._id
 });
 
 // Deserialize user from the session
 passport.deserializeUser(async (id: string, done: any) => {
   console.log('Deserializing User:', id);
   try {
-    const user = await User.findById(id).populate('playerId').exec();
-    console.log('User:', user);
+    const user = await User.findById(id);
+    console.log('Found User in deserializing:', user);
     done(null, user);
   } catch (error) {
     done(error);
@@ -35,7 +35,7 @@ passport.use(
     async (token: string, done: any) => {
       console.log('Cookie Token:', token);
       await User.findOne(
-        { accessToken: token },
+        { 'details.accessToken': token },
         function (err: Error | null, user: IUser) {
           if (err) {
             return done(err);
@@ -43,6 +43,7 @@ passport.use(
           if (!user) {
             return done(null, false);
           }
+          console.log('Cookie Strategy found user: ', user);
           return done(null, user);
         },
       );

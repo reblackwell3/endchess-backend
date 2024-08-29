@@ -35,8 +35,8 @@ function setUserIDResponseCookie(req: Request, res: Response, next: Function) {
   const user = req.user as IUser;
   if (user.id != req.cookies['endchess-token']) {
     if (req.user) {
-      console.log('Setting cookie to token: ', user.accessToken);
-      res.cookie('endchess-token', user.accessToken, {
+      console.log('Setting cookie to token: ', user.details.accessToken);
+      res.cookie('endchess-token', user.details.accessToken, {
         expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // expires 3 days from now
         signed: true,
         httpOnly: true,

@@ -8,16 +8,16 @@ import Player from '../user/playerModel';
 // dotenv.config({ path: '.env' });
 
 // Serialize user into the session
-passport.serializeUser((_id: any, done: any) => {
-  console.log('Serializing User:', _id);
-  done(null, _id);
+passport.serializeUser((user: any, done: any) => {
+  console.log('Serializing User:', user);
+  done(null, user._id);
 });
 
 // Deserialize user from the session
-passport.deserializeUser(async (_id: string, done: any) => {
-  console.log('Deserializing User:', _id);
+passport.deserializeUser(async (id: string, done: any) => {
+  console.log('Deserializing User:', id);
   try {
-    const user = await User.findById(_id).populate('players').exec();
+    const user = await User.findById(id);
     console.log('User:', user);
     done(null, user);
   } catch (error) {
@@ -46,6 +46,7 @@ passport.use(
           accessToken,
           refreshToken,
         );
+        console.log('Google Strategy found user: ', user);
         done(null, user);
       } catch (error) {
         done(error);

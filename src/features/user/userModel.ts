@@ -6,15 +6,17 @@ import UserDetails, {
 import Player, { playerSchema, IPlayer } from './playerModel';
 
 export interface IUserDocument extends Document {
-  playerId: Types.ObjectId;
-  userDetails: IUserDetails;
+  player: IPlayer;
+  details: IUserDetails;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface IUser extends IUserDocument {
+  provider: string;
+  providerId: string;
   player: IPlayer;
-  userDetails: IUserDetails;
+  details: IUserDetails;
 }
 
 export interface IUserModel extends Model<IUser> {
@@ -34,11 +36,20 @@ export interface IUserModel extends Model<IUser> {
 
 const userSchema = new Schema<IUser>(
   {
+    provider: {
+      type: String,
+      required: true,
+    },
+    providerId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     player: {
       type: playerSchema,
       required: true,
     },
-    userDetails: {
+    details: {
       type: userDetailsSchema,
       required: true,
     },
@@ -58,11 +69,11 @@ userSchema.statics.findOrCreate = async function (
   accessToken: string,
   refreshToken: string,
 ) {
-  let user = await this.findOne({ 'userDetails.providerId': profile.id });
+  let user = await this.findOne({
+    providerId: profile.id,
+  });
   if (!user) {
-    const userDetails = new UserDetails({
-      provider: profile.provider,
-      providerId: profile.id,
+    const details = new UserDetails({
       accessToken,
       refreshToken,
       email: profile.emails[0].value,
@@ -76,8 +87,10 @@ userSchema.statics.findOrCreate = async function (
     const player = new Player({});
 
     user = await this.create({
+      provider: profile.provider,
+      providerId: profile.id,
       player,
-      userDetails,
+      details,
     });
   }
   return user;
