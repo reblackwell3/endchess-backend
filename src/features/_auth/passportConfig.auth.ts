@@ -8,15 +8,21 @@ import User, { IUser } from '../user/userModel'; // Import the User class from t
 // dotenv.config({ path: '.env' });
 
 // Serialize user into the session
-passport.serializeUser((user: any, done: any) => {
-  console.log('Serializing User:', user);
-  done(null, user.id);
+passport.serializeUser((_id: any, done: any) => {
+  console.log('Serializing User:', _id);
+  done(null, _id);
 });
 
 // Deserialize user from the session
-passport.deserializeUser((id: string, done: any) => {
-  console.log('Deserializing User:', id);
-  done(null, User.findById(id).populate('players'));
+passport.deserializeUser(async (_id: string, done: any) => {
+  console.log('Deserializing User:', _id);
+  try {
+    const user = await User.findById(_id).populate('players').exec();
+    console.log('User:', user);
+    done(null, user);
+  } catch (error) {
+    done(error);
+  }
 });
 
 passport.use(
@@ -35,37 +41,11 @@ passport.use(
       try {
         console.log('Access Token:', accessToken);
         console.log('Refresh Token:', refreshToken);
-        await User.findOrCreate(profile, accessToken, refreshToken);
-        done(null, profile);
+        const _id = await User.findOrCreate(profile, accessToken, refreshToken);
+        done(null, _id);
       } catch (error) {
         done(error);
       }
-    },
-  ),
-);
-
-passport.use(
-  // 'cookie',
-  new CookieStrategy( // the token is undefined here... is this from setting the value in res.cookie?
-    {
-      cookieName: 'myapp-userid',
-      signed: false,
-      passReqToCallback: false,
-    },
-    (token: string, done: any) => {
-      console.log('Cookie Token:', token);
-      User.findOne(
-        { accessToken: token },
-        function (err: Error | null, user: IUser) {
-          if (err) {
-            return done(err);
-          }
-          if (!user) {
-            return done(null, false);
-          }
-          return done(null, user);
-        },
-      );
     },
   ),
 );

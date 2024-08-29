@@ -18,7 +18,12 @@ import { default as connectMongoDBSession } from 'connect-mongodb-session';
 import cookieParser from 'cookie-parser';
 
 const app = express();
-app.use(cors<Request>());
+const corsOptions = {
+  origin: process.env.REACT_APP_URL!, // Your frontend URL
+  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+};
+
+app.use(cors<Request>(corsOptions));
 
 connectDB();
 

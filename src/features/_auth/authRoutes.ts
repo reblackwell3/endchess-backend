@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import passport from './passportConfig';
+import passport from './passportConfig.auth';
 import { IUser } from '../user/userModel';
 
 const router = Router();
@@ -26,21 +26,25 @@ router.get(
 
 // *** TODO this needs to be improved
 router.delete('/cookie', (req: Request, res: Response) => {
-  res.clearCookie('myapp-userid');
+  res.clearCookie('encchess-token');
   res.sendStatus(200);
 });
 
 function setUserIDResponseCookie(req: Request, res: Response, next: Function) {
   // *** TODO this can have a key for security
   const user = req.user as IUser;
-  if (user.id != req.cookies['myapp-userid']) {
+  if (user.id != req.cookies['endchess-token']) {
     if (req.user) {
-      res.cookie('myapp-userid', user.accessToken, {
+      console.log('Setting cookie to token: ', user.accessToken);
+      res.cookie('endchess-token', user.accessToken, {
         expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // expires 3 days from now
         signed: true,
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
       });
     } else {
-      res.clearCookie('myapp-userid');
+      res.clearCookie('endchess-token');
     }
   }
   next();

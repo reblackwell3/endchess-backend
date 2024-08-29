@@ -127,7 +127,7 @@ userSchema.statics.findOrCreate = async function (
       familyName: profile.name.familyName,
     });
   }
-  return user;
+  return user._id;
 };
 
 const User = model<IUser, IUserModel>('User', userSchema);
