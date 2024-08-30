@@ -47,7 +47,7 @@ export const addCompletedPuzzle = async (
   try {
     const user = req.user as IUser;
     user.player.puzzlesCompleted.push(req.body.puzzleId);
-    user.save();
+    await user.save();
     res.sendStatus(200);
   } catch (err) {
     const error = err as Error;

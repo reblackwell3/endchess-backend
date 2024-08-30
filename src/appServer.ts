@@ -50,6 +50,8 @@ app.use(cookieParser(process.env.COOKIE_SECRET!)); // Use the cookie-parser midd
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(express.json());
+
 // todo make sure that all of this functionality is replaced by sessions
 
 app.use(authenticateCookie);
