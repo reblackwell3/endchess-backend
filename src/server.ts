@@ -10,7 +10,7 @@ import playerRoutes from './features/players/playerRoutes';
 import gameRoutes from './features/games/gameRoutes';
 import importRoutes from './features/import/importRoutes';
 // import { attachPlayerId } from './features/_middleware/addPlayerIdMiddleware';
-import { authenticateCookie } from './features/_middleware/authenticateCookie';
+import { authenticateCookie } from './features/auth/authenticateCookie';
 // import { createOrUpdateAuth } from './features/_middleware/createOrUpdateAuth';
 import passport from 'passport';
 import session from 'express-session';

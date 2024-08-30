@@ -1,5 +1,5 @@
 import Game, { IGame } from '../games/gameModel';
-import Player from '../user/playerModel'; // Assuming this is the Player model
+import User from '../user/userModel'; // Assuming this is the User model
 import mongoose, { Types } from 'mongoose';
 
 export type SaveFeedback = {
@@ -62,8 +62,8 @@ async function updateUserImportedGames(
   userId: string,
   gameIds: mongoose.Types.ObjectId[],
 ): Promise<void> {
-  await Player.findOneAndUpdate(
-    { userId: userId },
-    { $push: { importedGames: { $each: gameIds } } },
+  await User.findOneAndUpdate(
+    { _id: userId },
+    { $push: { 'player.importedGames': { $each: gameIds } } },
   );
 }

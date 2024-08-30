@@ -4,7 +4,7 @@ dotenv.config({ path: '.env' });
 
 import express, { Request } from 'express';
 import cors from 'cors';
-import authRoutes from './features/_auth/authRoutes';
+import authRoutes from './features/auth/authRoutes';
 import passport from 'passport';
 import session from 'express-session';
 import { default as connectMongoDBSession } from 'connect-mongodb-session';
