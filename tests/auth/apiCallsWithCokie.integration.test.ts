@@ -18,6 +18,7 @@ import Player from '../../src/features/user/playerModel';
 import UserDetails from '../../src/features/user/userDetailsModel';
 import cookieSignature from 'cookie-signature';
 import request from 'supertest';
+import mockUser from '../__mocks__/mockUser';
 
 const app = express();
 
@@ -54,36 +55,12 @@ app.use('/games', gameRoutes);
 
 dotenv.config({ path: '.env.test' });
 
-function buildUser(): IUser {
-  const details = new UserDetails({
-    email: 'dummy@example.com',
-    emailVerified: true,
-    name: 'Dummy User',
-    givenName: 'Dummy',
-    familyName: 'User',
-    picture: 'http://example.com/dummy.jpg',
-  });
-
-  const player = new Player({});
-
-  const user = new User({
-    provider: 'dummyProvider',
-    providerId: 'dummyId',
-    accessToken: 'dummyAccessToken',
-    refreshToken: 'dummyRefreshToken',
-    player,
-    details,
-  });
-
-  return user;
-}
 describe('Cookie API Calls Integration Tests', () => {
   let signedCookie: string;
   beforeAll(async () => {
     await User.deleteMany({ providerId: 'dummyId' }); // Clear the User collection before tests
-    const user = buildUser();
-    User.create(user);
-    signedCookie = `s:${cookieSignature.sign(user.accessToken, process.env.COOKIE_SECRET!)}`;
+    User.create(mockUser);
+    signedCookie = `s:${cookieSignature.sign(mockUser.accessToken, process.env.COOKIE_SECRET!)}`;
   });
 
   it('should be able to get a random puzzle', async () => {

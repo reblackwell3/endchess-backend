@@ -5,12 +5,17 @@ import connectDB from '../../src/config/db';
 import Game from '../../src/features/games/gameModel';
 import Player from '../../src/features/user/playerModel';
 import dotenv from 'dotenv';
+import User from '../../src/features/user/userModel';
+import mockUser from '../__mocks__/mockUser';
+import mockDetails from '../__mocks__/mockFindOrCreateUserDetails';
 dotenv.config({ path: '.env.test' });
 
 const app = express();
 app.use(express.json());
 
-const endchess_username = 'end_minh';
+app.use('/import', importRoutes);
+
+const endchess_provider_id = 'end_minh';
 const chesscom_username = 'minhnotminh';
 const lichess_username = 'Minhnotminh';
 const CHESSCOM_GAMES_NUM = 16;
@@ -26,19 +31,18 @@ beforeAll(async () => {
       { 'black.username': lichess_username },
     ],
   });
-  await Player.updateOne(
-    { userId: endchess_username }, // Filter: find the document with the given userId
-    { $set: { userId: endchess_username } }, // Update: set the userId (can include other fields to set as well)
-    { upsert: true }, // If no document matches the filter, insert a new one
+  await User.deleteOne({ provider_id: endchess_provider_id });
+  await User.findOrCreate(
+    mockDetails.profile,
+    mockDetails.accessToken,
+    mockDetails.refreshToken,
   );
-
-  app.use('/import', importRoutes);
 });
 
 beforeEach(async () => {
-  await Player.updateOne(
-    { userId: endchess_username },
-    { $set: { importedGames: [] } },
+  await User.findOneAndUpdate(
+    { provider_id: endchess_provider_id },
+    { $set: { 'player.importedGames': [] } },
   );
 });
 
@@ -47,7 +51,7 @@ describe('Import Controller', () => {
     const chesscomRes = await request(app).post('/import').send({
       other_platform: 'chesscom',
       other_username: chesscom_username,
-      endchess_username,
+      endchess_username: endchess_provider_id,
     });
 
     expect(chesscomRes.status).toBe(200);
@@ -59,14 +63,22 @@ describe('Import Controller', () => {
       CHESSCOM_GAMES_NUM,
     );
 
-    const updatedPlayer = await Player.findOne({ userId: endchess_username });
+    const updatedPlayer = await Player.findOne({
+      userId: endchess_provider_id,
+    });
     expect(updatedPlayer).not.toBeNull();
     expect(updatedPlayer!.importedGames.length).toBeGreaterThanOrEqual(
       CHESSCOM_GAMES_NUM,
     );
 
+    const user = await User.findOne({
+      providerId: endchess_provider_id,
+    }).populate('player'); // q: I want to search inside user and get only imported games
+    const importedGames = user!.player.importedGames;
+    expect(importedGames.length).toBeGreaterThanOrEqual(CHESSCOM_GAMES_NUM);
+
     const gamesInDB = await Game.find({
-      _id: { $in: updatedPlayer!.importedGames },
+      _id: { $in: importedGames },
     });
     expect(gamesInDB.length).toBe(CHESSCOM_GAMES_NUM);
   });
@@ -75,7 +87,7 @@ describe('Import Controller', () => {
     const lichessRes = await request(app).post('/import').send({
       other_platform: 'lichess',
       other_username: lichess_username,
-      endchess_username,
+      endchess_username: endchess_provider_id,
     });
 
     expect(lichessRes.status).toBe(200);
@@ -84,14 +96,14 @@ describe('Import Controller', () => {
     expect(lichessRes.body.feedback.inserts.length).toBeGreaterThanOrEqual(
       LICHESS_GAMES_NUM,
     );
-    const updatedPlayer = await Player.findOne({ userId: endchess_username });
-    expect(updatedPlayer).not.toBeNull();
-    expect(updatedPlayer!.importedGames.length).toBeGreaterThanOrEqual(
-      LICHESS_GAMES_NUM,
-    );
+    const user = await User.findOne({
+      providerId: endchess_provider_id,
+    }).populate('player'); // q: I want to search inside user and get only imported games
+    const importedGames = user!.player.importedGames.length;
+    expect(importedGames).toBeGreaterThanOrEqual(LICHESS_GAMES_NUM);
 
     const gamesInDB = await Game.find({
-      _id: { $in: updatedPlayer!.importedGames },
+      _id: { $in: importedGames },
     });
     expect(gamesInDB.length).toBe(LICHESS_GAMES_NUM);
   });

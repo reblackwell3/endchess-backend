@@ -9,7 +9,7 @@ export type SaveFeedback = {
 
 export async function saveGames(
   games: IGame[],
-  endchess_username: string,
+  providerId: string,
   source: string,
 ): Promise<SaveFeedback> {
   const savedGameIds: Types.ObjectId[] = [];
@@ -25,7 +25,7 @@ export async function saveGames(
   }
 
   if (savedGameIds.length > 0) {
-    await updateUserImportedGames(endchess_username, savedGameIds);
+    await updateUserImportedGames(providerId, savedGameIds);
   }
 
   console.log(`${savedGameIds.length} games have been saved from ${source}.`);
@@ -59,11 +59,11 @@ async function isDuplicateGame(game: IGame, source: string): Promise<boolean> {
 }
 
 async function updateUserImportedGames(
-  userId: string,
+  providerId: string,
   gameIds: mongoose.Types.ObjectId[],
 ): Promise<void> {
   await User.findOneAndUpdate(
-    { _id: userId },
+    { providerId: providerId },
     { $push: { 'player.importedGames': { $each: gameIds } } },
   );
 }
