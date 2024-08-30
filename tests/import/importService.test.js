@@ -1,5 +1,5 @@
 const { saveGames } = require('../../src/features/import/importService');
-const { mockBuiltGames } = require('../__mocks__/mock-built-games');
+const { mockBuiltGames } = require('../__mocks__/mockBuitGames');
 const Game = require('../../src/features/games/gameModel').default;
 const mockingoose = require('mockingoose');
 
