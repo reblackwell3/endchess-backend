@@ -9,19 +9,19 @@ import {
 
 const router = express.Router();
 
-router.get('/:userId', (req: Request, res: Response) => {
+router.get('/', (req: Request, res: Response) => {
   getPlayerByUserId(req, res);
 });
 
-router.put('/:userId/elo', (req: Request, res: Response) => {
+router.put('/elo', (req: Request, res: Response) => {
   updatePlayerElo(req, res);
 });
 
-router.put('/:userId/completed', (req: Request, res: Response) => {
+router.put('/completed', (req: Request, res: Response) => {
   addCompletedPuzzle(req, res);
 });
 
-router.put('/:userId/completed-game', (req: Request, res: Response) => {
+router.put('/completed-game', (req: Request, res: Response) => {
   addCompletedGame(req, res);
 });
 
