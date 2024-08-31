@@ -1,9 +1,7 @@
 import request from 'supertest';
 import express, { Request, Response } from 'express';
-import { authenticateCookie } from '../../src/features/auth/authenticateCookie';
+import authenticateCookie from '../../src/features/auth/authenticateCookie';
 import User, { IUser } from '../../src/features/user/userModel';
-import UserDetails from '../../src/features/user/userDetailsModel';
-import Player from '../../src/features/user/playerModel';
 import cookieSignature from 'cookie-signature';
 import dotenv from 'dotenv';
 import connectDB from '../../src/config/db';
@@ -11,6 +9,7 @@ import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import connectMongoDBSession from 'connect-mongodb-session';
+import mockDetails from '../__mocks__/mockFindOrCreateUserDetails';
 
 dotenv.config({ path: '.env.test' });
 
@@ -48,34 +47,14 @@ app.post(
   },
 );
 
-async function buildUser(): Promise<IUser> {
-  const details = new UserDetails({
-    email: 'dummy@example.com',
-    emailVerified: true,
-    name: 'Dummy User',
-    givenName: 'Dummy',
-    familyName: 'User',
-    picture: 'http://example.com/dummy.jpg',
-  });
-
-  const player = new Player({});
-
-  const user = new User({
-    provider: 'dummyProvider',
-    providerId: 'dummyId',
-    accessToken: 'dummyAccessToken',
-    refreshToken: 'dummyRefreshToken',
-    player,
-    details,
-  });
-
-  return user;
-}
-
 beforeAll(async () => {
   await connectDB();
-  await User.deleteOne({ providerId: 'dummyId' });
-  await User.create(await buildUser());
+  await User.deleteOne({ providerId: mockDetails.profile.id });
+  await User.findOrCreate(
+    mockDetails.profile,
+    mockDetails.accessToken,
+    mockDetails.refreshToken,
+  );
 });
 
 describe('Authenticate Cookie Middleware', () => {

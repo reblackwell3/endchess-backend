@@ -7,7 +7,6 @@ import importRoutes from '../../src/features/import/importRoutes';
 import connectDB from '../../src/config/db';
 import Game from '../../src/features/games/gameModel';
 import User from '../../src/features/user/userModel';
-import mockUser from '../__mocks__/mockUser';
 import mockDetails from '../__mocks__/mockFindOrCreateUserDetails';
 import session from 'express-session';
 import passport from 'passport';
@@ -68,7 +67,7 @@ describe('Import Controller', () => {
         { 'black.username': lichess_username },
       ],
     });
-    signedCookie = `s:${cookieSignature.sign(mockUser.accessToken, process.env.COOKIE_SECRET!)}`;
+    signedCookie = `s:${cookieSignature.sign(mockDetails.accessToken, process.env.COOKIE_SECRET!)}`;
   });
 
   beforeEach(async () => {

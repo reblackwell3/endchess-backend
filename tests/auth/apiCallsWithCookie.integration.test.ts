@@ -16,8 +16,7 @@ import connectMongoDBSession from 'connect-mongodb-session';
 import User from '../../src/features/user/userModel';
 import cookieSignature from 'cookie-signature';
 import request from 'supertest';
-import mockUser from '../__mocks__/mockUser';
-
+import mockDetails from '../__mocks__/mockFindOrCreateUserDetails';
 const app = express();
 
 connectDB();
@@ -56,9 +55,13 @@ dotenv.config({ path: '.env.test' });
 describe('Cookie API Calls Integration Tests', () => {
   let signedCookie: string;
   beforeAll(async () => {
-    await User.deleteMany({ providerId: 'dummyId' }); // Clear the User collection before tests
-    User.create(mockUser);
-    signedCookie = `s:${cookieSignature.sign(mockUser.accessToken, process.env.COOKIE_SECRET!)}`;
+    await User.deleteOne({ providerId: mockDetails.profile.id }); // Clear the User collection before tests
+    User.findOrCreate(
+      mockDetails.profile,
+      mockDetails.accessToken,
+      mockDetails.refreshToken,
+    ); // Create a mock user
+    signedCookie = `s:${cookieSignature.sign(mockDetails.accessToken, process.env.COOKIE_SECRET!)}`;
   });
 
   it('should be able to get a random puzzle', async () => {
