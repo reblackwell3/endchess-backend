@@ -1,110 +1,132 @@
-import request from 'supertest';
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.test' });
+
+import request, { Response as SupertestResponse } from 'supertest';
 import express from 'express';
 import importRoutes from '../../src/features/import/importRoutes';
 import connectDB from '../../src/config/db';
 import Game from '../../src/features/games/gameModel';
-import Player from '../../src/features/user/playerModel';
-import dotenv from 'dotenv';
 import User from '../../src/features/user/userModel';
 import mockUser from '../__mocks__/mockUser';
 import mockDetails from '../__mocks__/mockFindOrCreateUserDetails';
-dotenv.config({ path: '.env.test' });
+import session from 'express-session';
+import passport from 'passport';
+import cookieParser from 'cookie-parser';
+import authenticateCookie from '../../src/features/auth/authenticateCookie';
+import connectMongoDBSession from 'connect-mongodb-session';
+import cookieSignature from 'cookie-signature';
 
 const app = express();
 app.use(express.json());
+connectDB();
+const MongoDBStore = connectMongoDBSession(session);
+const store = new MongoDBStore({
+  uri: process.env.MONGO_URI!,
+  collection: 'sessions',
+});
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET!,
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+    },
+  }),
+);
+
+app.use(cookieParser(process.env.COOKIE_SECRET!)); // Use the cookie-parser middleware
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(authenticateCookie);
 
 app.use('/import', importRoutes);
 
-const endchess_provider_id = 'end_minh';
-const chesscom_username = 'minhnotminh';
-const lichess_username = 'Minhnotminh';
-const CHESSCOM_GAMES_NUM = 16;
-const LICHESS_GAMES_NUM = 1;
-
-beforeAll(async () => {
-  await connectDB();
-  await Game.deleteMany({
-    $or: [
-      { 'white.username': chesscom_username },
-      { 'black.username': chesscom_username },
-      { 'white.username': lichess_username },
-      { 'black.username': lichess_username },
-    ],
-  });
-  await User.deleteOne({ provider_id: endchess_provider_id });
-  await User.findOrCreate(
-    mockDetails.profile,
-    mockDetails.accessToken,
-    mockDetails.refreshToken,
-  );
-});
-
-beforeEach(async () => {
-  await User.findOneAndUpdate(
-    { provider_id: endchess_provider_id },
-    { $set: { 'player.importedGames': [] } },
-  );
-});
-
 describe('Import Controller', () => {
-  it('should import games, and verify the data', async () => {
-    const chesscomRes = await request(app).post('/import').send({
-      other_platform: 'chesscom',
-      other_username: chesscom_username,
-      endchess_username: endchess_provider_id,
-    });
+  const chesscom_username = 'minhnotminh';
+  const chesscom_games_count = 16;
+  const lichess_username = 'Minhnotminh';
+  const lichess_games_count = 1;
+  let signedCookie: string;
 
-    expect(chesscomRes.status).toBe(200);
-    expect(chesscomRes.body).not.toBeNull();
-    expect(chesscomRes.body.message).toBe(
+  beforeAll(async () => {
+    await User.deleteOne({ providerId: mockDetails.profile.id });
+    await User.findOrCreate(
+      mockDetails.profile,
+      mockDetails.accessToken,
+      mockDetails.refreshToken,
+    );
+    await Game.deleteMany({
+      $or: [
+        { 'white.username': chesscom_username },
+        { 'black.username': chesscom_username },
+        { 'white.username': lichess_username },
+        { 'black.username': lichess_username },
+      ],
+    });
+    signedCookie = `s:${cookieSignature.sign(mockUser.accessToken, process.env.COOKIE_SECRET!)}`;
+  });
+
+  beforeEach(async () => {
+    await User.findOneAndUpdate(
+      // Clear the User collection before tests
+      { providerId: mockDetails.profile.id },
+      { $set: { 'player.importedGames': [] } },
+    );
+  });
+
+  it('should import games, and verify the data', async () => {
+    const chesscomRes = await request(app)
+      .post('/import')
+      .send({
+        otherPlatform: 'chesscom',
+        otherUsername: chesscom_username,
+      })
+      .set('Cookie', `endchess-token=${signedCookie}`);
+
+    await expectCountEquals(
+      chesscomRes,
+      chesscom_games_count,
       'Chess.com games imported successfully',
     );
-    expect(chesscomRes.body.feedback.inserts.length).toBeGreaterThanOrEqual(
-      CHESSCOM_GAMES_NUM,
-    );
-
-    const updatedPlayer = await Player.findOne({
-      userId: endchess_provider_id,
-    });
-    expect(updatedPlayer).not.toBeNull();
-    expect(updatedPlayer!.importedGames.length).toBeGreaterThanOrEqual(
-      CHESSCOM_GAMES_NUM,
-    );
-
-    const user = await User.findOne({
-      providerId: endchess_provider_id,
-    }).populate('player'); // q: I want to search inside user and get only imported games
-    const importedGames = user!.player.importedGames;
-    expect(importedGames.length).toBeGreaterThanOrEqual(CHESSCOM_GAMES_NUM);
-
-    const gamesInDB = await Game.find({
-      _id: { $in: importedGames },
-    });
-    expect(gamesInDB.length).toBe(CHESSCOM_GAMES_NUM);
   });
 
   it('should import games from lichess and verify', async () => {
-    const lichessRes = await request(app).post('/import').send({
-      other_platform: 'lichess',
-      other_username: lichess_username,
-      endchess_username: endchess_provider_id,
-    });
-
-    expect(lichessRes.status).toBe(200);
-    expect(lichessRes.body).not.toBeNull();
-    expect(lichessRes.body.message).toBe('Lichess games imported successfully');
-    expect(lichessRes.body.feedback.inserts.length).toBeGreaterThanOrEqual(
-      LICHESS_GAMES_NUM,
+    const lichessRes = await request(app)
+      .post('/import')
+      .send({
+        otherPlatform: 'lichess',
+        otherUsername: lichess_username,
+      })
+      .set('Cookie', `endchess-token=${signedCookie}`);
+    await expectCountEquals(
+      lichessRes,
+      lichess_games_count,
+      'Lichess games imported successfully',
     );
+  });
+
+  async function expectCountEquals(
+    res: SupertestResponse,
+    count: number,
+    successMessage: string,
+  ) {
+    expect(res.status).toBe(200);
+    expect(res.body.message).toBe(successMessage);
+    expect(res.body.feedback.inserts.length).toBeGreaterThanOrEqual(count);
     const user = await User.findOne({
-      providerId: endchess_provider_id,
-    }).populate('player'); // q: I want to search inside user and get only imported games
-    const importedGames = user!.player.importedGames.length;
-    expect(importedGames).toBeGreaterThanOrEqual(LICHESS_GAMES_NUM);
+      providerId: mockDetails.profile.id,
+    }).populate('player');
+    const importedGames = user!.player.importedGames;
+    expect(importedGames.length).toBeGreaterThanOrEqual(count);
 
     const gamesInDB = await Game.find({
       _id: { $in: importedGames },
     });
-    expect(gamesInDB.length).toBe(LICHESS_GAMES_NUM);
-  });
+    expect(gamesInDB.length).toBe(count);
+  }
 });

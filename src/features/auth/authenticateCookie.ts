@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import passport from './passportConfig.app';
 
-export const authenticateCookie = (
+const authenticateCookie = (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -17,3 +17,5 @@ export const authenticateCookie = (
     },
   )(req, res, next);
 };
+
+export default authenticateCookie;
