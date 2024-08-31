@@ -5,7 +5,6 @@ import { saveGames } from '../../src/features/import/importService'; // Ensure c
 import twoUserGames from '../__data__/two-games.blackfromchina.chesscom.json';
 
 jest.mock('../../src/features/import/importService');
-jest.mock('../../src/features/players/playerModel'); // Mock Player model
 
 describe('readGamesFromChessCom', () => {
   let axiosMock: MockAdapter;
