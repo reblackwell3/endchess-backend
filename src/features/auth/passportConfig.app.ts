@@ -4,8 +4,6 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 // import { Strategy as AppleStrategy } from 'passport-apple';
 import { Strategy as CookieStrategy } from 'passport-cookie';
 import User, { IUser } from '../user/userModel'; // Import the User class from the appropriate location
-// import dotenv from 'dotenv';
-// dotenv.config({ path: '.env' });
 
 // Serialize user into the session
 passport.serializeUser((user: any, done: any) => {

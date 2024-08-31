@@ -15,11 +15,9 @@ jobs:
     env:
       MONGO_URI: ${{ secrets.MONGO_URI }}
       COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
-      MONGO_URI: ${{ secrets.MONGO_URI }}
       PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
       PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-
 
     steps:
       - name: Checkout code
