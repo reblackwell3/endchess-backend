@@ -50,8 +50,6 @@ app.use('/puzzles', puzzleRoutes);
 
 app.use('/games', gameRoutes);
 
-dotenv.config({ path: '.env.test' });
-
 describe('Cookie API Calls Integration Tests', () => {
   let signedCookie: string;
   beforeAll(async () => {
