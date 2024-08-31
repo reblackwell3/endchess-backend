@@ -53,12 +53,12 @@ describe('Import Controller', () => {
   let signedCookie: string;
 
   beforeAll(async () => {
-    // await User.deleteOne({ providerId: mockDetails.profile.id });
-    // await User.findOrCreate(
-    //   mockDetails.profile,
-    //   mockDetails.accessToken,
-    //   mockDetails.refreshToken,
-    // );
+    await User.deleteOne({ providerId: mockDetails.profile.id });
+    await User.findOrCreate(
+      mockDetails.profile,
+      mockDetails.accessToken,
+      mockDetails.refreshToken,
+    );
     await Game.deleteMany({
       $or: [
         { 'white.username': chesscom_username },
