@@ -9,7 +9,7 @@ import passport from 'passport';
 import session from 'express-session';
 import { default as connectMongoDBSession } from 'connect-mongodb-session';
 import cookieParser from 'cookie-parser'; // Import the cookie-parser module
-import connectDB from './config/db';
+import { connectDB } from './config/db';
 
 const app = express();
 app.use(cors<Request>());

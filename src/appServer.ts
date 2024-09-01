@@ -4,7 +4,7 @@ dotenv.config({ path: '.env' });
 
 import express, { NextFunction, Request } from 'express';
 import cors from 'cors';
-import connectDB from './config/db';
+import { connectDB } from './config/db';
 import puzzleRoutes from './features/puzzles/puzzleRoutes';
 import playerRoutes from './features/players/playerRoutes';
 import gameRoutes from './features/games/gameRoutes';

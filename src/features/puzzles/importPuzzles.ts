@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import fs from 'fs';
 import csv from 'csv-parser';
 import Puzzle from './puzzleModel';
-import connectDB from '../../config/db';
+import { connectDB } from '../../config/db';
 import dotenv from 'dotenv';
 
 // Load environment variables from .env file
