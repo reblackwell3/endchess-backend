@@ -17,7 +17,9 @@ import User from '../../src/features/user/userModel';
 import cookieSignature from 'cookie-signature';
 import request from 'supertest';
 import mockDetails from '../__mocks__/mockFindOrCreateUserDetails';
+
 const app = express();
+app.use(express.json());
 
 const MongoDBStore = connectMongoDBSession(session);
 const store = new MongoDBStore({
@@ -62,7 +64,7 @@ describe('Cookie API Calls Integration Tests', () => {
   });
 
   afterAll(async () => {
-    closeDB();
+    await closeDB();
   });
 
   it('should be able to get a random puzzle', async () => {

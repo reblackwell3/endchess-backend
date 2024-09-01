@@ -79,7 +79,7 @@ describe('Import Controller', () => {
   });
 
   afterAll(async () => {
-    closeDB();
+    await closeDB();
   });
 
   it('should import games, and verify the data', async () => {

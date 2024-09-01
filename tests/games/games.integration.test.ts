@@ -23,7 +23,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  closeDB();
+  await closeDB();
 });
 
 describe('Games Controller', () => {

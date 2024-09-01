@@ -34,7 +34,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  closeDB();
+  await closeDB();
 });
 
 describe('Puzzles Controller', () => {

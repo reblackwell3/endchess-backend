@@ -1,7 +1,7 @@
 import request from 'supertest';
 import express, { Request, Response } from 'express';
 import authenticateCookie from '../../src/features/auth/authenticateCookie';
-import User, { IUser } from '../../src/features/user/userModel';
+import User from '../../src/features/user/userModel';
 import cookieSignature from 'cookie-signature';
 import dotenv from 'dotenv';
 import { connectDB, closeDB } from '../../src/config/db';
@@ -59,7 +59,7 @@ describe('Authenticate Cookie Middleware', () => {
   });
 
   afterAll(async () => {
-    closeDB();
+    await closeDB();
   });
 
   it('should authenticate using a valid cookie', async () => {
