@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import Puzzle from './puzzleModel';
-import Player from '../players/playerModel';
+import Player from '../user/playerModel';
 
 // @desc    Get a random puzzle
 // @route   GET /puzzles/random
@@ -10,6 +10,8 @@ export const getRandomPuzzle = async (
   res: Response,
 ): Promise<void> => {
   try {
+    console.log('random puzzle');
+    console.log(`req.user: ${req.user}`);
     const count = await Puzzle.countDocuments();
     const randomIndex = Math.floor(Math.random() * count);
     const puzzle = await Puzzle.findOne().skip(randomIndex);

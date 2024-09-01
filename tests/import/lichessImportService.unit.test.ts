@@ -6,8 +6,8 @@ import { readGamesFromLichess } from '../../src/features/import/lichessImportSer
 import Game from '../../src/features/games/gameModel';
 import { parsePgn } from '../../src/features/import/parsePgn'; // Import parsePgn to mock it
 import { saveGames } from '../../src/features/import/importService'; // Import saveGames to mock it
-import { mockParsedGames } from '../__mocks__/mock-parsed-games'; // Import mockParsedGames
-import { mockBuiltGames } from '../__mocks__/mock-built-games';
+import { mockParsedGames } from '../__mocks__/mockParsedGames'; // Import mockParsedGames
+import { mockBuiltGames } from '../__mocks__/mockBuiltGames';
 
 jest.mock('../../src/features/games/gameModel');
 jest.mock('../../src/features/import/parsePgn'); // Mock parsePgn

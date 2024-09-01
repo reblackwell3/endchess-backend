@@ -12,6 +12,7 @@
     "es2021": true
   },
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "curly": ["error", "multi-line"]
   }
 }

@@ -1,42 +1,17 @@
-import Player from './playerModel';
+import Player from '../user/playerModel';
 import { Request, Response } from 'express';
-
-// @desc    Create a new player
-// @route   POST /players
-// @access  Public
-export const createPlayer = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
-  const { userId } = req.body;
-
-  const player = new Player({
-    userId,
-  });
-
-  try {
-    const newPlayer = await player.save();
-    res.status(201).json(newPlayer);
-  } catch (err) {
-    const error = err as Error;
-    res.status(400).json({ message: error.message });
-  }
-};
+import User, { IUser } from '../user/userModel';
 
 // @desc    Get a single player by userId
-// @route   GET /players/:userId
+// @route   GET /players
 // @access  Public
 export const getPlayerByUserId = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
   try {
-    const player = await Player.findOne({ userId: req.params.userId });
-    if (!player) {
-      res.status(404).json({ message: 'Player not found' });
-    } else {
-      res.json(player);
-    }
+    const user = req.user as IUser;
+    res.json(user.player);
   } catch (err) {
     const error = err as Error;
     res.status(500).json({ message: error.message });
@@ -44,23 +19,18 @@ export const getPlayerByUserId = async (
 };
 
 // @desc    Update a player's ELO
-// @route   PUT /players/:userId/elo
+// @route   PUT /players/elo
 // @access  Public
 export const updatePlayerElo = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
   try {
-    const player = await Player.findOne({ userId: req.params.userId });
-    if (!player) {
-      res.status(404).json({ message: 'Player not found' });
-    } else {
-      // Update player's ELO
-      player.elo = req.body.elo;
-
-      const updatedPlayer = await player.save();
-      res.json(updatedPlayer);
-    }
+    const user = req.user as IUser;
+    // Update player's ELO
+    user.player.elo = req.body.elo;
+    await user.save();
+    res.sendStatus(200);
   } catch (err) {
     const error = err as Error;
     res.status(400).json({ message: error.message });
@@ -68,27 +38,17 @@ export const updatePlayerElo = async (
 };
 
 // @desc    Add a completed puzzle to a player
-// @route   PUT /players/:userId/completed
+// @route   PUT /players/completed
 // @access  Public
 export const addCompletedPuzzle = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
   try {
-    console.log(req.body);
-    const player = await Player.findOne({ userId: req.params.userId });
-    console.log(player);
-    const puzzleId = req.body.puzzleId;
-    console.log(puzzleId);
-    if (!player) {
-      res.status(404).json({ message: 'Player not found' });
-    } else {
-      // Add puzzle to the completed puzzles list
-      player.puzzlesCompleted.push(puzzleId);
-
-      const updatedPlayer = await player.save();
-      res.json(updatedPlayer);
-    }
+    const user = req.user as IUser;
+    user.player.puzzlesCompleted.push(req.body.puzzleId);
+    await user.save();
+    res.sendStatus(200);
   } catch (err) {
     const error = err as Error;
     res.status(400).json({ message: error.message });
@@ -96,49 +56,19 @@ export const addCompletedPuzzle = async (
 };
 
 // @desc    Add a completed game to a player
-// @route   PUT /players/:userId/completed-game
+// @route   PUT /players/completed-game
 // @access  Public
 export const addCompletedGame = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
   try {
-    console.log(req.body);
-    const player = await Player.findOne({ userId: req.params.userId });
-    console.log(player);
-    const gameId = req.body.gameId;
-    console.log(gameId);
-    if (!player) {
-      res.status(404).json({ message: 'Player not found' });
-    } else {
-      // Add game to the completed games list
-      player.gamesCompleted.push(gameId);
-
-      const updatedPlayer = await player.save();
-      res.json(updatedPlayer);
-    }
+    const user = req.user as IUser;
+    user.player.gamesCompleted.push(req.body.gameId);
+    await user.save();
+    res.sendStatus(200);
   } catch (err) {
     const error = err as Error;
     res.status(400).json({ message: error.message });
   }
 };
-
-// // @desc    Delete a player
-// // @route   DELETE /players/:userId
-// // @access  Public
-// export const deletePlayer = async (req: Request, res: Response): Promise<void> => {
-//   try {
-//     const player = await Player.findOne({ userId: req.params.userId });
-//     if (!player) {
-//       res.status(404).json({ message: 'Player not found' });
-//     } else {
-
-//           await player.remove();
-//           res.json({ message: 'Player deleted' });
-
-//     }
-//   } catch (err) {
-//     const error = err as Error;
-//     res.status(500).json({ message: error.message });
-//   }
-// };

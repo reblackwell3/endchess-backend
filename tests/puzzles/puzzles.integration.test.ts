@@ -1,7 +1,7 @@
 import request from 'supertest';
 import express from 'express';
 import puzzleRoutes from '../../src/features/puzzles/puzzleRoutes'; // Adjust the path as necessary
-import connectDB from '../../src/config/db';
+import { connectDB, closeDB } from '../../src/config/db';
 
 import dotenv from 'dotenv';
 import Puzzle from '../../src/features/puzzles/puzzleModel';
@@ -31,6 +31,10 @@ beforeAll(async () => {
     { $set: testPuzzleData },
     { upsert: true },
   );
+});
+
+afterAll(async () => {
+  await closeDB();
 });
 
 describe('Puzzles Controller', () => {
