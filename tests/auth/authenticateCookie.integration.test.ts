@@ -4,7 +4,7 @@ import authenticateCookie from '../../src/features/auth/authenticateCookie';
 import User, { IUser } from '../../src/features/user/userModel';
 import cookieSignature from 'cookie-signature';
 import dotenv from 'dotenv';
-import connectDB from '../../src/config/db';
+import { connectDB, closeDB } from '../../src/config/db';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
@@ -55,6 +55,10 @@ beforeAll(async () => {
     mockDetails.accessToken,
     mockDetails.refreshToken,
   );
+});
+
+afterAll(async () => {
+  closeDB();
 });
 
 describe('Authenticate Cookie Middleware', () => {

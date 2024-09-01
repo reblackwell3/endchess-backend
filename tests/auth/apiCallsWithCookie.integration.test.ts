@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config({ path: '.env.test' });
 
 import express from 'express';
-import connectDB from '../../src/config/db';
+import { connectDB, closeDB } from '../../src/config/db';
 import puzzleRoutes from '../../src/features/puzzles/puzzleRoutes';
 import gameRoutes from '../../src/features/games/gameRoutes';
 // import { attachPlayerId } from '../../src/features/_middleware/addPlayerIdMiddleware';
@@ -60,6 +60,10 @@ describe('Cookie API Calls Integration Tests', () => {
       mockDetails.refreshToken,
     ); // Create a mock user
     signedCookie = `s:${cookieSignature.sign(mockDetails.accessToken, process.env.COOKIE_SECRET!)}`;
+  });
+
+  afterAll(async () => {
+    closeDB();
   });
 
   it('should be able to get a random puzzle', async () => {

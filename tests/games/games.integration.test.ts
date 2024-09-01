@@ -1,7 +1,7 @@
 import request from 'supertest';
 import express from 'express';
 import gameRoutes from '../../src/features/games/gameRoutes';
-import connectDB from '../../src/config/db';
+import { connectDB, closeDB } from '../../src/config/db';
 import { mockBuiltGames } from '../__mocks__/mockBuiltGames';
 import Game from '../../src/features/games/gameModel';
 import dotenv from 'dotenv';
@@ -20,6 +20,10 @@ beforeAll(async () => {
     { $setOnInsert: game }, // Only set this if inserting
     { upsert: true }, // Perform insert if no document matches the filter
   );
+});
+
+afterAll(async () => {
+  closeDB();
 });
 
 describe('Games Controller', () => {
