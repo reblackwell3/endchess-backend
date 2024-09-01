@@ -47,21 +47,21 @@ app.post(
   },
 );
 
-beforeAll(async () => {
-  await connectDB();
-  await User.deleteOne({ providerId: mockDetails.profile.id });
-  await User.findOrCreate(
-    mockDetails.profile,
-    mockDetails.accessToken,
-    mockDetails.refreshToken,
-  );
-});
-
-afterAll(async () => {
-  closeDB();
-});
-
 describe('Authenticate Cookie Middleware', () => {
+  beforeAll(async () => {
+    await connectDB();
+    await User.deleteOne({ providerId: mockDetails.profile.id });
+    await User.findOrCreate(
+      mockDetails.profile,
+      mockDetails.accessToken,
+      mockDetails.refreshToken,
+    );
+  });
+
+  afterAll(async () => {
+    closeDB();
+  });
+
   it('should authenticate using a valid cookie', async () => {
     const user = await User.findOne({ providerId: 'dummyId' });
     const signedCookie = `s:${cookieSignature.sign(user!.accessToken, process.env.COOKIE_SECRET!)}`;
