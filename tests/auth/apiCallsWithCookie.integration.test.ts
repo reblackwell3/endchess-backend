@@ -19,8 +19,6 @@ import request from 'supertest';
 import mockDetails from '../__mocks__/mockFindOrCreateUserDetails';
 const app = express();
 
-connectDB();
-
 const MongoDBStore = connectMongoDBSession(session);
 const store = new MongoDBStore({
   uri: process.env.MONGO_URI!,
@@ -53,13 +51,14 @@ app.use('/games', gameRoutes);
 describe('Cookie API Calls Integration Tests', () => {
   let signedCookie: string;
   beforeAll(async () => {
+    await connectDB();
     await User.deleteOne({ providerId: mockDetails.profile.id }); // Clear the User collection before tests
-    User.findOrCreate(
+    const user = await User.findOrCreate(
       mockDetails.profile,
       mockDetails.accessToken,
       mockDetails.refreshToken,
     ); // Create a mock user
-    signedCookie = `s:${cookieSignature.sign(mockDetails.accessToken, process.env.COOKIE_SECRET!)}`;
+    signedCookie = `s:${cookieSignature.sign(user!.accessToken, process.env.COOKIE_SECRET!)}`;
   });
 
   afterAll(async () => {
