@@ -34,10 +34,14 @@ passport.use(
       console.log('Cookie Token:', token);
       try {
         const user = await User.findOne({ accessToken: token });
-        if (!user) return done(null, false);
+        if (!user) {
+          console.log('Cookie Strategy did not find user');
+          return done(null, false);
+        }
         console.log('Cookie Strategy found user: ', user);
         return done(null, user);
       } catch (error) {
+        console.log('Cookie Strategy error:', error);
         return done(error);
       }
     },
