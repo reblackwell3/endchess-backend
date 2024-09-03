@@ -9,6 +9,7 @@ import puzzleRoutes from './features/puzzles/puzzleRoutes';
 import playerRoutes from './features/players/playerRoutes';
 import gameRoutes from './features/games/gameRoutes';
 import importRoutes from './features/import/importRoutes';
+import analyzeRoutes from './features/analyze/analyzeRoutes';
 // import { attachPlayerId } from './features/_middleware/addPlayerIdMiddleware';
 import authenticateCookie from './features/auth/authenticateCookie';
 // import { createOrUpdateAuth } from './features/_middleware/createOrUpdateAuth';
@@ -52,19 +53,13 @@ app.use(passport.session());
 
 app.use(express.json());
 
-// todo make sure that all of this functionality is replaced by sessions
-
 app.use(authenticateCookie);
-// app.use(createOrUpdateAuth);
-// app.use(attachPlayerId);
 
 app.use('/puzzles', puzzleRoutes);
-
 app.use('/players', playerRoutes);
-
 app.use('/games', gameRoutes);
-
 app.use('/import', importRoutes);
+app.use('/analyze', analyzeRoutes);
 
 const PORT = process.env.APP_PORT || 5555;
 
