@@ -38,17 +38,17 @@ export const analyzeGameFromPgn = async (req: Request, res: Response) => {
 
   try {
     const movesAnalysis = await analyzeGameFromPgnS(pgn, SHALLOW_DEPTH);
-    // const movesReanalysis = await Promise.all(
-    //   movesAnalysis
-    //     .filter((move) => move.diff > INACCURACY_DIFF)
-    //     .map(
-    //       async (move) => await analyzeMove(move.fen, move.move, DEEP_DEPTH),
-    //     ),
-    // );
-    // const mistakes = movesReanalysis.filter(
-    //   (move) => move.diff > INACCURACY_DIFF,
-    // );
-    // res.json(mistakes);
+    const movesReanalysis = await Promise.all(
+      movesAnalysis
+        .filter((move) => move.diff > INACCURACY_DIFF)
+        .map(
+          async (move) => await analyzeMove(move.fen, move.move, DEEP_DEPTH),
+        ),
+    );
+    const mistakes = movesReanalysis.filter(
+      (move) => move.diff > INACCURACY_DIFF,
+    );
+    res.json(mistakes);
   } catch (error) {
     console.error('Error analyzing game:', error);
     res

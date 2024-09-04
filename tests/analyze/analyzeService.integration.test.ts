@@ -27,5 +27,5 @@ describe('Analyze Service Integration Test', () => {
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('analysis');
     expect(response.body.analysis).toBeDefined();
-  });
+  }, 200000);
 });
