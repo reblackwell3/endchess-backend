@@ -49,8 +49,46 @@ export async function analyzeGame(
   return feedbacks;
 }
 
+export async function analyzeGameFromPgn(pgn: string, depth: number) {
+  const chess = new Chess();
+  chess.loadPgn(pgn);
+  const history = chess.history({ verbose: true });
+  console.log(history);
+  // const feedbacks = await analyzeGame(history, depth);
+}
+
 function buildPositions(moves: string[]) {
   const chess = new Chess();
+
+  chess.history({ verbose: true });
+  // -->
+  // [
+  //   {
+  //     before: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+  //     after: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1',
+  //     color: 'w',
+  //     piece: 'p',
+  //     from: 'e2',
+  //     to: 'e4',
+  //     san: 'e4',
+  //     lan: 'e2e4',
+  //     flags: 'b'
+  //   },
+  //   {
+  //     before: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1',
+  //     after: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2',
+  //     color: 'b',
+  //     piece: 'p',
+  //     from: 'e7',
+  //     to: 'e5',
+  //     san: 'e5',
+  //     lan: 'e7e5',
+  //     flags: 'b'
+  //   },
+  //   {
+  //     before: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2',
+  //     after: 'rnbqkbnr/pppp1ppp/8/4p3/4PP2/8/PPPP2PP/RNBQKBNR b KQkq - 0 2',
+  //     color: 'w',
   const positions = moves.map((move) => {
     const position = { fen: chess.fen(), move: move };
     chess.move(move);

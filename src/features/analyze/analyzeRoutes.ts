@@ -1,10 +1,14 @@
 import express, { Request, Response } from 'express';
-import { analyzeGameEndpoint } from './analyzeController';
+import { analyzeGameFromMoves, analyzeGameFromPgn } from './analyzeController';
 
 const router = express.Router();
 
-router.post('/', (req: Request, res: Response) => {
-  analyzeGameEndpoint(req, res);
+router.post('/moves', (req: Request, res: Response) => {
+  analyzeGameFromMoves(req, res);
+});
+
+router.post('/pgn', (req: Request, res: Response) => {
+  analyzeGameFromPgn(req, res);
 });
 
 export default router;
