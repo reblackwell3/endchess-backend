@@ -60,6 +60,7 @@ describe('Authenticate Cookie Middleware', () => {
 
   afterAll(async () => {
     await closeDB();
+    await store.client.close();
   });
 
   it('should authenticate using a valid cookie', async () => {
