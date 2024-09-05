@@ -18,6 +18,11 @@
     "typeRoots": ["./node_modules/@types", "./src/@types"],
     "sourceMap": true
   },
-  "include": ["src/**/*", "src/@types/**/*.d.ts"],
+  "include": [
+    "src/**/*",
+    "src/@types/**/*.d.ts",
+    "docker/stockfishServer.js",
+    "docker-stockfish/src/analyze"
+  ],
   "exclude": ["node_modules"]
 }
