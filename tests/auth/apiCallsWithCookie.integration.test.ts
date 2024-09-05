@@ -65,6 +65,7 @@ describe('Cookie API Calls Integration Tests', () => {
 
   afterAll(async () => {
     await closeDB();
+    await store.client.close();
   });
 
   it('should be able to get a random puzzle', async () => {
