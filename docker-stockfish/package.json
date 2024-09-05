@@ -1,0 +1,20 @@
+{
+  "name": "docker-stockfish",
+  "version": "1.0.0",
+  "description": "",
+  "main": "stockfishServer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "./node_modules/typescript/bin/tsc",
+    "build": "tsc",
+    "serve": "node dist/stockfishServer.js",
+    "start": "npm run build && npm run serve"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "node-uci": "^1.3.4"
+  }
+}

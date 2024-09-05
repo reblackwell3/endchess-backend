@@ -2,14 +2,14 @@
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
 
-import express, { NextFunction, Request } from 'express';
+import express, { Request } from 'express';
 import cors from 'cors';
 import { connectDB } from './config/db';
 import puzzleRoutes from './features/puzzles/puzzleRoutes';
 import playerRoutes from './features/players/playerRoutes';
 import gameRoutes from './features/games/gameRoutes';
 import importRoutes from './features/import/importRoutes';
-import analyzeRoutes from './features/analyze/analyzeRoutes';
+import analyzeRoutes from '../docker-stockfish/src/analyze/analyzeRoutes';
 // import { attachPlayerId } from './features/_middleware/addPlayerIdMiddleware';
 import authenticateCookie from './features/auth/authenticateCookie';
 // import { createOrUpdateAuth } from './features/_middleware/createOrUpdateAuth';

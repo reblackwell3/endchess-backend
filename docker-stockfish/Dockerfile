@@ -1,0 +1,19 @@
+FROM ubuntu:20.04
+
+RUN apt-get update && \
+    apt-get install -y build-essential wget tar curl && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN wget https://github.com/official-stockfish/Stockfish/releases/download/sf_16.1/stockfish-ubuntu-x86-64-avx2.tar && \
+    tar -xvf stockfish-ubuntu-x86-64-avx2.tar && \
+    mv stockfish /usr/local/bin/stockfish && \
+    chmod +x /usr/local/bin/stockfish
+
+RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash - && \
+    apt-get install -y nodejs
+
+WORKDIR /usr/src/app
+EXPOSE 8080
+COPY . ./
+RUN npm install
+RUN npm start

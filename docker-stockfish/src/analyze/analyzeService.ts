@@ -1,5 +1,7 @@
 import { Engine, SearchResult } from 'node-uci';
 import { Chess, Move } from 'chess.js';
+const stockfish_path = require.resolve('stockfish/src/stockfish-nnue-16.js');
+console.log(stockfish_path);
 
 export type EngineInfo = {
   depth: number;
@@ -128,7 +130,7 @@ async function getTopMoves(
   fen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
   depth: number,
 ): Promise<TopMoves> {
-  const stockfish = new Engine('stockfish');
+  const stockfish = new Engine(stockfish_path);
   const result = await stockfish
     .chain()
     .init()
