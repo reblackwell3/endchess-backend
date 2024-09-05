@@ -7,7 +7,7 @@ app.use(express.json());
 
 app.use('/', analyzeRoutes);
 
-const PORT = 8088;
+const PORT = 8080;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
