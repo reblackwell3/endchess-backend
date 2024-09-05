@@ -50,7 +50,7 @@ app.use(passport.session());
 
 app.use(express.json());
 
-app.use('/', authRoutes);
+app.use('/auth', authRoutes);
 
 app.use(authenticateCookie);
 
