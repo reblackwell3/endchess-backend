@@ -1,7 +1,5 @@
 import { Engine, SearchResult } from 'node-uci';
 import { Chess, Move } from 'chess.js';
-const stockfish_path = require.resolve('stockfish/src/stockfish-nnue-16.js');
-console.log(stockfish_path);
 
 export type EngineInfo = {
   depth: number;
@@ -73,36 +71,6 @@ export async function analyzeGameFromPgn(pgn: string, depth: number) {
 
 function buildPositions(moves: string[]) {
   const chess = new Chess();
-
-  chess.history({ verbose: true });
-  // -->
-  // [
-  //   {
-  //     before: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-  //     after: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1',
-  //     color: 'w',
-  //     piece: 'p',
-  //     from: 'e2',
-  //     to: 'e4',
-  //     san: 'e4',
-  //     lan: 'e2e4',
-  //     flags: 'b'
-  //   },
-  //   {
-  //     before: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1',
-  //     after: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2',
-  //     color: 'b',
-  //     piece: 'p',
-  //     from: 'e7',
-  //     to: 'e5',
-  //     san: 'e5',
-  //     lan: 'e7e5',
-  //     flags: 'b'
-  //   },
-  //   {
-  //     before: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2',
-  //     after: 'rnbqkbnr/pppp1ppp/8/4p3/4PP2/8/PPPP2PP/RNBQKBNR b KQkq - 0 2',
-  //     color: 'w',
   const positions = moves.map((move) => {
     const position = { fen: chess.fen(), move: move };
     chess.move(move);
@@ -130,7 +98,7 @@ async function getTopMoves(
   fen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
   depth: number,
 ): Promise<TopMoves> {
-  const stockfish = new Engine(stockfish_path);
+  const stockfish = new Engine('stockfish');
   const result = await stockfish
     .chain()
     .init()
