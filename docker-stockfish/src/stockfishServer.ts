@@ -5,7 +5,7 @@ import analyzeRoutes from './analyze/analyzeRoutes';
 const app = express();
 app.use(express.json());
 
-app.use('/', analyzeRoutes);
+app.use('/analyze', analyzeRoutes);
 
 const PORT = 8080;
 

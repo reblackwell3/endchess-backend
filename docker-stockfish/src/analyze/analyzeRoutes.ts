@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { analyzeGameFromPgn } from './analyzeController';
+import { analyzeGame } from './analyzeController';
 
 const router = express.Router();
 
@@ -8,7 +8,7 @@ const router = express.Router();
 // });
 
 router.post('/pgn', (req: Request, res: Response) => {
-  analyzeGameFromPgn(req, res);
+  analyzeGame(req, res);
 });
 
 export default router;
