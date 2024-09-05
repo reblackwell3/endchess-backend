@@ -27,8 +27,8 @@ export interface MoveAnalysis {
   diff: number;
 }
 
-export const SHALLOW_DEPTH = 12;
-export const DEEP_DEPTH = 20;
+export const SHALLOW_DEPTH = 8;
+export const DEEP_DEPTH = 18;
 
 export async function analyzeMove(fen: string, move: string, depth: number) {
   const topMoves = await getTopMoves(fen, depth);
@@ -112,7 +112,7 @@ function buildPositions(moves: string[]) {
 function getBestMoves(result: SearchResult): TopMoves {
   const moves = (result.info as unknown[])
     .map((value: unknown) => value as EngineInfo)
-    .filter((info: EngineInfo) => info.depth === 12)
+    .filter((info: EngineInfo) => info.depth === SHALLOW_DEPTH)
     .filter((info: EngineInfo) => info.score)
     .map((info: EngineInfo) => ({
       score: info.score.value,
