@@ -6,6 +6,7 @@ export interface IPlayerDocument extends Document {
   puzzlesCompleted: Types.ObjectId[];
   importedGames: Types.ObjectId[];
   gamesCompleted: Types.ObjectId[];
+  unimportedLinks: number;
 }
 
 // Define the IPlayer interface extending IPlayerDocument
@@ -33,6 +34,10 @@ export const playerSchema = new mongoose.Schema<IPlayer>({
   gamesCompleted: {
     type: [mongoose.Schema.Types.ObjectId],
     default: [], // Initialize this array too
+  },
+  unimportedLinks: {
+    type: Number,
+    default: 0,
   },
 });
 

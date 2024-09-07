@@ -2,6 +2,8 @@ import { Document, Model, model, Schema, Types } from 'mongoose';
 
 export interface IGame extends Document {
   _id: Types.ObjectId;
+  isAnalyzed: boolean;
+  isViewed: boolean;
   import_from: string; // 'chess.com' or 'lichess'
   url: string;
   pgn: string;
@@ -29,6 +31,8 @@ export interface IGame extends Document {
 }
 
 const gameSchema = new Schema<IGame>({
+  isAnalyzed: { type: Boolean, required: true, default: false },
+  isViewed: { type: Boolean, required: true, default: false },
   import_from: { type: String, required: true },
   url: { type: String, required: true },
   pgn: { type: String, required: true },
