@@ -8,6 +8,7 @@ import { connectDB } from './config/db';
 import puzzleRoutes from './features/puzzles/puzzleRoutes';
 import playerRoutes from './features/players/playerRoutes';
 import gameRoutes from './features/games/gameRoutes';
+import mistakesRoutes from './features/mistakes/mistakesRoutes';
 import authenticateCookie from './features/auth/authenticateCookie';
 import authRoutes from './features/auth/authRoutes';
 import passport from 'passport';
@@ -57,6 +58,7 @@ app.use(authenticateCookie);
 app.use('/puzzles', puzzleRoutes);
 app.use('/players', playerRoutes);
 app.use('/games', gameRoutes);
+app.use('/mistakes', mistakesRoutes);
 
 const PORT = process.env.PORT || 5000;
 
