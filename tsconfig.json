@@ -26,7 +26,8 @@
     "src/**/*",
     "src/@types/**/*.d.ts",
     "docker/stockfishServer.js",
-    "docker-stockfish/src/analyze"
+    "docker-stockfish/src/analyze",
+    "scripts/importPuzzles.ts"
   ],
   "exclude": ["node_modules"]
 }
