@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import fs from 'fs';
 import csv from 'csv-parser';
-import Puzzle from './puzzleModel';
+import Puzzle from 'endchess-models';
 import { connectDB } from '../../config/db';
 import dotenv from 'dotenv';
 
