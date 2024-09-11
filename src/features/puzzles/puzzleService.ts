@@ -5,12 +5,18 @@ export const findPuzzle = async (
   user: IUser,
   difficulty: Difficulty,
 ): Promise<IPuzzle | null> => {
-  const playerData = await PlayerData.findOne({
+  const playerPuzzlesData = await PlayerData.findOne({
     providerId: user.providerId,
     feature: 'puzzles',
-  }).select('rating');
-  const ratingRange = calculateRatingRange(playerData!.rating, difficulty);
-  const puzzle = await findPuzzleInRange(ratingRange);
+  });
+  const solvedPuzzleIds = playerPuzzlesData?.itemEvents
+    .filter((itemEvent) => itemEvent.event === 'solved')
+    .map((itemEvent) => itemEvent.itemId);
+  const ratingRange = calculateRatingRange(
+    playerPuzzlesData!.rating,
+    difficulty,
+  );
+  const puzzle = await findUnsolvedPuzzle(solvedPuzzleIds || [], ratingRange);
   return puzzle;
 };
 
@@ -40,12 +46,16 @@ const calculateRatingRange = (
   };
 };
 
-const findPuzzleInRange = async (ratingRange: {
-  min: number;
-  max: number;
-}): Promise<IPuzzle | null> => {
-  const count = await Puzzle.countDocuments();
-  const randomIndex = Math.floor(Math.random() * count);
-  const puzzle = await Puzzle.findOne().skip(randomIndex);
+const findUnsolvedPuzzle = async (
+  solvedIds: string[],
+  ratingRange: {
+    min: number;
+    max: number;
+  },
+): Promise<IPuzzle | null> => {
+  const puzzle = await Puzzle.findOne({
+    _id: { $nin: solvedIds },
+    rating: { $gte: ratingRange.min, $lte: ratingRange.max },
+  });
   return puzzle;
 };
