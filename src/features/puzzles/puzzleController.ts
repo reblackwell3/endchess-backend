@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { IUser } from 'endchess-models';
 import { findPuzzle } from './puzzleService';
+
 export const getPuzzle = async (req: Request, res: Response): Promise<void> => {
   try {
     console.log(`req.user: ${req.user}`);
