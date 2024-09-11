@@ -15,7 +15,11 @@
     "paths": {
       "*": ["src/@types/*"]
     },
-    "typeRoots": ["./node_modules/@types", "./src/@types"],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/@types",
+      "./node_modules/endchess-models/dist"
+    ],
     "sourceMap": true
   },
   "include": [

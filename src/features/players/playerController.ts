@@ -1,6 +1,5 @@
-import Player from '../user/playerModel';
 import { Request, Response } from 'express';
-import User, { IUser } from '../user/userModel';
+import { User, IUser } from 'endchess-models';
 
 // @desc    Get a single player by userId
 // @route   GET /players
