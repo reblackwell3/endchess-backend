@@ -15,19 +15,9 @@
     "paths": {
       "*": ["src/@types/*"]
     },
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/@types",
-      "./node_modules/endchess-models/dist"
-    ],
+    "typeRoots": ["./node_modules/@types", "./src/@types"],
     "sourceMap": true
   },
-  "include": [
-    "src/**/*",
-    "src/@types/**/*.d.ts",
-    "docker/stockfishServer.js",
-    "docker-stockfish/src/analyze",
-    "scripts/importPuzzles.ts"
-  ],
+  "include": ["src/**/*", "src/@types/**/*.d.ts"],
   "exclude": ["node_modules"]
 }
