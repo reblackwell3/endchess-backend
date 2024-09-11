@@ -1,17 +1,17 @@
 import { Difficulty } from './settings';
-import { Puzzle, PlayerData, IPuzzle, IUser } from 'endchess-models';
+import { Puzzle, IPuzzle, PlayerData, IUser } from 'endchess-models';
 
-export const getAPuzzle = async (
+export const findPuzzle = async (
   user: IUser,
   difficulty: Difficulty,
-): Promise<IPuzzle> => {
+): Promise<IPuzzle | null> => {
   const playerData = await PlayerData.findOne({
     providerId: user.providerId,
     feature: 'puzzles',
   }).select('rating');
   const ratingRange = calculateRatingRange(playerData!.rating, difficulty);
   const puzzle = await findPuzzleInRange(ratingRange);
-  return puzzle!;
+  return puzzle;
 };
 
 const calculateRatingRange = (
