@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import fs from 'fs';
 import csv from 'csv-parser';
-import Puzzle from './puzzleModel';
-import { connectDB } from '../../config/db';
+import Puzzle from 'endchess-models';
+import { connectDB } from '../src/config/db';
 import dotenv from 'dotenv';
 
 // Load environment variables from .env file
