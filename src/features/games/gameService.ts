@@ -1,9 +1,10 @@
 import { Game } from 'endchess-models';
+import {findOne}
 
 const findRandomGame = async () => {
-  const count = await Game.countDocuments();
-  const randomIndex = Math.floor(Math.random() * count);
-  const game = await Game.findOne().skip(randomIndex);
+  return await findOneRandomGame();
 };
 
-export { findRandomGame };
+const findRandomGameRatedGreaterThan = async (rating: number) => {
+  return await findRandomGameRatedGreaterThan(rating);
+};

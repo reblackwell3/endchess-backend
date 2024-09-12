@@ -32,15 +32,7 @@ const getRandomGameRated = async (
   const rating = parseInt(req.params.rating, 10);
 
   try {
-    const count = await Game.countDocuments({
-      WhiteElo: { $gt: rating },
-      BlackElo: { $gt: rating },
-    });
-    const randomIndex = Math.floor(Math.random() * count);
-    const game = await Game.findOne({
-      WhiteElo: { $gt: rating },
-      BlackElo: { $gt: rating },
-    }).skip(randomIndex);
+
     res.json(game);
   } catch (err) {
     const error = err as Error;
