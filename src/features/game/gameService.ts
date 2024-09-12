@@ -7,8 +7,10 @@ class GameService {
     switch (category) {
       case GamesSettings.RatingCategory.MASTER:
         return await repo.findRandomGameRatedGreaterThan(2400);
+        break;
       case GamesSettings.RatingCategory.NEAR_RATING:
         throw new Error('Not implemented');
+        break;
       default:
         return await repo.findRandomGame();
     }

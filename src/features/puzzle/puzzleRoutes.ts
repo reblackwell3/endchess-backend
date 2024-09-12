@@ -1,12 +1,10 @@
 // backend/puzzles/puzzleRoutes.ts
 import express, { Request, Response } from 'express';
-import { getPuzzle } from './puzzleController';
+import controller from './puzzleController';
 
 const router = express.Router();
 
 // Get a random puzzle
-router.get('/', (req: Request, res: Response) => {
-  getPuzzle(req, res);
-});
+router.get('/', controller.getPuzzle);
 
 export default router;

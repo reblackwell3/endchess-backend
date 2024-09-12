@@ -4,8 +4,6 @@ import controller from './gameController';
 
 const router = express.Router();
 
-router.get('/', (req: Request, res: Response) => {
-  controller.getGame(req, res);
-});
+router.get('/', controller.getGame);
 
 export default router;

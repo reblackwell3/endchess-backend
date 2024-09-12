@@ -1,57 +1,77 @@
-import { PuzzleSettings } from 'endchess-api-settings'
-import { Puzzle, IPuzzle, PlayerData, IUser } from 'endchess-models';
+// src/features/puzzle/puzzlesService.ts
+import { PuzzleSettings, PuzzleSettingsDto } from 'endchess-api-settings';
+import { IPuzzle, IUser } from 'endchess-models';
+import repo from './puzzleRepo';
+import { stat } from 'fs';
 
-export const calculateRatingRange = (
-  rating: number,
-  difficulty: ,
-): { min: number; max: number } => {
-  const LEVEL_ADJUSTMENT = 300;
-  let target: number;
-  switch (difficulty) {
-    case Difficulty.EASY:
-      target = rating - LEVEL_ADJUSTMENT;
-      break;
-    case Difficulty.MEDIUM:
-      target = rating;
-      break;
-    case Difficulty.HARD:
-      target = rating + LEVEL_ADJUSTMENT;
-      break;
-    default:
-      throw new Error('Invalid difficulty');
+class PuzzleService {
+  private static LEVEL_ADJUSTMENT = 300;
+
+  public async findPuzzle(
+    user: IUser,
+    settings: PuzzleSettingsDto,
+  ): Promise<IPuzzle | null> {
+    const playerData = await repo.findPlayerPuzzlesData(user);
+    const [difficulty] = settings.difficulties || [];
+    const ratingRange = this.calculateRatingRange(
+      playerData!.rating,
+      difficulty,
+    );
+    const solvedPuzzleIds = playerData?.itemEvents
+      .filter((itemEvent) => itemEvent.event === 'solved')
+      .map((itemEvent) => itemEvent.itemId);
+    const statuses = settings.solvedStatuses || [];
+    const puzzle = this.findPuzzleByStatus(
+      statuses,
+      ratingRange,
+      solvedPuzzleIds || [],
+    );
+    return puzzle;
   }
 
-  return {
-    min: target - LEVEL_ADJUSTMENT / 2,
-    max: target + LEVEL_ADJUSTMENT / 2,
-  };
-};
+  private async findPuzzleByStatus(
+    statuses: string[],
+    ratingRange: { min: number; max: number },
+    solvedPuzzleIds: string[],
+  ): Promise<IPuzzle | null> {
+    if (
+      statuses.includes(PuzzleSettings.SolvedStatus.SOLVED) &&
+      statuses.includes(PuzzleSettings.SolvedStatus.UNSOLVED)
+    ) {
+      return await repo.findAnyPuzzle(ratingRange);
+    } else if (statuses.includes(PuzzleSettings.SolvedStatus.SOLVED)) {
+      return await repo.findSolvedPuzzle(solvedPuzzleIds, ratingRange);
+    } else if (statuses.includes(PuzzleSettings.SolvedStatus.UNSOLVED)) {
+      return await repo.findUnsolvedPuzzle(solvedPuzzleIds, ratingRange);
+    } else {
+      throw new Error('Invalid solved status');
+    }
+  }
 
-export const findPuzzle = async (
-  user: IUser,
-  ratingRange: { min: number; max: number },
-): Promise<IPuzzle | null> => {
-  const playerPuzzlesData = await PlayerData.findOne({
-    providerId: user.providerId,
-    feature: 'puzzles',
-  });
-  const solvedPuzzleIds = playerPuzzlesData?.itemEvents
-    .filter((itemEvent) => itemEvent.event === 'solved')
-    .map((itemEvent) => itemEvent.itemId);
-  const puzzle = await findUnsolvedPuzzle(solvedPuzzleIds || [], ratingRange);
-  return puzzle;
-};
+  private calculateRatingRange(
+    rating: number,
+    difficulty: string,
+  ): { min: number; max: number } {
+    let target: number;
+    switch (difficulty) {
+      case PuzzleSettings.Difficulty.EASY:
+        target = rating - PuzzleService.LEVEL_ADJUSTMENT;
+        break;
+      case PuzzleSettings.Difficulty.MEDIUM:
+        target = rating;
+        break;
+      case PuzzleSettings.Difficulty.HARD:
+        target = rating + PuzzleService.LEVEL_ADJUSTMENT;
+        break;
+      default:
+        throw new Error('Invalid difficulty');
+    }
 
-const findUnsolvedPuzzle = async (
-  solvedIds: string[],
-  ratingRange: {
-    min: number;
-    max: number;
-  },
-): Promise<IPuzzle | null> => {
-  const puzzle = await Puzzle.findOne({
-    _id: { $nin: solvedIds },
-    rating: { $gte: ratingRange.min, $lte: ratingRange.max },
-  });
-  return puzzle;
-};
+    return {
+      min: target - PuzzleService.LEVEL_ADJUSTMENT / 2,
+      max: target + PuzzleService.LEVEL_ADJUSTMENT / 2,
+    };
+  }
+}
+
+export default new PuzzleService();
