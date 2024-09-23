@@ -1,5 +1,9 @@
 // src/features/puzzle/puzzlesService.ts
-import { PuzzleSettings, PuzzleSettingsDto } from 'endchess-api-settings';
+import {
+  IMoveFeedback,
+  PuzzleSettings,
+  PuzzleSettingsDto,
+} from 'endchess-api-settings';
 import { IPuzzle, IUser } from 'endchess-models';
 import repo from './puzzleRepo';
 import { stat } from 'fs';
@@ -71,6 +75,13 @@ class PuzzleService {
       min: target - PuzzleService.LEVEL_ADJUSTMENT / 2,
       max: target + PuzzleService.LEVEL_ADJUSTMENT / 2,
     };
+  }
+
+  public async saveFeedback(
+    user: IUser,
+    feedback: IMoveFeedback,
+  ): Promise<void> {
+    await repo.saveFeedback(user, feedback);
   }
 }
 

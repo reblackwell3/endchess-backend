@@ -7,4 +7,6 @@ const router = express.Router();
 // Get a random puzzle
 router.get('/', controller.getPuzzle);
 
+router.post('/feedback', controller.postFeedback);
+
 export default router;

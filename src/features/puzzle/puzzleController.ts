@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { IUser, IPlayerData } from 'endchess-models';
-import { PuzzleSettingsDto } from 'endchess-api-settings';
+import { IUser } from 'endchess-models';
+import { PuzzleSettingsDto, IMoveFeedback } from 'endchess-api-settings';
 import service from './puzzlesService';
 class PuzzleController {
   public async getPuzzle(req: Request, res: Response): Promise<void> {
@@ -16,6 +16,18 @@ class PuzzleController {
       } else {
         res.status(404).json({ message: 'Puzzle not found' });
       }
+    } catch (err) {
+      const error = err as Error;
+      res.status(500).json({ message: error.message });
+    }
+  }
+
+  public async postFeedback(req: Request, res: Response): Promise<void> {
+    try {
+      const user = req.user as IUser;
+      const feedback = req.body as IMoveFeedback;
+      await service.saveFeedback(user, feedback);
+      res.status(200).json({ message: 'Feedback saved' });
     } catch (err) {
       const error = err as Error;
       res.status(500).json({ message: error.message });

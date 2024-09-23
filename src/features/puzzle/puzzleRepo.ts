@@ -1,4 +1,5 @@
 // src/features/puzzle/puzzleRepo.ts
+import { IMoveFeedback } from 'endchess-api-settings';
 import {
   Puzzle,
   IPuzzle,
@@ -42,6 +43,18 @@ class PuzzleRepo {
     return await Puzzle.findOne({
       rating: { $gte: ratingRange.min, $lte: ratingRange.max },
     });
+  }
+
+  async saveFeedback(user: IUser, feedback: IMoveFeedback): Promise<void> {
+    const playerData = await this.findPlayerPuzzlesData(user);
+    if (playerData) {
+      playerData.itemEvents.push({
+        itemId: feedback.index.toString(),
+        eventType: 'feedback',
+        event: JSON.stringify(feedback),
+      });
+      await playerData.save();
+    }
   }
 }
 
