@@ -13,7 +13,12 @@ class PuzzleRepo {
     return await PlayerData.findOne({
       providerId: user.providerId,
       feature: 'puzzles',
-    });
+    })
+      .populate({
+        path: 'itemEvents',
+        match: { eventType: 'solved' },
+      })
+      .exec();
   }
 
   async findUnsolvedPuzzle(

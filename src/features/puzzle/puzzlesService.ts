@@ -4,9 +4,8 @@ import {
   PuzzleSettings,
   PuzzleSettingsDto,
 } from 'endchess-api-settings';
-import { IPuzzle, IUser } from 'endchess-models';
+import { IItemEvent, IPuzzle, IUser } from 'endchess-models';
 import repo from './puzzleRepo';
-import { stat } from 'fs';
 
 class PuzzleService {
   private static LEVEL_ADJUSTMENT = 300;
@@ -22,7 +21,7 @@ class PuzzleService {
       difficulty,
     );
     const solvedPuzzleIds = playerData?.itemEvents
-      .filter((itemEvent) => itemEvent.event === 'solved')
+      .map((itemEvent) => itemEvent as IItemEvent)
       .map((itemEvent) => itemEvent.itemId);
     const statuses = settings.solvedStatuses || [];
     const puzzle = this.findPuzzleByStatus(
