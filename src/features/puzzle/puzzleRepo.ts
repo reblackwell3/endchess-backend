@@ -1,11 +1,12 @@
 // src/features/puzzle/puzzleRepo.ts
-import { IMoveFeedback } from 'endchess-api-settings';
+import { MoveFeedbackDto } from 'endchess-api-settings';
 import {
   Puzzle,
   IPuzzle,
   PlayerData,
   IPlayerData,
   IUser,
+  ItemEvent,
 } from 'endchess-models';
 
 class PuzzleRepo {
@@ -50,16 +51,22 @@ class PuzzleRepo {
     });
   }
 
-  async saveFeedback(user: IUser, feedback: IMoveFeedback): Promise<void> {
-    const playerData = await this.findPlayerPuzzlesData(user);
-    if (playerData) {
-      playerData.itemEvents.push({
-        itemId: feedback.index.toString(),
-        eventType: 'feedback',
-        event: JSON.stringify(feedback),
-      });
-      await playerData.save();
-    }
+  async saveFeedback(user: IUser, feedback: MoveFeedbackDto): Promise<void> {
+    const itemEvent = await ItemEvent.create({
+      itemId: feedback.puzzleId,
+      eventType: 'feedback',
+      event: JSON.stringify(feedback),
+    });
+    const savedItemEvent = await itemEvent.save();
+
+    await PlayerData.updateOne(
+      { providerId: user.providerId, feature: 'puzzles' },
+      {
+        $push: {
+          itemEvents: savedItemEvent._id,
+        },
+      },
+    );
   }
 }
 

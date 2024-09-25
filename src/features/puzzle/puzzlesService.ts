@@ -1,6 +1,6 @@
 // src/features/puzzle/puzzlesService.ts
 import {
-  IMoveFeedback,
+  MoveFeedbackDto,
   PuzzleSettings,
   PuzzleSettingsDto,
 } from 'endchess-api-settings';
@@ -78,7 +78,7 @@ class PuzzleService {
 
   public async saveFeedback(
     user: IUser,
-    feedback: IMoveFeedback,
+    feedback: MoveFeedbackDto,
   ): Promise<void> {
     await repo.saveFeedback(user, feedback);
   }

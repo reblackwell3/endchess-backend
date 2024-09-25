@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { IUser } from 'endchess-models';
-import { PuzzleSettingsDto, IMoveFeedback } from 'endchess-api-settings';
+import { PuzzleSettingsDto, MoveFeedbackDto } from 'endchess-api-settings';
 import service from './puzzlesService';
 class PuzzleController {
   public async getPuzzle(req: Request, res: Response): Promise<void> {
@@ -25,7 +25,7 @@ class PuzzleController {
   public async postFeedback(req: Request, res: Response): Promise<void> {
     try {
       const user = req.user as IUser;
-      const feedback = req.body as IMoveFeedback;
+      const feedback = req.body as MoveFeedbackDto;
       await service.saveFeedback(user, feedback);
       res.status(200).json({ message: 'Feedback saved' });
     } catch (err) {
