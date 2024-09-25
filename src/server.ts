@@ -6,7 +6,6 @@ import express, { Request } from 'express';
 import cors from 'cors';
 import { connectDB } from './config/db';
 import puzzleRoutes from './features/puzzle/puzzleRoutes';
-import gameRoutes from './features/game/gameRoutes';
 import mistakesRoutes from './features/mistake/mistakesRoutes';
 import authenticateCookie from './auth/authenticateCookie';
 import authRoutes from './auth/authRoutes';
@@ -58,7 +57,6 @@ app.use('/auth', authRoutes);
 app.use(authenticateCookie);
 
 app.use('/puzzles', puzzleRoutes);
-app.use('/games', gameRoutes);
 app.use('/mistakes', mistakesRoutes);
 
 const PORT = process.env.PORT || 5000;
