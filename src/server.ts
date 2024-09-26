@@ -1,11 +1,14 @@
 import app from './app';
+import { connectDB, closeDB } from './config/db';
 
-const start = (port: number) => {
+const start = async (port: number) => {
   try {
+    await connectDB();
     app.listen(port, () => {
       console.log(`Server running on port ${PORT}`);
     });
   } catch (err) {
+    await closeDB();
     console.error(err);
     process.exit();
   }

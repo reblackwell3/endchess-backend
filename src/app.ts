@@ -3,7 +3,6 @@ dotenv.config({ path: '.env' });
 
 import express, { Request } from 'express';
 import cors from 'cors';
-import { connectDB } from './config/db';
 import puzzleRoutes from './features/puzzle/puzzleRoutes';
 import mistakesRoutes from './features/mistake/mistakesRoutes';
 import authenticateCookie from './auth/authenticateCookie';
@@ -22,8 +21,6 @@ const corsOptions = {
 };
 
 app.use(cors<Request>(corsOptions));
-
-connectDB();
 
 const MongoDBStore = connectMongoDBSession(session);
 const store = new MongoDBStore({
