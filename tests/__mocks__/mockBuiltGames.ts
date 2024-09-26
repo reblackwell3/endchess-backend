@@ -1,4 +1,4 @@
-import Game, { IGame } from '../../src/features/games/gameModel';
+import Game, { IGame } from 'endchess-models';
 
 export const mockBuiltGames: IGame[] = [
   new Game({

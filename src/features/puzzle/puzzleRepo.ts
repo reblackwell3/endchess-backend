@@ -51,9 +51,13 @@ class PuzzleRepo {
     });
   }
 
-  async saveFeedback(user: IUser, feedback: MoveFeedbackDto): Promise<void> {
+  async saveFeedback(
+    user: IUser,
+    puzzleId: string,
+    feedback: MoveFeedbackDto,
+  ): Promise<void> {
     const itemEvent = await ItemEvent.create({
-      itemId: feedback.puzzleId,
+      itemId: puzzleId,
       eventType: 'feedback',
       event: JSON.stringify(feedback),
     });

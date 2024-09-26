@@ -1,19 +1,17 @@
-import User, { IUser } from '../../src/features/user/userModel';
-import UserDetails from '../../src/features/user/userDetailsModel';
-import Player from '../../src/features/user/playerModel';
-import exp from 'constants';
+import { User, IUser, PlayerData, ItemEvent } from 'endchess-models';
 
 function buildUser(): IUser {
-  const details = new UserDetails({
-    email: 'dummy@example.com',
-    emailVerified: true,
-    name: 'Dummy User',
-    givenName: 'Dummy',
-    familyName: 'User',
-    picture: 'http://example.com/dummy.jpg',
+  const itemEvent = new ItemEvent({
+    itemId: 'dummyPuzzleId',
+    eventType: 'solved',
+    event: 'dummyEvent',
   });
-
-  const player = new Player({});
+  const player = new PlayerData({
+    providerId: 'dummyId',
+    feature: 'puzzles',
+    rating: 1200,
+    itemEvents: [],
+  });
 
   const user = new User({
     provider: 'dummyProvider',
@@ -21,7 +19,12 @@ function buildUser(): IUser {
     accessToken: 'dummyAccessToken',
     refreshToken: 'dummyRefreshToken',
     player,
-    details,
+    email: 'dummy@example.com',
+    emailVerified: true,
+    name: 'Dummy User',
+    givenName: 'Dummy',
+    familyName: 'User',
+    picture: 'http://example.com/dummy.jpg',
   });
 
   return user;

@@ -78,9 +78,10 @@ class PuzzleService {
 
   public async saveFeedback(
     user: IUser,
+    puzzleId: string,
     feedback: MoveFeedbackDto,
   ): Promise<void> {
-    await repo.saveFeedback(user, feedback);
+    await repo.saveFeedback(user, puzzleId, feedback);
   }
 }
 

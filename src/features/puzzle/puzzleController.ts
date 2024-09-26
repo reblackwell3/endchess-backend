@@ -25,8 +25,9 @@ class PuzzleController {
   public async postFeedback(req: Request, res: Response): Promise<void> {
     try {
       const user = req.user as IUser;
+      const puzzleId = req.params.puzzleId;
       const feedback = req.body as MoveFeedbackDto;
-      await service.saveFeedback(user, feedback);
+      await service.saveFeedback(user, puzzleId, feedback);
       res.status(200).json({ message: 'Feedback saved' });
     } catch (err) {
       const error = err as Error;
