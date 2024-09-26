@@ -4,8 +4,10 @@ dotenv.config({ path: '.env.test' });
 
 import { connectDB, closeDB } from '../../src/config/db';
 import { closeSessionStore } from '../../src/config/session';
-import { PlayerData, User } from 'endchess-models';
+import { PlayerData, User, Puzzle } from 'endchess-models';
 import { PuzzleSettings, PuzzleSettingsDto } from 'endchess-api-settings';
+import { Types } from 'mongoose';
+import puzzleJson from '../__mocks__/puzzle.json';
 import cookieSignature from 'cookie-signature';
 import mockDetails from '../__mocks__/mockFindOrCreateUserDetails';
 
@@ -23,7 +25,11 @@ describe('Cookie API Calls Integration Tests', () => {
       mockDetails.accessToken,
       mockDetails.refreshToken,
     ); // Create a mock user
-    const playerData = await PlayerData.findOrCreate();
+    await PlayerData.findOrCreatePopulated(mockDetails.profile.id, 'puzzles');
+    await Puzzle.create({
+      ...puzzleJson,
+      _id: new Types.ObjectId(puzzleJson._id),
+    });
     signedCookie = `s:${cookieSignature.sign(user!.accessToken, process.env.COOKIE_SECRET!)}`;
   });
 
@@ -35,6 +41,7 @@ describe('Cookie API Calls Integration Tests', () => {
   it('should be able to get a random puzzle', async () => {
     const settings: PuzzleSettingsDto = {
       difficulties: [PuzzleSettings.Difficulty.MEDIUM],
+      solvedStatuses: [PuzzleSettings.SolvedStatus.UNSOLVED],
     };
     const headers = {
       settings: JSON.stringify(settings),
