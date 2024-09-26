@@ -1,11 +1,22 @@
-import { User, IUser, PlayerData, ItemEvent } from 'endchess-models';
+import {
+  User,
+  IUser,
+  PlayerData,
+  IPlayerData,
+  ItemEvent,
+  IItemEvent,
+} from 'endchess-models';
 
-function buildUser(): IUser {
+function buildItemEvent(): IItemEvent {
   const itemEvent = new ItemEvent({
     itemId: 'dummyPuzzleId',
     eventType: 'solved',
     event: 'dummyEvent',
   });
+
+  return itemEvent;
+}
+function buildPlayerData(): IPlayerData {
   const player = new PlayerData({
     providerId: 'dummyId',
     feature: 'puzzles',
@@ -13,12 +24,15 @@ function buildUser(): IUser {
     itemEvents: [],
   });
 
+  return player;
+}
+
+function buildUser(): IUser {
   const user = new User({
     provider: 'dummyProvider',
     providerId: 'dummyId',
     accessToken: 'dummyAccessToken',
     refreshToken: 'dummyRefreshToken',
-    player,
     email: 'dummy@example.com',
     emailVerified: true,
     name: 'Dummy User',

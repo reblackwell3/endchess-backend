@@ -8,6 +8,7 @@ import mistakesRoutes from './features/mistake/mistakesRoutes';
 import authenticateCookie from './auth/authenticateCookie';
 import authRoutes from './auth/authRoutes';
 import passport from 'passport';
+import setupPassport from './auth/passportConfig';
 import session from './config/session';
 
 import cookieParser from 'cookie-parser';
@@ -26,7 +27,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET!));
 
 app.use(passport.initialize());
 app.use(passport.session());
-require('./features/auth/passportConfig')(passport);
+setupPassport(passport);
 
 app.use(express.json());
 

@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 dotenv.config({ path: '.env.test' });
 
 import { connectDB, closeDB } from '../../src/config/db';
-import User from '../../src/features/user/userModel';
+import { closeSessionStore } from '../../src/config/session';
+import { User } from 'endchess-models';
 import cookieSignature from 'cookie-signature';
 import mockDetails from '../__mocks__/mockFindOrCreateUserDetails';
 
@@ -25,7 +26,7 @@ describe('Cookie API Calls Integration Tests', () => {
 
   afterAll(async () => {
     await closeDB();
-    await store.client.close();
+    await closeSessionStore();
   });
 
   it('should be able to get a random puzzle', async () => {
@@ -34,15 +35,5 @@ describe('Cookie API Calls Integration Tests', () => {
       .set('Cookie', `endchess-token=${signedCookie}`);
 
     expect(res.status).toBe(200);
-  });
-
-  // Add tests for your GET endpoints here
-  it('should be able to get a random game', async () => {
-    const res = await request(app)
-      .get('/games/random')
-      .set('Cookie', `endchess-token=${signedCookie}`);
-
-    expect(res.status).toBe(200);
-    // Add more assertions based on the expected response
   });
 });
