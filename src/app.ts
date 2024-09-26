@@ -8,37 +8,19 @@ import mistakesRoutes from './features/mistake/mistakesRoutes';
 import authenticateCookie from './auth/authenticateCookie';
 import authRoutes from './auth/authRoutes';
 import passport from 'passport';
-import session from 'express-session';
-import { default as connectMongoDBSession } from 'connect-mongodb-session';
+import session from './config/session';
+
 import cookieParser from 'cookie-parser';
-// import cookieSignature from 'cookie-signature';
-// import User from './features/user/userModel';
 
 const app = express();
 const corsOptions = {
-  origin: process.env.REACT_APP_URL!, // Your frontend URL
-  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+  origin: process.env.REACT_APP_URL!,
+  credentials: true,
 };
 
 app.use(cors<Request>(corsOptions));
 
-const MongoDBStore = connectMongoDBSession(session);
-const store = new MongoDBStore({
-  uri: process.env.MONGO_URI!,
-  collection: 'sessions',
-});
-
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET!,
-    resave: false,
-    saveUninitialized: false,
-    store: store,
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-    },
-  }),
-);
+app.use(session);
 
 app.use(cookieParser(process.env.COOKIE_SECRET!));
 
