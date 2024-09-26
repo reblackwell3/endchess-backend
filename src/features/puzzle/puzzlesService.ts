@@ -24,7 +24,7 @@ class PuzzleService {
       .map((itemEvent) => itemEvent as IItemEvent)
       .map((itemEvent) => itemEvent.itemId);
     const statuses = settings.solvedStatuses || [];
-    const puzzle = this.findPuzzleByStatus(
+    const puzzle = await this.findPuzzleByStatus(
       statuses,
       ratingRange,
       solvedPuzzleIds || [],

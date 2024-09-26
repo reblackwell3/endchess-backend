@@ -13,7 +13,6 @@ import mockDetails from '../__mocks__/mockFindOrCreateUserDetails';
 
 import request from 'supertest';
 import app from '../../src/app';
-import { Cookie } from 'express-session';
 
 describe('Cookie API Calls Integration Tests', () => {
   let signedCookie: string;
@@ -26,9 +25,11 @@ describe('Cookie API Calls Integration Tests', () => {
       mockDetails.refreshToken,
     ); // Create a mock user
     await PlayerData.findOrCreatePopulated(mockDetails.profile.id, 'puzzles');
+    const puzzleId = new Types.ObjectId(puzzleJson._id);
+    await Puzzle.deleteOne({ _id: puzzleId });
     await Puzzle.create({
       ...puzzleJson,
-      _id: new Types.ObjectId(puzzleJson._id),
+      _id: puzzleId,
     });
     signedCookie = `s:${cookieSignature.sign(user!.accessToken, process.env.COOKIE_SECRET!)}`;
   });
