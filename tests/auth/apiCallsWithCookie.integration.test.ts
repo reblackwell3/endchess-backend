@@ -4,12 +4,14 @@ dotenv.config({ path: '.env.test' });
 
 import { connectDB, closeDB } from '../../src/config/db';
 import { closeSessionStore } from '../../src/config/session';
-import { User } from 'endchess-models';
+import { PlayerData, User } from 'endchess-models';
+import { PuzzleSettings, PuzzleSettingsDto } from 'endchess-api-settings';
 import cookieSignature from 'cookie-signature';
 import mockDetails from '../__mocks__/mockFindOrCreateUserDetails';
 
 import request from 'supertest';
 import app from '../../src/app';
+import { Cookie } from 'express-session';
 
 describe('Cookie API Calls Integration Tests', () => {
   let signedCookie: string;
@@ -21,6 +23,7 @@ describe('Cookie API Calls Integration Tests', () => {
       mockDetails.accessToken,
       mockDetails.refreshToken,
     ); // Create a mock user
+    const playerData = await PlayerData.findOrCreate();
     signedCookie = `s:${cookieSignature.sign(user!.accessToken, process.env.COOKIE_SECRET!)}`;
   });
 
@@ -30,10 +33,14 @@ describe('Cookie API Calls Integration Tests', () => {
   });
 
   it('should be able to get a random puzzle', async () => {
-    const res = await request(app)
-      .get('/puzzles/random')
-      .set('Cookie', `endchess-token=${signedCookie}`);
-
+    const settings: PuzzleSettingsDto = {
+      difficulties: [PuzzleSettings.Difficulty.MEDIUM],
+    };
+    const headers = {
+      settings: JSON.stringify(settings),
+      Cookie: `endchess-token=${signedCookie}`,
+    };
+    const res = await request(app).get('/puzzles').set(headers);
     expect(res.status).toBe(200);
   });
 });

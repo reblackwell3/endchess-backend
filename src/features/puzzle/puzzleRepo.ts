@@ -11,15 +11,7 @@ import {
 
 class PuzzleRepo {
   async findPlayerPuzzlesData(user: IUser): Promise<IPlayerData | null> {
-    return await PlayerData.findOne({
-      providerId: user.providerId,
-      feature: 'puzzles',
-    })
-      .populate({
-        path: 'itemEvents',
-        match: { eventType: 'solved' },
-      })
-      .exec();
+    return await PlayerData.findOrCreatePopulated(user.providerId, 'puzzles');
   }
 
   async findUnsolvedPuzzle(
