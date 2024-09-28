@@ -24,6 +24,10 @@ describe('Puzzle Integration Tests', () => {
       mockDetails.accessToken,
       mockDetails.refreshToken,
     ); // Create a mock user
+    await PlayerData.deleteMany({
+      providerId: mockDetails.profile.id,
+      feature: 'puzzles',
+    });
     await PlayerData.findOrCreatePopulated(mockDetails.profile.id, 'puzzles');
     const puzzleId = new Types.ObjectId(puzzleJson._id);
     await Puzzle.deleteOne({ _id: puzzleId });
@@ -50,5 +54,48 @@ describe('Puzzle Integration Tests', () => {
     };
     const res = await request(app).get('/puzzles').set(headers);
     expect(res.status).toBe(200);
+  });
+
+  it('should be able to post feedback', async () => {
+    const incorrectGuess = {
+      index: 1,
+      guess: {
+        sourceSquare: 'e2',
+        targetSquare: 'e4',
+        piece: 'P',
+      },
+      isCorrect: false,
+    };
+    const hintRequested = {
+      index: 2,
+      hintRequested: true,
+    };
+    const correctFinish = {
+      index: 3,
+      guess: {
+        sourceSquare: 'd2',
+        targetSquare: 'd4',
+        piece: 'P',
+      },
+      isCorrect: true,
+      isFinished: true,
+    };
+    for (const feedback of [incorrectGuess, hintRequested, correctFinish]) {
+      const headers = {
+        'Content-Type': 'application/json',
+        Cookie: `endchess-token=${signedCookie}`,
+      };
+      const res = await request(app)
+        .post(`/puzzles/feedback/${puzzleJson._id}`)
+        .set(headers)
+        .send(feedback);
+      expect(res.status).toBe(200);
+    }
+    const resp = await PlayerData.findOne({
+      providerId: mockDetails.profile.id,
+      feature: 'puzzles',
+    }).select('itemEvents');
+    const itemEvents = resp!.itemEvents;
+    expect(itemEvents.length).toBe(3);
   });
 });
