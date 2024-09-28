@@ -6,8 +6,7 @@
     "node": ">=18.20.4"
   },
   "scripts": {
-    "test": "jest --config jest.config.cjs -- .unit.",
-    "test:integration": "jest --config jest.config.cjs -- .integration.",
+    "test": "jest --config jest.config.cjs",
     "start": "npm run serve",
     "tsc": "./node_modules/typescript/bin/tsc",
     "build": "tsc",

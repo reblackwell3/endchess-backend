@@ -14,7 +14,7 @@ import mockDetails from '../__mocks__/mockFindOrCreateUserDetails';
 import request from 'supertest';
 import app from '../../src/app';
 
-describe('Cookie API Calls Integration Tests', () => {
+describe('Puzzle Integration Tests', () => {
   let signedCookie: string;
   beforeAll(async () => {
     await connectDB();
