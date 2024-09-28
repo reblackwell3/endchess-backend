@@ -1,27 +1,44 @@
-import User, { IUser } from '../../src/features/user/userModel';
-import UserDetails from '../../src/features/user/userDetailsModel';
-import Player from '../../src/features/user/playerModel';
-import exp from 'constants';
+import {
+  User,
+  IUser,
+  PlayerData,
+  IPlayerData,
+  ItemEvent,
+  IItemEvent,
+} from 'endchess-models';
+
+function buildItemEvent(): IItemEvent {
+  const itemEvent = new ItemEvent({
+    itemId: 'dummyPuzzleId',
+    eventType: 'solved',
+    event: 'dummyEvent',
+  });
+
+  return itemEvent;
+}
+function buildPlayerData(): IPlayerData {
+  const player = new PlayerData({
+    providerId: 'dummyId',
+    feature: 'puzzles',
+    rating: 1200,
+    itemEvents: [],
+  });
+
+  return player;
+}
 
 function buildUser(): IUser {
-  const details = new UserDetails({
+  const user = new User({
+    provider: 'dummyProvider',
+    providerId: 'dummyId',
+    accessToken: 'dummyAccessToken',
+    refreshToken: 'dummyRefreshToken',
     email: 'dummy@example.com',
     emailVerified: true,
     name: 'Dummy User',
     givenName: 'Dummy',
     familyName: 'User',
     picture: 'http://example.com/dummy.jpg',
-  });
-
-  const player = new Player({});
-
-  const user = new User({
-    provider: 'dummyProvider',
-    providerId: 'dummyId',
-    accessToken: 'dummyAccessToken',
-    refreshToken: 'dummyRefreshToken',
-    player,
-    details,
   });
 
   return user;

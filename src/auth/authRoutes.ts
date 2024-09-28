@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
-import passport from './passportConfig.auth';
-import { IUser } from '../user/userModel';
+import passport from 'passport';
+import { IUser } from 'endchess-models';
 
 const router = Router();
 

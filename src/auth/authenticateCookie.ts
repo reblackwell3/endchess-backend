@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import passport from './passportConfig.app';
+import passport from 'passport';
 
 const authenticateCookie = (
   req: Request,

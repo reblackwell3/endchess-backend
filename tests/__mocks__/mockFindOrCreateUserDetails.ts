@@ -1,8 +1,15 @@
 import mockUser from '../__mocks__/mockUser';
 
 function getMockDetails() {
-  const { provider, providerId, accessToken, details } = mockUser;
-  const { email, givenName, familyName, picture } = details;
+  const {
+    provider,
+    providerId,
+    accessToken,
+    email,
+    givenName,
+    familyName,
+    picture,
+  } = mockUser;
   return {
     profile: {
       id: providerId,
