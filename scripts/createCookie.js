@@ -1,5 +1,6 @@
 const User = require('../dist/features/user/userModel').default;
 const cookieSignature = require('cookie-signature');
+require('dotenv').config({ path: '.env.local' });
 const { connectDB, closeDB } = require('../dist/config/db');
 
 async function getCookie() {

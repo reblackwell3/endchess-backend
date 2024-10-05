@@ -1,5 +1,12 @@
 import dotenv from 'dotenv';
-dotenv.config({ path: '.env' });
+switch (process.env.NODE_ENV) {
+  case 'local':
+    dotenv.config({ path: '.env.local' });
+    break;
+  default:
+    dotenv.config({ path: '.env' });
+    break;
+}
 
 import express, { Request } from 'express';
 import cors from 'cors';

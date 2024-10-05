@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import fs from 'fs';
 import csv from 'csv-parser';
-import Puzzle from 'endchess-models';
+import { Puzzle } from 'endchess-models';
 import { connectDB } from '../src/config/db';
 import dotenv from 'dotenv';
 
@@ -24,19 +24,19 @@ async function importPuzzles(): Promise<void> {
       .pipe(csv())
       .on('data', (row) => {
         const puzzle = new Puzzle({
-          PuzzleId: row.PuzzleId,
-          FEN: row.FEN,
-          Moves: row.Moves,
-          Rating: row.Rating,
-          RatingDeviation: row.RatingDeviation,
-          Popularity: row.Popularity,
-          NbPlays: row.NbPlays,
-          Themes: row.Themes,
-          GameUrl: row.GameUrl,
-          OpeningTags: row.OpeningTags,
+          puzzleId: row.PuzzleId,
+          fen: row.FEN,
+          moves: row.Moves.split(' '),
+          rating: row.Rating,
+          ratingDeviation: row.RatingDeviation,
+          popularity: row.Popularity,
+          nbPlays: row.NbPlays,
+          themes: row.Themes,
+          gameUrl: row.GameUrl,
+          openingTags: row.OpeningTags,
         });
 
-        puzzles.push(puzzle); // Add puzzle to the array
+        puzzles.push(puzzle);
       })
       .on('end', async () => {
         try {
